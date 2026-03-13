@@ -13,7 +13,10 @@ return function (App $app) {
         // CORS Pre-Flight OPTIONS Request Handler
         return $response;
     });
-
+    
     $app->get('/', [HomeController::class, 'home']);
+    
+    $app->get('/wishlist', WishlistController::class . ':index')
+    ->setName('wishlist');
 
 };
