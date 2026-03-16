@@ -1,0 +1,225 @@
+{% extends "base.html.twig" %}
+
+{% block title %}profile{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width:680px;">
+ 
+    <!-- En-tête profil -->
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <div class="bg-primary rounded-3 d-flex align-items-center justify-content-center text-white fw-bold fs-5"
+             style="width:52px;height:52px;flex-shrink:0;">S</div>
+        <div>
+            <div class="text-primary text-uppercase fw-semibold small mb-1"
+                 style="font-size:.7rem;letter-spacing:.1em;">Mon profil</div>
+            <div class="fw-bold fs-5">Son nom</div>
+        </div>
+    </div>
+ 
+    <!-- CV -->
+    <div class="card border rounded-3 shadow-sm mb-3">
+        <div class="card-body p-4">
+            <p class="text-uppercase text-secondary fw-semibold small mb-3">Vos CV</p>
+ 
+            <div class="border border-2 rounded-3 p-3 d-flex align-items-center gap-3 bg-light"
+                 role="button" onclick="document.getElementById('cvFile').click()">
+                <div class="bg-white border rounded-2 d-flex align-items-center justify-content-center text-primary"
+                     style="width:36px;height:36px;flex-shrink:0;">
+                    <i class="bi bi-file-earmark-person"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="fw-semibold small">Glissez ou cliquez pour importer</div>
+                    <div class="text-muted small">PDF, DOCX — max 10 Mo</div>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                    <i class="bi bi-upload me-1"></i>Choisir
+                </button>
+            </div>
+            <input type="file" id="cvFile" class="d-none" accept=".pdf,.doc,.docx"/>
+ 
+            <div id="cvBadge" class="d-none mt-2">
+                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 fw-normal">
+                    <i class="bi bi-check-circle-fill me-1"></i><span id="cvName"></span>
+                </span>
+            </div>
+ 
+            <div class="d-flex align-items-center gap-2 my-3">
+                <hr class="flex-grow-1 my-0"/>
+                <span class="text-muted small fw-semibold">OU</span>
+                <hr class="flex-grow-1 my-0"/>
+            </div>
+ 
+            <button class="btn btn-light border w-100 small text-secondary"
+                    data-bs-toggle="modal" data-bs-target="#textModal" data-target="cv">
+                <i class="bi bi-clipboard-plus me-1"></i>Coller du texte
+            </button>
+        </div>
+    </div>
+ 
+    <!-- Lettre de motivation -->
+    <div class="card border rounded-3 shadow-sm mb-3">
+        <div class="card-body p-4">
+            <p class="text-uppercase text-secondary fw-semibold small mb-3">Vos lettres de motivation</p>
+ 
+            <div class="border border-2 rounded-3 p-3 d-flex align-items-center gap-3 bg-light"
+                 role="button" onclick="document.getElementById('lmFile').click()">
+                <div class="bg-white border rounded-2 d-flex align-items-center justify-content-center text-primary"
+                     style="width:36px;height:36px;flex-shrink:0;">
+                    <i class="bi bi-file-earmark-text"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="fw-semibold small">Glissez ou cliquez pour importer</div>
+                    <div class="text-muted small">PDF, DOCX — max 10 Mo</div>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                    <i class="bi bi-upload me-1"></i>Choisir
+                </button>
+            </div>
+            <input type="file" id="lmFile" class="d-none" accept=".pdf,.doc,.docx"/>
+ 
+            <div id="lmBadge" class="d-none mt-2">
+                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 fw-normal">
+                    <i class="bi bi-check-circle-fill me-1"></i><span id="lmName"></span>
+                </span>
+            </div>
+ 
+            <div class="d-flex align-items-center gap-2 my-3">
+                <hr class="flex-grow-1 my-0"/>
+                <span class="text-muted small fw-semibold">OU</span>
+                <hr class="flex-grow-1 my-0"/>
+            </div>
+ 
+            <button class="btn btn-light border w-100 small text-secondary"
+                    data-bs-toggle="modal" data-bs-target="#textModal" data-target="lm">
+                <i class="bi bi-clipboard-plus me-1"></i>Coller du texte
+            </button>
+        </div>
+    </div>
+ 
+    <!-- Compétences -->
+    <div class="card border rounded-3 shadow-sm mb-3">
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <p class="text-uppercase text-secondary fw-semibold small mb-0">Compétences</p>
+                <div class="dropdown">
+                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-plus-circle me-1"></i>Ajouter
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end border shadow-sm rounded-3 p-2"
+                         style="min-width:220px;" onclick="event.stopPropagation()">
+                        <div class="input-group input-group-sm mb-2">
+                            <span class="input-group-text bg-light border-end-0 text-muted">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" class="form-control form-control-sm bg-light border-start-0"
+                                   placeholder="Rechercher…" id="skillSearch" oninput="filterSkills()"/>
+                        </div>
+                        <div id="skillOptions" style="max-height:200px;overflow-y:auto;"></div>
+                    </div>
+                </div>
+            </div>
+ 
+            <div class="d-flex flex-wrap gap-2" id="skillsGrid"></div>
+            <p id="noSkills" class="text-muted small text-center mb-0 d-none">
+                Aucune compétence — cliquez sur Ajouter
+            </p>
+        </div>
+    </div>
+ 
+</div>
+ 
+{# ── MODAL TEXTE ── #}
+<div class="modal fade" id="textModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header px-4 py-3">
+                <h6 class="modal-title fw-bold" id="textModalTitle">Ajouter du texte</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4 py-3">
+                <textarea class="form-control bg-light" id="textArea" rows="7"
+                          placeholder="Collez ou écrivez votre contenu ici…"></textarea>
+            </div>
+            <div class="modal-footer px-4 py-3 gap-2">
+                <button class="btn btn-light border rounded-pill px-4 btn-sm"
+                        data-bs-dismiss="modal">Annuler</button>
+                <button class="btn btn-primary rounded-pill px-4 btn-sm fw-semibold"
+                        onclick="saveText()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ── Upload ──
+    ['cv','lm'].forEach(id => {
+        document.getElementById(id+'File').addEventListener('change', function() {
+            const f = this.files[0];
+            if (!f) return;
+            document.getElementById(id+'Name').textContent = f.name;
+            document.getElementById(id+'Badge').classList.remove('d-none');
+        });
+    });
+ 
+    // ── Modal ──
+    let modalTarget = '';
+    document.querySelectorAll('[data-target]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            modalTarget = btn.dataset.target;
+            document.getElementById('textModalTitle').textContent =
+                modalTarget === 'cv' ? 'Ajouter votre CV (texte)' : 'Ajouter votre lettre (texte)';
+        });
+    });
+ 
+    function saveText() {
+        const val = document.getElementById('textArea').value.trim();
+        if (val) {
+            document.getElementById(modalTarget+'Name').textContent = val.length > 50 ? val.slice(0,50)+'…' : val;
+            document.getElementById(modalTarget+'Badge').classList.remove('d-none');
+        }
+        bootstrap.Modal.getInstance(document.getElementById('textModal')).hide();
+    }
+ 
+    // ── Skills ──
+    const ALL = ['HTML','CSS','JavaScript','TypeScript','React','Vue.js','Angular','Bootstrap',
+        'Python','Node.js','SQL','Git','Figma','PHP','Java','C#','Ruby','Swift','Kotlin','Docker'];
+    const active = new Set(['HTML']);
+ 
+    function renderSkills() {
+        const grid = document.getElementById('skillsGrid');
+        grid.innerHTML = '';
+        active.forEach(s => {
+            const chip = document.createElement('span');
+            chip.className = 'badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal d-inline-flex align-items-center gap-2';
+            chip.innerHTML = `${s}<button class="btn-close" style="font-size:.55rem;" onclick="removeSkill('${s}')"></button>`;
+            grid.appendChild(chip);
+        });
+        document.getElementById('noSkills').classList.toggle('d-none', active.size > 0);
+        filterSkills();
+    }
+ 
+    function filterSkills() {
+        const q = (document.getElementById('skillSearch').value || '').toLowerCase();
+        const wrap = document.getElementById('skillOptions');
+        wrap.innerHTML = '';
+        ALL.filter(s => s.toLowerCase().includes(q)).forEach(s => {
+            const btn = document.createElement('button');
+            btn.className = 'dropdown-item rounded-2 d-flex justify-content-between align-items-center small py-2';
+            btn.innerHTML = `<span>${s}</span>${active.has(s) ? '<i class="bi bi-check2 text-primary"></i>' : ''}`;
+            btn.onclick = () => { active.has(s) ? active.delete(s) : active.add(s); renderSkills(); };
+            wrap.appendChild(btn);
+        });
+    }
+ 
+    function removeSkill(s) { active.delete(s); renderSkills(); }
+ 
+    renderSkills();
+</script>
+
+{% endblock %}
