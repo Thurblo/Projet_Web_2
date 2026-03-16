@@ -1,0 +1,82 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Créer un compte{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 mb-5 d-flex justify-content-center w-75">
+    <div class="border border-primary border-5 rounded-5 ms-5 me-5 py-5 px-4 shadow-lg w-100">
+        <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-inline-block">
+            Créer un compte
+        </h1>
+
+        <form method="post">
+            <div class="row mx-4 my-5">
+
+                <div class="col-md-12">
+                    <label class="form-label" for="type">Type de compte</label>
+                    <select class="form-control border border-secondary border-3 rounded-3" id="type" name="type">
+                        <option value="">Choisir un type</option>
+                        <option value="etudiant" {% if typeCompte is defined and typeCompte == 'etudiant' %}selected{% endif %}>Étudiant</option>
+                        <option value="pilote" {% if typeCompte is defined and typeCompte == 'pilote' %}selected{% endif %}>Pilote</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="nom">Nom</label>
+                    <input class="form-control border border-secondary border-3 rounded-3"
+                           type="text" id="nom" name="nom" placeholder="Entrez le nom">
+                </div>
+
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="phone">Numéro de téléphone</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="number"id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
+                </div>
+
+                <div class="col-md-12 mt-4">
+                    <label class="form-label" for="description">Présentation</label>
+                    <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description" placeholder="Entrez une présentation" rows="5"></textarea>
+                </div>
+
+                <div class="col-md-12 mt-4">
+                    <label class="form-label" for="email">Email</label>
+                    <input class="form-control border border-secondary border-3 rounded-3"type="email" id="email" name="email" placeholder="Entrez l'email">
+                </div>
+
+                {% if typeCompte is defined and typeCompte == 'etudiant' %}
+                    <div class="col-md-12 mt-4">
+                        <label class="form-label" for="formation">Formation</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="formation" name="formation" placeholder="Ex : CESI école d'ingénieur">
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                        <label class="form-label" for="campus">Campus</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="campus" name="campus" placeholder="Ex : CESI Reims">
+                    </div>
+                {% elseif typeCompte is defined and typeCompte == 'pilote' %}
+                    <div class="col-md-12 mt-4">
+                        <label class="form-label" for="entreprise">Entreprise</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="entreprise" name="entreprise" placeholder="Nom de l'entreprise">
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                        <label class="form-label" for="poste">Poste</label>
+                        <input class="form-control border border-secondary border-3 rounded-3"type="text" id="poste" name="poste" placeholder="Ex : Responsable RH">
+                    </div>
+                {% endif %}
+
+                <div class="col-md-12 mt-5">
+                    <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
+                        <button class="btn btn-primary btn-lg rounded-5 px-4 flex-fill" type="submit">
+                            Créer le profil
+                        </button>
+                        <button class="btn btn-secondary btn-lg rounded-5 px-4 flex-fill" type="reset">
+                            Annuler
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
