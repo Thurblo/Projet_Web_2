@@ -1,203 +1,111 @@
 {% extends "base.html.twig" %}
 
 {% block title %}Index{% endblock %}
+
 {% block head %}
     {{ parent() }}
-
 {% endblock %}
+
 {% block content %}
-{# ── CONTENU PRINCIPAL ── #}
-    {% block body %}
-    <div class="container-xl py-4">
+<div class="container-xl py-4">
 
-        <h5 class="fw-bold mb-0">Emplois recommandés</h5>
-        <p class="text-muted small mb-3">Emplois basés sur votre activité</p>
+    <h5 class="fw-bold mb-0">Emplois recommandés</h5>
+    <p class="text-muted small mb-3">Emplois basés sur votre activité</p>
 
-        <div class="row g-3 align-items-start">
+    <div class="row g-3 align-items-start">
 
-            {# LEFT: Liste #}
-            <div class="col-12 col-md-5 col-lg-4">
-                <div class="bg-white border rounded-3 overflow-hidden">
+        <div class="col-12 col-md-5 col-lg-4">
+            <div class="bg-white border rounded-3 overflow-hidden">
 
-                    {# Card 1 #}
-                    <div class="job-card active p-3 border-bottom" onclick="afficherDetail(1, this)" id="card-1">
+                {% for offre in offres %}
+                    <div class="job-card {% if loop.first %}active{% endif %} p-3 {% if not loop.last %}border-bottom{% endif %}">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge badge-urgent rounded-pill fw-semibold" style="font-size:.68rem">Urgent</span>
+                            <span class="badge {{ offre.badgeClass }} rounded-pill fw-semibold" style="font-size:.68rem">
+                                {{ offre.badge }}
+                            </span>
                             <div class="d-flex gap-1">
-                                <button class="icon-btn">🔖</button>
-                                <button class="icon-btn">👎</button>
+                                <button class="icon-btn" type="button">🔖</button>
+                                <button class="icon-btn" type="button">👎</button>
                             </div>
                         </div>
-                        <p class="fw-bold mb-1" style="font-size:.95rem">Développeur Web Full Stack</p>
-                        <p class="text-muted small mb-1">TechCorp</p>
-                        <p class="text-muted small mb-2">🌐 Télétravail</p>
-                        <div class="d-flex flex-wrap gap-1 mb-2">
-                            <span class="badge badge-salary rounded-pill fw-semibold" style="font-size:.72rem">✓ 800 €/mois</span>
-                            <span class="tag-pill">Temps plein</span>
-                            <span class="tag-pill">React</span>
-                        </div>
-                        <a class="apply-link">➤ Candidature simplifiée</a>
-                        <p class="text-muted mb-0 mt-1" style="font-size:.7rem">Annonce</p>
-                    </div>
 
-                    {# Card 2 #}
-                    <div class="job-card p-3 border-bottom" onclick="afficherDetail(2, this)" id="card-2">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge badge-delay rounded-pill fw-semibold" style="font-size:.68rem">Répond souvent dans un délai de 5 jours</span>
-                            <div class="d-flex gap-1">
-                                <button class="icon-btn">🔖</button>
-                                <button class="icon-btn">👎</button>
-                            </div>
-                        </div>
-                        <p class="fw-bold mb-1" style="font-size:.95rem">Intégrateur HTML/CSS</p>
-                        <p class="text-muted small mb-1">AgenceWeb</p>
-                        <p class="text-muted small mb-2">📍 15 min · Lyon (69)</p>
-                        <div class="d-flex flex-wrap gap-1 mb-2">
-                            <span class="badge badge-salary rounded-pill fw-semibold" style="font-size:.72rem">✓ Gratification légale</span>
-                            <span class="tag-pill">Temps partiel</span>
-                            <span class="tag-pill">Figma</span>
-                        </div>
-                        <a class="apply-link">➤ Candidature simplifiée</a>
-                        <p class="text-muted mb-0 mt-1" style="font-size:.7rem">Annonce</p>
-                    </div>
+                        <p class="fw-bold mb-1" style="font-size:.95rem">{{ offre.titre }}</p>
+                        <p class="text-muted small mb-1">{{ offre.entreprise }}</p>
+                        <p class="text-muted small mb-2">{{ offre.lieuCourt }}</p>
 
-                    {# Card 3 #}
-                    <div class="job-card p-3" onclick="afficherDetail(3, this)" id="card-3">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge badge-delay rounded-pill fw-semibold" style="font-size:.68rem">Répond souvent dans un délai de 11 jours</span>
-                            <div class="d-flex gap-1">
-                                <button class="icon-btn">🔖</button>
-                                <button class="icon-btn">👎</button>
-                            </div>
-                        </div>
-                        <p class="fw-bold mb-1" style="font-size:.95rem">Développeur PHP/Symfony</p>
-                        <p class="text-muted small mb-1">StartupIO</p>
-                        <p class="text-muted small mb-2">📍 Bordeaux (33)</p>
                         <div class="d-flex flex-wrap gap-1 mb-2">
-                            <span class="badge badge-salary rounded-pill fw-semibold" style="font-size:.72rem">✓ 1 200 €/mois</span>
-                            <span class="tag-pill">Temps plein</span>
-                            <span class="tag-pill">+1</span>
+                            <span class="badge badge-salary rounded-pill fw-semibold" style="font-size:.72rem">
+                                ✓ {{ offre.salaire }}
+                            </span>
+                            {% for tag in offre.tags %}
+                                <span class="tag-pill">{{ tag }}</span>
+                            {% endfor %}
                         </div>
-                        <a class="apply-link">➤ Candidature simplifiée</a>
-                        <p class="text-muted mb-0 mt-1" style="font-size:.7rem">Annonce</p>
-                    </div>
 
-                </div>
+                        <a class="apply-link">➤ {{ offre.candidature }}</a>
+                        <p class="text-muted mb-0 mt-1" style="font-size:.7rem">{{ offre.annonceType }}</p>
+                    </div>
+                {% else %}
+                    <div class="p-3 text-center text-muted">
+                        Aucune offre disponible.
+                    </div>
+                {% endfor %}
+
             </div>
-
-            {# RIGHT: Détail #}
-            <div class="col-12 col-md-7 col-lg-8">
-                <div class="detail-panel bg-white border rounded-3 overflow-hidden">
-
-                    <div id="detail-placeholder" class="text-muted small text-center py-5">
-                        ← Cliquez sur une offre pour voir le détail
-                    </div>
-
-                    <div id="detail-inner" class="d-none">
-
-                        {# Header détail #}
-                        <div class="p-4 border-bottom">
-                            <h4 class="fw-bold mb-1" id="d-titre"></h4>
-                            <p class="mb-1" style="font-size:.85rem"><a href="#" class="text-primary" id="d-entreprise"></a></p>
-                            <p class="text-muted mb-1" style="font-size:.85rem" id="d-lieu"></p>
-                            <p class="fw-semibold mb-0" style="font-size:.85rem" id="d-type-line"></p>
-                            <div class="d-flex align-items-center gap-2 mt-2 text-success" style="font-size:.75rem">
-                                <span>⚡</span><span id="d-response"></span>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 mt-3">
-                                <button class="btn btn-primary btn-postuler px-4">Postuler maintenant</button>
-                                <button class="icon-btn">🔖</button>
-                                <button class="icon-btn">👎</button>
-                                <button class="icon-btn">↗</button>
-                            </div>
-                        </div>
-
-                        {# Détails emploi #}
-                        <div class="p-4 border-bottom">
-                            <p class="fw-bold mb-3">Détails de l'emploi</p>
-                            <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Type de poste</p>
-                            <div class="mb-3"><span class="meta-chip" id="d-contrat"></span></div>
-                            <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Horaires de travail</p>
-                            <div><span class="meta-chip" id="d-horaires"></span></div>
-                        </div>
-
-                        {# Avantages #}
-                        <div class="p-4 border-bottom">
-                            <p class="fw-bold mb-1">Avantages</p>
-                            <p class="text-muted mb-2" style="font-size:.75rem">Extraits de la description complète du poste</p>
-                            <ul class="mb-0 ps-3" style="font-size:.85rem;line-height:1.9" id="d-avantages"></ul>
-                        </div>
-
-                        {# Description #}
-                        <div class="p-4">
-                            <p class="fw-bold mb-2">Description du poste</p>
-                            <p style="font-size:.85rem;line-height:1.7" id="d-description"></p>
-                            <div class="d-flex flex-wrap gap-2 mt-3" id="d-competences"></div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <div class="col-12 col-md-7 col-lg-8">
+            <div class="detail-panel bg-white border rounded-3 overflow-hidden">
+
+                <div class="p-4 border-bottom">
+                    <h4 class="fw-bold mb-1">{{ offreSelectionnee.titre }}</h4>
+                    <p class="mb-1" style="font-size:.85rem">
+                        <a href="#" class="text-primary">{{ offreSelectionnee.entrepriseDetail }}</a>
+                    </p>
+                    <p class="text-muted mb-1" style="font-size:.85rem">{{ offreSelectionnee.lieu }}</p>
+                    <p class="fw-semibold mb-0" style="font-size:.85rem">{{ offreSelectionnee.typeLine }}</p>
+                    <div class="d-flex align-items-center gap-2 mt-2 text-success" style="font-size:.75rem">
+                        <span>⚡</span><span>{{ offreSelectionnee.response }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 mt-3">
+                        <button class="btn btn-primary btn-postuler px-4" type="button">Postuler maintenant</button>
+                        <button class="icon-btn" type="button">🔖</button>
+                        <button class="icon-btn" type="button">👎</button>
+                        <button class="icon-btn" type="button">↗</button>
+                    </div>
+                </div>
+
+                <div class="p-4 border-bottom">
+                    <p class="fw-bold mb-3">Détails de l'emploi</p>
+                    <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Type de poste</p>
+                    <div class="mb-3"><span class="meta-chip">{{ offreSelectionnee.contrat }}</span></div>
+                    <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Horaires de travail</p>
+                    <div><span class="meta-chip">{{ offreSelectionnee.horaires }}</span></div>
+                </div>
+
+                <div class="p-4 border-bottom">
+                    <p class="fw-bold mb-1">Avantages</p>
+                    <p class="text-muted mb-2" style="font-size:.75rem">Extraits de la description complète du poste</p>
+                    <ul class="mb-0 ps-3" style="font-size:.85rem;line-height:1.9">
+                        {% for avantage in offreSelectionnee.avantages %}
+                            <li>{{ avantage }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="p-4">
+                    <p class="fw-bold mb-2">Description du poste</p>
+                    <p style="font-size:.85rem;line-height:1.7">{{ offreSelectionnee.description }}</p>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        {% for competence in offreSelectionnee.competences %}
+                            <span class="skill-chip">{{ competence }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
-    {% endblock %}
-
-    <script>
-        const offres = {
-            1: {
-                titre: "Développeur Web Full Stack", entreprise: "TechCorp ↗", lieu: "Télétravail",
-                typeLine: "Temps plein", contrat: "Temps plein", horaires: "Flextime",
-                response: "A répondu à 90 % des candidatures sur les 30 derniers jours, généralement en 1 jour.",
-                avantages: ["Télétravail complet", "Flextime", "Intéressement et participation"],
-                description: "Vous rejoindrez une équipe dynamique pour développer et maintenir des applications web modernes. Vous interviendrez sur l'ensemble de la stack technique, du backend API au frontend responsive.",
-                competences: ["PHP", "Symfony", "JavaScript", "React", "SQL", "Git"]
-            },
-            2: {
-                titre: "Intégrateur HTML/CSS", entreprise: "AgenceWeb ↗", lieu: "Lyon (69)",
-                typeLine: "Temps partiel", contrat: "Temps partiel", horaires: "Horaires flexibles",
-                response: "Répond souvent dans un délai de 5 jours.",
-                avantages: ["Flextime", "Formation continue", "Tickets restaurant"],
-                description: "Au sein de notre agence créative, vous intégrerez des maquettes Figma en pages web responsive. Vous travaillerez en binôme avec un développeur senior.",
-                competences: ["HTML", "CSS", "Bootstrap", "Figma", "Git"]
-            },
-            3: {
-                titre: "Développeur PHP/Symfony", entreprise: "StartupIO ↗", lieu: "Bordeaux (33)",
-                typeLine: "Temps plein", contrat: "Temps plein", horaires: "Flextime",
-                response: "Répond souvent dans un délai de 11 jours.",
-                avantages: ["Intéressement", "Participation", "Mutuelle d'entreprise"],
-                description: "Intégrez notre startup en pleine croissance et participez au développement de notre plateforme SaaS. Environnement agile, beaucoup d'autonomie et de montée en compétences.",
-                competences: ["PHP", "Symfony", "Twig", "MySQL", "Docker", "API REST"]
-            }
-        };
-
-        function afficherDetail(id, cardEl) {
-            document.querySelectorAll('.job-card').forEach(c => c.classList.remove('active'));
-            cardEl.classList.add('active');
-            const o = offres[id];
-            document.getElementById('detail-placeholder').classList.add('d-none');
-            document.getElementById('detail-inner').classList.remove('d-none');
-            document.getElementById('d-titre').textContent = o.titre;
-            document.getElementById('d-entreprise').textContent = o.entreprise;
-            document.getElementById('d-lieu').textContent = o.lieu;
-            document.getElementById('d-type-line').textContent = o.typeLine;
-            document.getElementById('d-response').textContent = o.response;
-            document.getElementById('d-contrat').textContent = o.contrat;
-            document.getElementById('d-horaires').textContent = o.horaires;
-            document.getElementById('d-description').textContent = o.description;
-            const avEl = document.getElementById('d-avantages');
-            avEl.innerHTML = '';
-            o.avantages.forEach(a => { const li = document.createElement('li'); li.textContent = a; avEl.appendChild(li); });
-            const compEl = document.getElementById('d-competences');
-            compEl.innerHTML = '';
-            o.competences.forEach(c => { const s = document.createElement('span'); s.className = 'skill-chip'; s.textContent = c; compEl.appendChild(s); });
-        }
-
-        window.onload = () => afficherDetail(1, document.getElementById('card-1'));
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+</div>
 {% endblock %}
