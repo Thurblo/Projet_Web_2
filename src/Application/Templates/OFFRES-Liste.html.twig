@@ -1,0 +1,140 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Offres{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-3">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-primary m-0">Offres</h3>
+        <div class="d-flex gap-2">
+            <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">6 actives</span>
+            <button class="btn btn-primary rounded-5 px-3 py-1 fw-bold">
+                <i class="bi bi-building-add"></i> Ajouter
+            </button>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+
+        <div class="card border border-primary rounded-4">
+            <div class="card-body p-2">
+                <div class="row align-items-center g-2">
+                    <div class="col-4">
+                        <strong>Développeur Full Stack</strong><br>
+                        <small class="text-secondary">InnoTech</small>
+                    </div>
+                    <div class="col-4">
+                        <span class="badge bg-light text-dark border me-1">6 mois</span>
+                        <span class="badge bg-light text-dark border me-1">Bac+4</span>
+                        <span class="badge bg-light text-dark border">Paris</span>
+                    </div>
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border border-primary rounded-4">
+            <div class="card-body p-2">
+                <div class="row align-items-center g-2">
+                    <div class="col-4">
+                        <strong>Magicien JavaScript</strong><br>
+                        <small class="text-secondary">La Compagnie du Code</small>
+                    </div>
+                    <div class="col-4">
+                        <span class="badge bg-light text-dark border me-1">CDI</span>
+                        <span class="badge bg-light text-dark border me-1">Sénior</span>
+                        <span class="badge bg-light text-dark border">Télétravail</span>
+                    </div>
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border border-primary rounded-4">
+            <div class="card-body p-2">
+                <div class="row align-items-center g-2">
+                    <div class="col-4">
+                        <strong>Chef de Projet Digital</strong><br>
+                        <small class="text-secondary">Agence Créative</small>
+                    </div>
+                    <div class="col-4">
+                        <span class="badge bg-light text-dark border me-1">Stage</span>
+                        <span class="badge bg-light text-dark border me-1">Bac+5</span>
+                        <span class="badge bg-light text-dark border">Lyon</span>
+                    </div>
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border border-primary rounded-4">
+            <div class="card-body p-2">
+                <div class="row align-items-center g-2">
+                    <div class="col-4">
+                        <strong>UI/UX Designer</strong><br>
+                        <small class="text-secondary">Design Studio</small>
+                    </div>
+                    <div class="col-4">
+                        <span class="badge bg-light text-dark border me-1">Alternance</span>
+                        <span class="badge bg-light text-dark border me-1">12 mois</span>
+                        <span class="badge bg-light text-dark border">Bordeaux</span>
+                    </div>
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border border-primary rounded-4">
+            <div class="card-body p-2">
+                <div class="row align-items-center g-2">
+                    <div class="col-4">
+                        <strong>Data Scientist</strong><br>
+                        <small class="text-secondary">DataCorp</small>
+                    </div>
+                    <div class="col-4">
+                        <span class="badge bg-light text-dark border me-1">CDI</span>
+                        <span class="badge bg-light text-dark border me-1">Bac+8</span>
+                        <span class="badge bg-light text-dark border">Toulouse</span>
+                    </div>
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border border-primary rounded-4">
+            <div class="card-body p-2">
+                <div class="row align-items-center g-2">
+                    <div class="col-4">
+                        <strong>Community Manager</strong><br>
+                        <small class="text-secondary">SocialMedia Agency</small>
+                    </div>
+                    <div class="col-4">
+                        <span class="badge bg-light text-dark border me-1">Freelance</span>
+                        <span class="badge bg-light text-dark border me-1">Confirmé</span>
+                        <span class="badge bg-light text-dark border">Remote</span>
+                    </div>
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

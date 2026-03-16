@@ -7,14 +7,14 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 
-class WishlistController
+class OffresController
 {
 
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
 
-        return $view->render($response, 'WISHLIST.html.twig', [
+        return $view->render($response, 'OFFRES-Liste.html.twig', [
             'name' => 'John',
         ]);
     }
