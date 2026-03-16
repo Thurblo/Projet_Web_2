@@ -1,0 +1,62 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Liste des pilotes{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <h1 class="fw-bold mb-4">Liste des pilotes</h1>
+
+    <p class="text-muted">
+        Recherchez un pilote puis consultez les résultats.
+    </p>
+
+    <form method="get" action="/pilote" class="row g-3 mb-4">
+        <div class="col-md-10">
+            <input
+                type="text"
+                name="search"
+                class="form-control"
+                placeholder="Tape le nom d'un pilote"
+            >
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                Rechercher
+            </button>
+        </div>
+    </form>
+
+    <div class="row g-4">
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <h5 class="card-title fw-bold">
+                        Jean Dupont
+                    </h5>
+
+                    <p class="text-muted">
+                        Entreprise : Amazon
+                    </p>
+
+                    <p class="card-text">
+                        Responsable du suivi des étudiants en stage.
+                    </p>
+
+                    <a href="#" class="btn btn-outline-primary btn-sm">
+                        Voir le profil
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
