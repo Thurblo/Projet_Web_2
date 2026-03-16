@@ -11,7 +11,7 @@
     {% endblock %}
 
     <style>
-        body { font-family: 'Noto Sans', sans-serif; background: #f3f2f1; }
+        body { font-family: 'Noto Sans', sans-serif; background: #F8F9FA; }
 
         .job-card {
             cursor: pointer;
@@ -47,8 +47,8 @@
     {# ── NAVBAR ── #}
     <header>
         <nav class="navbar navbar-expand-lg bg-white border-bottom px-4">
-            <a class="navbar-brand fw-bold" href="#">MonSite</a>
-
+            <a class="navbar-brand fw-bold" href="#">
+                <img src="/images/Logo_v2.png" alt="Logo" width="100" height="40" class="d-inline-block align-text-top"></a>
             <button class="navbar-toggler" type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarMain"
@@ -67,8 +67,7 @@
                 <ul class="navbar-nav align-items-center">
                     <li class="nav-item"><a class="nav-link text-dark" href="/wishlist">Wishlist</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="#">Consultation</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark fw-semibold" aria-current="page" href="#">Profil</a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" aria-current="page" href="/profile">Profil</a></li>
                     <li class="nav-item">
                         <a class="nav-link text-dark px-2" href="#">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -92,14 +91,19 @@
             <title>{% block title %}{% endblock %} - My Webpage</title>
     </head>
     <body>
+        <style>
+            html, body { height: 100%; }
+            body { display: flex; flex-direction: column; min-height: 100vh; }
+            main#content { flex: 1; }
+        </style>
         <main id="content">{% block content %}{% endblock %}</main>
         <footer id="footer">
             {% block footer %}
-                <div class=" container-fluid bg-white py-3 mt-5 border-top border-2 fixed-bottom d-flex justify-content-center shadow">
-                    <a href="mentions.html" class="text-black text-decoration-none small">
-                        <i class="bi bi-file-text text-black me-1"></i>Mentions ilégales
-                    </a>
-                </div>
+            <div class="container-fluid bg-white py-3 border-top border-1 d-flex justify-content-center shadow">
+                <a href="mentions.html" class="text-black text-decoration-none small">
+                    <i class="bi bi-file-text text-black me-1"></i>Mentions légales
+                </a>
+            </div>
             {% endblock %}
         </footer>
     </body>

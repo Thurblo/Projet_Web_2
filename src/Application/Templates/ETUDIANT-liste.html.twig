@@ -1,0 +1,57 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Liste{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid p-3">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold text-primary m-0">Résultat pour {{ nom }}</h3>
+        <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">
+            {{ resultats|length }} étudiants
+        </span>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+
+        {% for etudiant in resultats %}
+
+        <div class="card border border-primary rounded-4">
+            <div class="card-body p-2">
+                <div class="row align-items-center g-2">
+
+                    <div class="col-4">
+                        <strong>{{ etudiant.nom }}</strong><br>
+                        <small class="text-secondary">{{ etudiant.prenom }}</small>
+                    </div>
+
+                    <div class="col-4">
+                        <span class="badge bg-light text-dark border">
+                            {{ etudiant.campus }}
+                        </span>
+                    </div>
+
+                    <div class="col-4 text-end">
+                        <button class="btn btn-primary btn-sm rounded-4 px-3">
+                            Modifier
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+
+        <div class="alert alert-danger">
+            Aucun étudiant trouvé pour cette recherche.
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

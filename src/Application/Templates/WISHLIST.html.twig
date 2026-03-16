@@ -7,7 +7,11 @@
 {% endblock %}
 
 {% block content %}
-    <body class="bg-light py-4 container-fluid w-75">
+    <div class="bg-light py-4 container-fluid w-75">
+    <div class="text-center mb-5">
+    <h1 class="display-3 fw-bold text-primary">Wishlist</h1>
+    <p class="lead text-secondary">Votre wishlist personnelle : les offres qui vous font rêver, à portée de clic.</p>
+    </div>
     <div class="row row-cols-3 g-4">
         <div class="col-md-4">
             <div class="card shadow card-hover border-0">
@@ -141,11 +145,6 @@
             </div>
         </div>
     </div>
-    <footer class=" container-fluid bg-white py-3 mt-5 border-top border-2 fixed-bottom d-flex justify-content-center shadow">
-        <a href="mentions.html" class="text-black text-decoration-none small">
-            <i class="bi bi-file-text text-black me-1"></i>Mentions ilégales
-        </a>
-    </footer>
 </body>
 </html>
 {% endblock %}

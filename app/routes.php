@@ -8,6 +8,8 @@ use Slim\App;
 use App\Application\Controller\HomeController;
 use App\Application\Controller\WishlistController;
 use App\Application\Controller\OffresController;
+use App\Application\Controller\ProfileController;
+use App\Application\Etudiant\EtudiantController;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -21,4 +23,13 @@ return function (App $app) {
 
     $app->get('/offres', [OffresController::class, 'index'])
     ->setName('offres');
+
+    $app->get('/offres/creer', [OffresController::class, 'create'])
+    ->setName('offres.creer');
+
+    $app->get('/offres/modifier', [OffresController::class, 'modify'])
+    ->setName('offres.modifier');
+
+    $app->get('/profile', [ProfileController::class, 'index'])
+    ->setName('profile');
 };

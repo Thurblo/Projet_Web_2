@@ -18,4 +18,22 @@ class OffresController
             'name' => 'John',
         ]);
     }
+
+    public function create(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'OFFRES-Crée.html.twig', [
+            'name' => 'John',
+        ]);
+    }
+
+    public function modify(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'OFFRES-Modifier.html.twig', [
+            'name' => 'John',
+        ]);
+    }
 }
