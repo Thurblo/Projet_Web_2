@@ -1,0 +1,44 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Liste des entreprises{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="fw-bold mb-4">Liste des entreprises</h1>
+
+    <p class="text-muted">
+        Recherchez une entreprise puis consultez les résultats.
+    </p>
+
+    <form method="get" action="/entreprise" class="row g-3 mb-4">
+        <div class="col-md-10">
+            <input
+                type="text"
+                name="search"
+                class="form-control"
+                placeholder="Tape le nom d'une entreprise"
+            >
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                Rechercher
+            </button>
+        </div>
+    </form>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">Amazon</h5>
+                    <p class="text-muted">Paris</p>
+                    <p class="card-text">
+                        Entreprise spécialisée dans le commerce en ligne.
+                    </p>
+                    <a href="#" class="btn btn-outline-primary btn-sm">Voir</a>
+                </div>
+            </div>
+            </div>
+        </div>
+</div>
+{% endblock %}
