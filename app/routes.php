@@ -21,4 +21,10 @@ return function (App $app) {
 
     $app->get('/offres', [OffresController::class, 'index'])
     ->setName('offres');
+
+    $app->get('/offres/creer', [OffresController::class, 'create'])
+    ->setName('offres.creer');
+
+    $app->get('/offres/modifier', [OffresController::class, 'modify'])
+    ->setName('offres.modifier');
 };
