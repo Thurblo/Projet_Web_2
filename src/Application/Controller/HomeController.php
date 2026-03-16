@@ -85,4 +85,13 @@ class HomeController
             'offreSelectionnee' => $offreSelectionnee
         ]);
     }
+
+    public function connexion(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+    
+        return $view->render($response, 'Connexion.html.twig', [
+            'name' => 'John',
+        ]);
+    }
 }

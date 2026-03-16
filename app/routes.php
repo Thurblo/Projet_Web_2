@@ -32,4 +32,6 @@ return function (App $app) {
 
     $app->get('/profile', [ProfileController::class, 'index'])
     ->setName('profile');
+    $app->get('/home/connexion', [HomeController::class, 'connexion'])
+    ->setName('home.connexion');
 };
