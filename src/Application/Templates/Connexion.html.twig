@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Wishlist{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+    <body>
+    <div class="container-fluid mt-5 mb-5 d-flex justify-content-center w-50">
+        <div class="border border-primary border-5 rounded-5 ms-5 me-5 py-5 px-4 shadow-lg">
+            <h1 class="card-title h1 m-3 border-bottom border-primary border-4 text-center text-primary"><b>Connexion</b></h1>
+            <div class="row mx-4 my-5">
+                <div class="col-md-12">
+                    <label class="form-label" for="email">Adresse email</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="email" id="email" name="email" placeholder="Entrez votre email">
+                </div>
+                <div class="col-md-12 mt-4">
+                    <label class="form-label" for="password">Mot de passe</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="password" id="password" name="password" placeholder="Entrez votre mot de passe">
+                </div>
+                <div class="col-md-12 mt-4">
+                    <div class="form-check">
+                        <input class="form-check-input border border-secondary border-2" type="checkbox" id="remember">
+                        <label class="form-check-label mb-3" for="remember">
+                            Se souvenir de moi
+                        </label>
+                    </div>
+                </div>
+                <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
+                    <button class="btn btn-primary btn-lg rounded-5 px-4 flex-fill" type="submit">Valider</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}
