@@ -19,7 +19,7 @@ return function (App $app) {
     $app->get('/', [HomeController::class, 'home']);
 
     $app->get('/wishlist', [WishlistController::class, 'index'])
-        ->setName('wishlist');
+    ->setName('wishlist');
 
     $app->get('/offres', [OffresController::class, 'index'])
     ->setName('offres');
@@ -32,6 +32,10 @@ return function (App $app) {
 
     $app->get('/profile', [ProfileController::class, 'index'])
     ->setName('profile');
+
     $app->get('/home/connexion', [HomeController::class, 'connexion'])
     ->setName('home.connexion');
+
+    $app->get('/mentions', [HomeController::class, 'mention'])
+    ->setName('mentions');
 };

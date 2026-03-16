@@ -27,4 +27,13 @@ class HomeController
             'name' => 'John',
         ]);
     }
+
+    public function mention(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+    
+        return $view->render($response, '/mentions.html.twig', [
+            'name' => 'John',
+        ]);
+    }
 }
