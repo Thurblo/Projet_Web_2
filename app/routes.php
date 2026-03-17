@@ -10,6 +10,7 @@ use App\Application\Controller\WishlistController;
 use App\Application\Controller\OffresController;
 use App\Application\Controller\ProfileController;
 use App\Application\Etudiant\EtudiantController;
+use App\Application\Controller\EntreprisesController;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -38,4 +39,7 @@ return function (App $app) {
 
     $app->get('/mentions', [HomeController::class, 'mention'])
     ->setName('mentions');
+
+    $app->get('/entreprises', [EntreprisesController::class, 'index'])
+    ->setName('entreprises');
 };
