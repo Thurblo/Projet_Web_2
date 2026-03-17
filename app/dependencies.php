@@ -12,8 +12,11 @@ use Monolog\Logger;
 use Monolog\Processor\UidProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+<<<<<<< HEAD
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+=======
+>>>>>>> 317656a1c341b4d8e9fd61b7c1b8b0ebdbc1a296
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -31,6 +34,7 @@ return function (ContainerBuilder $containerBuilder) {
 
             return $logger;
         },
+<<<<<<< HEAD
         EntityManager::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
             $doctrine = $settings->get('doctrine');
@@ -53,5 +57,7 @@ return function (ContainerBuilder $containerBuilder) {
             return new EntityManager($connection, $config);
         },
 
+=======
+>>>>>>> 317656a1c341b4d8e9fd61b7c1b8b0ebdbc1a296
     ]);
 };
