@@ -1,4 +1,4 @@
-version: '3.7'
+
 
 volumes:
     logs:
@@ -6,7 +6,7 @@ volumes:
 
 services:
     slim:
-        image: php:7-alpine
+        image: php:8-alpine
         working_dir: /var/www
         command: php -S 0.0.0.0:8080 -t public
         environment:
@@ -16,3 +16,25 @@ services:
         volumes:
             - .:/var/www
             - logs:/var/www/logs
+
+
+
+    db:
+        image: mysql
+        restart: always
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: example
+            MYSQL_DATABASE: toto
+    # (this is just an example, not intended to be a production configuration)
+
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
+        ports:
+            - 99:80
+        environment:
+            - PMA_HOST=db
+            - PMA_USER=root
+            - PMA_PASSWORD=example
