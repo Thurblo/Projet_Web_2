@@ -42,4 +42,11 @@ return function (App $app) {
 
     $app->get('/entreprises', [EntreprisesController::class, 'index'])
     ->setName('entreprises');
+
+    $app->get('/entreprises/creer', [EntreprisesController::class, 'create'])
+    ->setName('entreprises.creer');
+
+    $app->get('/entreprises/modifier', [EntreprisesController::class, 'modify'])
+    ->setName('entreprises.modifier');
+
 };
