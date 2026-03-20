@@ -7,11 +7,8 @@ use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Monolog\Logger;
 
-<<<<<<< HEAD
 define('APP_ROOT', __DIR__);
 
-=======
->>>>>>> 317656a1c341b4d8e9fd61b7c1b8b0ebdbc1a296
 return function (ContainerBuilder $containerBuilder) {
 
     // Global Settings Object
