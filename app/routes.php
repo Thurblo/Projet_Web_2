@@ -42,11 +42,18 @@ return function (App $app) {
 
     $app->get('/entreprises', [EntreprisesController::class, 'index'])
     ->setName('entreprises');
-
+    
     $app->get('/entreprises/creer', [EntreprisesController::class, 'create'])
     ->setName('entreprises.creer');
-
-    $app->get('/entreprises/modifier', [EntreprisesController::class, 'modify'])
+    
+    $app->post('/entreprises/creer', [EntreprisesController::class, 'create']);
+    
+    $app->get('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modify'])
     ->setName('entreprises.modifier');
+    
+    $app->post('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modify']);
+    
+    $app->post('/entreprises/supprimer/{id:\d+}', [EntreprisesController::class, 'delete'])
+    ->setName('entreprises.supprimer');
 
 };
