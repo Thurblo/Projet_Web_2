@@ -1,66 +1,67 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Liste des entreprises{% endblock %}
+{% block title %}Modifier une entreprise{% endblock %}
 
 {% block content %}
     <div class="container-fluid mt-5 mb-5 d-flex justify-content-center w-75">
         <div class="border border-primary border-5 rounded-5 ms-5 me-5 py-5 px-4 shadow-lg">
-            <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-inline-block ">Ajouter une offre</h1>
-            <div class="row mx-4 my-5">
-                <div class="col-md-6 ">
-                    <label class="form-label" for="entreprise">Nom de l'entreprise</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="entreprise" name="entreprise" placeholder="Entrez le nom de l'entreprise">
-                </div>
-                <div class="col-md-6 ">
-                    <label class="form-label" for="phone">Numéro de téléphone</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="number" id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
-                </div>
-                <div class="col-md-6 mt-4 ">
-                    <label class="form-label" for="date">Date de Création</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="date" id="date" name="Date" placeholder="Entrez la date de création">
-                </div>
-                <div class="col-md-6 mt-4 ">
-                    <label class="form-label" for="type">Type d'entreprise</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="type" name="Type" placeholder="Entrez le type d'entreprise">
-                </div>
+            <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-inline-block ">Modifier une Entreprise</h1>
+            <form method="POST" action="{{ url_for('entreprises.modifier', { 'id': entreprise.id }) }}">
+                <div class="row mx-4 my-5">
+                    <div class="col-md-6 ">
+                        <label class="form-label" for="entreprise">Nom de l'entreprise</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="entreprise" name="entreprise" placeholder="Entrez le nom de l'entreprise">
+                    </div>
+                    <div class="col-md-6 ">
+                        <label class="form-label" for="phone">Numéro de téléphone</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
+                    </div>
+                    <div class="col-md-6 mt-4 ">
+                        <label class="form-label" for="date">Date de Création</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="date" id="date" name="date" placeholder="Entrez la date de création">
+                    </div>
+                    <div class="col-md-6 mt-4 ">
+                        <label class="form-label" for="type">Type d'entreprise</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="type" name="type" placeholder="Entrez le type d'entreprise">
+                    </div>
 
-                <div class="col-md-6 mt-4 ">
-                    <label class="form-label" for="date">Ville</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="ville" name="Ville" placeholder="Entrez la ville">
-                </div>
-                <div class="col-md-6 mt-4 ">
-                    <label class="form-label" for="salariés">Salariés</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="number" id="salariés" name="Salariés" placeholder="Entrez le nombre de salariés">
-                </div>
-                
-                <div class="col-md-12 mt-4 ">
-                    <label class="form-label" for="description">Description de l'entreprise</label>
-                    <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description" placeholder="Entrez la description de l'entreprise" cols="30" rows="5"></textarea>
-                </div>
-                <div class="col-md-12 mt-4 ">
-                    <label class="form-label" for="niveau">Missions</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="niveau" name="niveau" placeholder="Entrez les missions">
-                </div>
-                <div class="col-md-12 mt-4 ">
-                    <label class="form-label" for="niveau">Domaines d'expertise</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="compétences" name="compétences" placeholder="Entrez les domaines d'expertise">
-                </div>
-                <div class="col-md-12 mt-4 ">
-                    <label class="form-label" for="niveau">Evaluation de l'entreprise</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="niveau" name="niveau" placeholder="Entrez l'évaluation de l'entreprise">
-                </div>
-                <div class="col-md-12 mt-4 ">
-                    <label class="form-label" for="email">Email</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="email" id="email" name="email" placeholder="Entrez l'email">
-                </div>
-                <div class="col-md-12 mt-5 ">
-                    <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
-                        <button class="btn btn-primary btn-lg rounded-5 px-4 flex-fill" type="submit">Ajouter l'offre</button>
-                        <button class="btn btn-secondary btn-lg rounded-5 px-4 flex-fill" type="reset">Annuler</button>
-                        <button class="btn btn-danger btn-lg rounded-5 px-4 flex-fill" type="button">Supprimer</button>
+                    <div class="col-md-6 mt-4 ">
+                        <label class="form-label" for="ville">Ville</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="ville" name="ville" placeholder="Entrez la ville">
+                    </div>
+                    <div class="col-md-6 mt-4 ">
+                        <label class="form-label" for="salariés">Salariés</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="number" id="salariés" name="salariés" placeholder="Entrez le nombre de salariés">
+                    </div>
+                    
+                    <div class="col-md-12 mt-4 ">
+                        <label class="form-label" for="description">Description de l'entreprise</label>
+                        <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description" placeholder="Entrez la description de l'entreprise" cols="30" rows="5"></textarea>
+                    </div>
+                    <div class="col-md-12 mt-4 ">
+                        <label class="form-label" for="missions">Missions</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="missions" name="missions" placeholder="Entrez les missions">
+                    </div>
+                    <div class="col-md-12 mt-4 ">
+                        <label class="form-label" for="domaines">Domaines d'expertise</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="domaines" name="domaines" placeholder="Entrez les domaines d'expertise">
+                    </div>
+                    <div class="col-md-12 mt-4 ">
+                        <label class="form-label" for="evaluation">Evaluation de l'entreprise</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="evaluation" name="evaluation" placeholder="Entrez l'évaluation de l'entreprise">
+                    </div>
+                    <div class="col-md-12 mt-4 ">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="email" id="email" name="email" placeholder="Entrez l'email">
+                    </div>
+                    <div class="col-md-12 mt-5 ">
+                        <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
+                            <button class="btn btn-primary w-50 btn-lg rounded-5 px-4 flex-fill" type="submit">Modifier l'entreprise</button>
+                            <a href="{{ url_for('entreprises') }}" class="btn btn-secondary w-50 btn-lg rounded-5 px-4 flex-fill text-center text-decoration-none">Annuler</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 {% endblock %}

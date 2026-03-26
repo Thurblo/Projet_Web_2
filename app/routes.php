@@ -19,6 +19,9 @@ return function (App $app) {
 
     $app->get('/', [HomeController::class, 'home']);
 
+    $app->get('/home', [HomeController::class, 'home'])
+    ->setName('home');
+
     $app->get('/wishlist', [WishlistController::class, 'index'])
     ->setName('wishlist');
 
