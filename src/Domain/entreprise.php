@@ -30,8 +30,8 @@ class Entreprise
     #[Column(type: 'string', nullable: false)]
     private string $ville;
 
-    #[Column(type: 'integer', nullable: false)]
-    private int $salaries;
+    #[Column(type: 'string', nullable: false)]
+    private string $salaries;
 
     #[Column(type: 'text', nullable: false)]
     private string $description;
@@ -48,8 +48,9 @@ class Entreprise
     #[Column(type: 'string', nullable: false)]
     private string $email;
 
-    #[Column(name: 'created_at', type: 'datetimetz_immutable', nullable: false)]
-    private DateTimeImmutable $createdAt;
+    #[Column(type: 'string', nullable: false)]
+    private string $statut;
+
 
     public function __construct(
         string $nom,
@@ -57,12 +58,13 @@ class Entreprise
         DateTimeImmutable $dateCreation,
         string $type,
         string $ville,
-        int $salaries,
+        string $salaries,
         string $description,
         string $missions,
         string $domainesExpertise,
         string $evaluation,
-        string $email
+        string $email,
+        string $statut = 'Actif'
     ) {
         $this->nom = $nom;
         $this->telephone = $telephone;
@@ -75,7 +77,7 @@ class Entreprise
         $this->domainesExpertise = $domainesExpertise;
         $this->evaluation = $evaluation;
         $this->email = $email;
-        $this->createdAt = new DateTimeImmutable('now');
+        $this->statut = $statut;
     }
 
     public function getId(): int
@@ -133,12 +135,12 @@ class Entreprise
         $this->ville = $ville;
     }
 
-    public function getSalaries(): int
+    public function getSalaries(): string
     {
         return $this->salaries;
     }
 
-    public function setSalaries(int $salaries): void
+    public function setSalaries(string $salaries): void
     {
         $this->salaries = $salaries;
     }
@@ -193,8 +195,13 @@ class Entreprise
         $this->email = $email;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getStatut(): string
     {
-        return $this->createdAt;
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): void
+    {
+        $this->statut = $statut;
     }
 }

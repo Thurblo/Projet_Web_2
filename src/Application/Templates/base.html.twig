@@ -45,11 +45,12 @@
 
 <body>
 
-    {# ── NAVBAR ── #}
+{# ── NAVBAR ── #}
     <header>
         <nav class="navbar navbar-expand-lg bg-white border-bottom px-4">
-            <a class="navbar-brand fw-bold" href="#">
-                <img src="/images/Logo_v2.png" alt="Logo" width="100" height="40" class="d-inline-block align-text-top"></a>
+            <a class="navbar-brand fw-bold" href="/home">
+                <img src="/images/Logo_v2.png" alt="Logo" width="100" height="40" class="d-inline-block align-text-top">
+            </a>
             <button class="navbar-toggler" type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarMain"
@@ -60,34 +61,24 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" href="#"></a>
-                    </li>
-                </ul>
-                <div class="input-group">
-                    <select class="btn btn-primary border border-secondary border-1 rounded-start-pill"><i class="bi bi-search"></i></button>
-                        <option>Offre</option>
-                        <option>Entreprise</option>
-                        <option>Étudiant</option>
-                        <option>Pilote</option>
-                    </select>
-                    <input type="text" class="form-control border border-secondary border-1" placeholder="Rechercher...">
-                    <button class="btn btn-primary border border-secondary border-1 rounded-end-pill"><i class="bi bi-search"></i></button>
-                </div>
-                
+                <ul class="navbar-nav me-auto"></ul>
+
                 <ul class="navbar-nav align-items-center">
                     <li class="nav-item"><a class="nav-link text-dark" href="/wishlist">Wishlist</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
                     <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" aria-current="page" href="/profile">Profil</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark d-flex align-items-center gap-1" href="/home/connexion"><i class="bi bi-person-circle"></i> Connexion </a></li>
+                    <li class="nav-item"><a class="nav-link text-dark" href="/profile">Profil</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark d-flex align-items-center gap-1" href="/home/connexion">
+                            <i class="bi bi-person-circle"></i> Connexion
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
     </header>
 
-            <title>{% block title %}{% endblock %} - My Webpage</title>
+    <title>{% block title %}{% endblock %} - My Webpage</title>
     </head>
     <body>
         <style>
@@ -95,6 +86,31 @@
             body { display: flex; flex-direction: column; min-height: 100vh; }
             main#content { flex: 1; }
         </style>
+
+        {# ── BARRE DE RECHERCHE ── #}
+        <div class="d-flex align-items-center border border-2 border-primary rounded-pill px-2 py-1 mx-auto my-2 w-50">
+            <div class="dropdown me-1">
+                <button class="btn btn-primary btn-sm rounded-pill dropdown-toggle fw-semibold px-3"
+                        type="button" data-bs-toggle="dropdown">
+                    Offre
+                </button>
+                <ul class="dropdown-menu shadow-sm border-0 mt-1">
+                    <li><a class="dropdown-item" href="#">Offre</a></li>
+                    <li><a class="dropdown-item" href="#">Entreprise</a></li>
+                    <li><a class="dropdown-item" href="#">Étudiant</a></li>
+                    <li><a class="dropdown-item" href="#">Pilote</a></li>
+                </ul>
+            </div>
+
+            <input type="text"
+                   class="form-control border-0 shadow-none bg-transparent"
+                   placeholder="Rechercher...">
+
+            <button class="btn btn-primary btn-sm rounded-pill px-3" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+
         <main id="content">{% block content %}{% endblock %}</main>
         <footer id="footer">
             {% block footer %}

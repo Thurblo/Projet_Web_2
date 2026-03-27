@@ -35,76 +35,128 @@ class EntreprisesController
     {
         $view = Twig::fromRequest($request);
         
+        $success = false;
+        $nom = '';
+        $phone = '';
+        $date = '';
+        $type = '';
+        $ville = '';
+        $salaries = '';
+        $description = '';
+        $missions = '';
+        $domaines = '';
+        $evaluation = '';
+        $email = '';
+        $statut = '';
+
         if ($request->getMethod() === 'POST') {
             $parsedBody = $request->getParsedBody();
-            
-            $entreprise = new Entreprise(
-                $parsedBody['entreprise'] ?? '',      // nom
-                $parsedBody['phone'] ?? '',            // téléphone
-                DateTimeImmutable::createFromFormat('Y-m-d', $parsedBody['Date'] ?? date('Y-m-d')), // date
-                $parsedBody['Type'] ?? '',             // type
-                $parsedBody['Ville'] ?? '',            // ville
-                (int)($parsedBody['Salariés'] ?? 0),   // salaries
-                $parsedBody['description'] ?? '',      // description
-                $parsedBody['niveau'] ?? '',           // missions
-                $parsedBody['compétences'] ?? '',      // domainesExpertise
-                $parsedBody['niveau'] ?? '',           // evaluation
-                $parsedBody['email'] ?? ''             // email
-            );
-            
-            $this->em->persist($entreprise);
-            $this->em->flush();
-            
-            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-            $url = $routeParser->urlFor('entreprises');
-            return $response->withHeader('Location', $url)->withStatus(302);
+            $nom = trim($parsedBody['nom'] ?? '');
+            $phone = trim($parsedBody['phone'] ?? '');
+            $date = trim($parsedBody['date'] ?? date('Y-m-d'));
+            $type = trim($parsedBody['type'] ?? '');
+            $ville = trim($parsedBody['ville'] ?? '');
+            $salaries = trim($parsedBody['salaries'] ?? '');
+            $description = trim($parsedBody['description'] ?? '');
+            $missions = trim($parsedBody['missions'] ?? '');
+            $domaines = trim($parsedBody['domaines'] ?? '');
+            $evaluation = trim($parsedBody['evaluation'] ?? '');
+            $email = trim($parsedBody['email'] ?? '');
+            $statut = trim($parsedBody['statut'] ?? '');
+
+            if ($nom !== '' && $phone !== '') {
+                $nouvelleEntreprise = new Entreprise(
+                    $nom,
+                    $phone,
+                    DateTimeImmutable::createFromFormat('Y-m-d', $date),
+                    $type,
+                    $ville,
+                    $salaries,
+                    $description,
+                    $missions,
+                    $domaines,
+                    $evaluation,
+                    $email,
+                    $statut
+                );
+                $this->em->persist($nouvelleEntreprise);
+                $this->em->flush();
+                $success = true;
+            }
         }
-        
-        return $view->render($response, 'ENTREPRISES-Crée.html.twig');
+
+        return $view->render($response, 'ENTREPRISES-Crée.html.twig', [
+            'nom' => $nom,
+            'phone' => $phone,
+            'date' => $date,
+            'type' => $type,
+            'ville' => $ville,
+            'salaries' => $salaries,
+            'description' => $description,
+            'missions' => $missions,
+            'domaines' => $domaines,
+            'evaluation' => $evaluation,
+            'email' => $email,
+            'statut' => $statut,
+            'success' => $success,
+        ]);
     }
 
-       // MODIFIER - AJOUTE CETTE METHODE
     public function modify(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
         
-        $id = (int)($args['id'] ?? 0);
+        $id = (int)$args['id'];
         $entreprise = $this->em->find(Entreprise::class, $id);
         
         if (!$entreprise) {
             return $response->withStatus(404);
         }
         
+        $success = false;
+        
         if ($request->getMethod() === 'POST') {
             $parsedBody = $request->getParsedBody();
+            $nom = trim($parsedBody['nom'] ?? '');
+            $telephone = trim($parsedBody['phone'] ?? '');
+            $dateCreation = trim($parsedBody['date'] ?? date('Y-m-d'));
+            $type = trim($parsedBody['type'] ?? '');
+            $ville = trim($parsedBody['ville'] ?? '');
+            $salaries = trim($parsedBody['salaries'] ?? '');
+            $desc = trim($parsedBody['description'] ?? '');
+            $missions = trim($parsedBody['missions'] ?? '');
+            $domaines = trim($parsedBody['domaines'] ?? '');
+            $evaluation = trim($parsedBody['evaluation'] ?? '');
+            $email = trim($parsedBody['email'] ?? '');
+            $statut = trim($parsedBody['statut'] ?? '');
             
-            $entreprise->setNom($parsedBody['entreprise'] ?? '');
-            $entreprise->setTelephone($parsedBody['phone'] ?? '');
-            $entreprise->setDateCreation(DateTimeImmutable::createFromFormat('Y-m-d', $parsedBody['date'] ?? date('Y-m-d')));
-            $entreprise->setType($parsedBody['type'] ?? '');
-            $entreprise->setVille($parsedBody['ville'] ?? '');
-            $entreprise->setSalaries((int)($parsedBody['salariés'] ?? 0));
-            $entreprise->setDescription($parsedBody['description'] ?? '');
-            $entreprise->setMissions($parsedBody['missions'] ?? '');
-            $entreprise->setDomainesExpertise($parsedBody['domaines'] ?? '');
-            $entreprise->setEvaluation($parsedBody['evaluation'] ?? '');
-            $entreprise->setEmail($parsedBody['email'] ?? '');
-            
-            $this->em->flush();
-            
-            $routeParser = RouteContext::fromRequest($request)->getRouteParser();
-            $url = $routeParser->urlFor('entreprises');
-            return $response->withHeader('Location', $url)->withStatus(302);
+            if ($nom !== '' && $telephone !== '') {
+                $entreprise->setNom($nom);
+                $entreprise->setTelephone($telephone);
+                $entreprise->setDateCreation(DateTimeImmutable::createFromFormat('Y-m-d', $dateCreation));
+                $entreprise->setType($type);
+                $entreprise->setVille($ville);
+                $entreprise->setSalaries($salaries);
+                $entreprise->setDescription($desc);
+                $entreprise->setMissions($missions);
+                $entreprise->setDomainesExpertise($domaines);
+                $entreprise->setEvaluation($evaluation);
+                $entreprise->setEmail($email);
+                $entreprise->setStatut($statut);
+                $this->em->flush();
+                $success = true;
+            }
         }
         
         return $view->render($response, 'ENTREPRISES-Modifier.html.twig', [
             'entreprise' => $entreprise,
+            'success' => $success,
         ]);
     }
     
     public function delete(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        $id = (int)($args['id'] ?? 0);
+        $id = (int)$args['id'];
         $entreprise = $this->em->find(Entreprise::class, $id);
         
         if ($entreprise) {

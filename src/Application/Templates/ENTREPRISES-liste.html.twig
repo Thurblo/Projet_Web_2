@@ -37,7 +37,7 @@
                     </div>
                     <div class="col-4">
                         <span class="badge bg-light text-dark border me-1">{{ entreprise.type }}</span>
-                        <span class="badge bg-light text-dark border">Actif</span>
+                        <span class="badge {% if entreprise.statut == 'Actif' %}bg-success{% else %}bg-danger{% endif %} text-white">{{ entreprise.statut }}</span>
                     </div>
                     <div class="col-4 text-end">
                         <!-- LIEN MODIFIER CORRIGÉ -->
