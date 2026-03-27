@@ -43,7 +43,7 @@ return function (App $app) {
     $app->get('/mentions', [HomeController::class, 'mention'])
     ->setName('mentions');
 
-    $app->get('/entreprises', [EntreprisesController::class, 'index'])
+    $app->get('/entreprises[/{page:\d+}]', [EntreprisesController::class, 'index'])
     ->setName('entreprises');
     
     $app->get('/entreprises/creer', [EntreprisesController::class, 'create'])

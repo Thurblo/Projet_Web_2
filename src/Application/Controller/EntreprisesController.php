@@ -24,10 +24,30 @@ class EntreprisesController
         $view = Twig::fromRequest($request);
         
         $repository = $this->em->getRepository(Entreprise::class);
-        $entreprises = $repository->findAll();
-
+        
+        $perPage = 5;
+        $page = isset($args['page']) ? (int)$args['page'] : 1;
+        $offset = ($page - 1) * $perPage;
+        
+        $totalEntreprises = $repository->createQueryBuilder('e')
+            ->select('COUNT(e.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+        
+        $entreprises = $repository->createQueryBuilder('e')
+            ->orderBy('e.id', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($perPage)
+            ->getQuery()
+            ->getResult();
+        
+        $totalPages = (int)ceil($totalEntreprises / $perPage);
+        
         return $view->render($response, 'ENTREPRISES-Liste.html.twig', [
             'entreprises' => $entreprises,
+            'page' => $page,
+            'totalPages' => $totalPages,
+            'totalEntreprises' => $totalEntreprises,
         ]);
     }
 

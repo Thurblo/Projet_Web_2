@@ -9,8 +9,8 @@
             <form method="POST" action="{{ url_for('entreprises.modifier', { 'id': entreprise.id }) }}">
                 <div class="row mx-4 my-5">
                     <div class="col-md-6 ">
-                        <label class="form-label" for="entreprise">Nom de l'entreprise</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="entreprise" name="entreprise" placeholder="Entrez le nom de l'entreprise">
+                        <label class="form-label" for="nom">Nom de l'entreprise</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="nom" name="nom" placeholder="Entrez le nom de l'entreprise">
                     </div>
                     <div class="col-md-6 ">
                         <label class="form-label" for="phone">Numéro de téléphone</label>
@@ -30,8 +30,8 @@
                         <input class="form-control border border-secondary border-3 rounded-3" type="text" id="ville" name="ville" placeholder="Entrez la ville">
                     </div>
                     <div class="col-md-6 mt-4 ">
-                        <label class="form-label" for="salariés">Salariés</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="number" id="salariés" name="salariés" placeholder="Entrez le nombre de salariés">
+                        <label class="form-label" for="salaries">Salariés</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="salaries" name="salaries" placeholder="Entrez le nombre de salariés">
                     </div>
                     
                     <div class="col-md-12 mt-4 ">
@@ -49,6 +49,13 @@
                     <div class="col-md-12 mt-4 ">
                         <label class="form-label" for="evaluation">Evaluation de l'entreprise</label>
                         <input class="form-control border border-secondary border-3 rounded-3" type="text" id="evaluation" name="evaluation" placeholder="Entrez l'évaluation de l'entreprise">
+                    </div>
+                    <div class="col-md-6 mt-4">
+                        <label class="form-label" for="statut">Statut de l'entreprise</label>
+                        <select class="form-control border border-secondary border-3 rounded-3" id="statut" name="statut">
+                            <option value="Actif" {% if statut == 'Actif' %}selected{% endif %}>Actif</option>
+                            <option value="Inactif" {% if statut == 'Inactif' %}selected{% endif %}>Inactif</option>
+                        </select>
                     </div>
                     <div class="col-md-12 mt-4 ">
                         <label class="form-label" for="email">Email</label>
