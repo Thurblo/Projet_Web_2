@@ -21,6 +21,9 @@ return function (App $app) {
 
     $app->get('/', [HomeController::class, 'home']);
 
+    $app->get('/home', [HomeController::class, 'home'])
+    ->setName('home');
+
     $app->get('/wishlist', [WishlistController::class, 'index'])
     ->setName('wishlist');
 
@@ -42,14 +45,21 @@ return function (App $app) {
     $app->get('/mentions', [HomeController::class, 'mention'])
     ->setName('mentions');
 
-    $app->get('/entreprises', [EntreprisesController::class, 'index'])
+    $app->get('/entreprises[/{page:\d+}]', [EntreprisesController::class, 'index'])
     ->setName('entreprises');
-
+    
     $app->get('/entreprises/creer', [EntreprisesController::class, 'create'])
     ->setName('entreprises.creer');
-
-    $app->get('/entreprises/modifier', [EntreprisesController::class, 'modify'])
+    
+    $app->post('/entreprises/creer', [EntreprisesController::class, 'create']);
+    
+    $app->get('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modify'])
     ->setName('entreprises.modifier');
+    
+    $app->post('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modify']);
+    
+    $app->post('/entreprises/supprimer/{id:\d+}', [EntreprisesController::class, 'delete'])
+    ->setName('entreprises.supprimer');
 
    $app->get('/compte', [CompteController::class, 'index'])
         ->setName('compte');

@@ -19,22 +19,66 @@ class Entreprise
     private string $nom;
 
     #[Column(type: 'string', nullable: false)]
-    private string $secteur;
+    private string $telephone;
+
+    #[Column(name: 'date_creation', type: 'date_immutable', nullable: false)]
+    private DateTimeImmutable $dateCreation;
 
     #[Column(type: 'string', nullable: false)]
-    private string $statut;
+    private string $type;
+
+    #[Column(type: 'string', nullable: false)]
+    private string $ville;
+
+    #[Column(type: 'integer', nullable: false)]
+    private int $salaries;
+
+    #[Column(type: 'text', nullable: false)]
+    private string $description;
+
+    #[Column(type: 'text', nullable: false)]
+    private string $missions;
+
+    #[Column(name: 'domaines_expertise', type: 'text', nullable: false)]
+    private string $domainesExpertise;
+
+    #[Column(type: 'string', nullable: false)]
+    private string $evaluation;
+
+    #[Column(type: 'string', nullable: false)]
+    private string $email;
 
     #[Column(name: 'created_at', type: 'datetimetz_immutable', nullable: false)]
     private DateTimeImmutable $createdAt;
 
-    public function __construct(string $nom, string $secteur, string $statut)
-    {
+    public function __construct(
+        string $nom,
+        string $telephone,
+        DateTimeImmutable $dateCreation,
+        string $type,
+        string $ville,
+        int $salaries,
+        string $description,
+        string $missions,
+        string $domainesExpertise,
+        string $evaluation,
+        string $email
+    ) {
         $this->nom = $nom;
-        $this->secteur = $secteur;
-        $this->statut = $statut;
+        $this->telephone = $telephone;
+        $this->dateCreation = $dateCreation;
+        $this->type = $type;
+        $this->ville = $ville;
+        $this->salaries = $salaries;
+        $this->description = $description;
+        $this->missions = $missions;
+        $this->domainesExpertise = $domainesExpertise;
+        $this->evaluation = $evaluation;
+        $this->email = $email;
         $this->createdAt = new DateTimeImmutable('now');
     }
 
+    // Getters
     public function getId(): int
     {
         return $this->id;
@@ -45,33 +89,114 @@ class Entreprise
         return $this->nom;
     }
 
-    public function setNom(string $nom): void
+    public function getTelephone(): string
     {
-        $this->nom = $nom;
+        return $this->telephone;
     }
 
-    public function getSecteur(): string
+    public function getDateCreation(): DateTimeImmutable
     {
-        return $this->secteur;
+        return $this->dateCreation;
     }
 
-    public function setSecteur(string $secteur): void
+    public function getType(): string
     {
-        $this->secteur = $secteur;
+        return $this->type;
     }
 
-    public function getStatut(): string
+    public function getVille(): string
     {
-        return $this->statut;
+        return $this->ville;
     }
 
-    public function setStatut(string $statut): void
+    public function getSalaries(): int
     {
-        $this->statut = $statut;
+        return $this->salaries;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getMissions(): string
+    {
+        return $this->missions;
+    }
+
+    public function getDomainesExpertise(): string
+    {
+        return $this->domainesExpertise;
+    }
+
+    public function getEvaluation(): string
+    {
+        return $this->evaluation;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 
     public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
+    }
+
+    // Setters
+    public function setNom(string $nom): void
+    {
+        $this->nom = $nom;
+    }
+
+    public function setTelephone(string $telephone): void
+    {
+        $this->telephone = $telephone;
+    }
+
+    public function setDateCreation(DateTimeImmutable $dateCreation): void
+    {
+        $this->dateCreation = $dateCreation;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+    }
+
+    public function setVille(string $ville): void
+    {
+        $this->ville = $ville;
+    }
+
+    public function setSalaries(int $salaries): void
+    {
+        $this->salaries = $salaries;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function setMissions(string $missions): void
+    {
+        $this->missions = $missions;
+    }
+
+    public function setDomainesExpertise(string $domainesExpertise): void
+    {
+        $this->domainesExpertise = $domainesExpertise;
+    }
+
+    public function setEvaluation(string $evaluation): void
+    {
+        $this->evaluation = $evaluation;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
     }
 }
