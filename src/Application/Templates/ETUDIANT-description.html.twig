@@ -1,0 +1,29 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Profil étudiant{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<div class= "profil-etudiant">
+<p>Nom : {{ etudiant.nom }}</p>
+<p>Prénom : {{ etudiant.prenom }}</p>
+<p>Campus : {{ etudiant.campus }}</p>
+<p>Description : {{ etudiant.description }}</p>
+</div>
+
+<h2>Candidatures</h2>
+{% for candidature in etudiant.candidatures %}
+<div class= "candidature">
+<p>Offre : {{ candidature.offre }}</p>
+<p>Entreprise : {{ candidature.entreprise }}</p>
+<p>Date : {{ candidature.date }}</p>
+</div>
+
+{% else %}
+    <p>Aucune candidature</p>
+
+{% endfor %}
+{% endblock %}
