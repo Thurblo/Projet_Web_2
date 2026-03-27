@@ -9,8 +9,10 @@ use App\Application\Controller\HomeController;
 use App\Application\Controller\WishlistController;
 use App\Application\Controller\OffresController;
 use App\Application\Controller\ProfileController;
-use App\Application\Etudiant\EtudiantController;
+use App\Application\Controller\EtudiantController;
 use App\Application\Controller\EntreprisesController;
+use App\Application\Controller\CompteController;
+use App\Application\Controller\PiloteController;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -58,5 +60,12 @@ return function (App $app) {
     
     $app->post('/entreprises/supprimer/{id:\d+}', [EntreprisesController::class, 'delete'])
     ->setName('entreprises.supprimer');
+
+   $app->get('/compte', [CompteController::class, 'index'])
+        ->setName('compte');
+
+    $app->post('/compte', [CompteController::class, 'create'])
+        ->setName('compte.creer');
+
 
 };

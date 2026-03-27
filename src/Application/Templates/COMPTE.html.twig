@@ -3,23 +3,28 @@
 {% block title %}Créer un compte{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-5 mb-5 d-flex justify-content-center w-75">
-    <div class="border border-primary border-5 rounded-5 ms-5 me-5 py-5 px-4 shadow-lg w-100">
-        <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-inline-block">
+<div class="container mt-5 mb-5"> 
+    <div class="row justify-content-center"> 
+    <div class="col-lg-8 col-md-10"> 
+    <div class="border border-primary border-5 rounded-5 py-5 px-4 shadow-lg bg-white">
+        <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-inline-block w-75">
             Créer un compte
         </h1>
 
-        <form method="post">
+        <form action="{{ url_for('compte.creer') }}" method="post">
             <div class="row mx-4 my-5">
 
                 <div class="col-md-12">
-                    <label class="form-label" for="type">Type de compte</label>
-                    <select class="form-control border border-secondary border-3 rounded-3" id="type" name="type">
-                        <option value="">Choisir un type</option>
-                        <option value="etudiant" {% if typeCompte is defined and typeCompte == 'etudiant' %}selected{% endif %}>Étudiant</option>
-                        <option value="pilote" {% if typeCompte is defined and typeCompte == 'pilote' %}selected{% endif %}>Pilote</option>
-                    </select>
-                </div>
+    <label class="form-label" for="type">Type de compte</label>
+    <div class="d-flex gap-2">
+        <select class="form-select border border-secondary border-3 rounded-3" id="type" name="type">
+            <option value="">Choisir un type</option>
+            <option value="etudiant" {% if typeCompte == 'etudiant' %}selected{% endif %}>Étudiant</option>
+            <option value="pilote" {% if typeCompte == 'pilote' %}selected{% endif %}>Pilote</option>
+        </select>
+        <button type="submit" name="action" value="select_type" class="btn btn-outline-primary">OK</button>
+    </div>
+</div>
 
                 <div class="col-md-6 mt-4">
                     <label class="form-label" for="nom">Nom</label>
@@ -29,7 +34,7 @@
 
                 <div class="col-md-6 mt-4">
                     <label class="form-label" for="phone">Numéro de téléphone</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="number"id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
+                    <input class="form-control border border-secondary border-3 rounded-3" type="tel"id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
                 </div>
 
                 <div class="col-md-12 mt-4">
@@ -69,7 +74,7 @@
                         <button class="btn btn-primary btn-lg rounded-5 px-4 flex-fill" type="submit">
                             Créer le profil
                         </button>
-                        <button class="btn btn-secondary btn-lg rounded-5 px-4 flex-fill" type="reset">
+                        <button class="btn btn-outline-secondary btn-lg rounded-5 px-4 flex-fill" type="reset">
                             Annuler
                         </button>
                     </div>
@@ -77,6 +82,8 @@
 
             </div>
         </form>
-    </div>
+     </div>
+  </div>
+ </div>
 </div>
 {% endblock %}
