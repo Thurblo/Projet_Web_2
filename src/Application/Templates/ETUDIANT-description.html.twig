@@ -3,27 +3,59 @@
 {% block title %}Profil étudiant{% endblock %}
 
 {% block head %}
-    {{ parent() }}
+    {{ parent() }} 
 {% endblock %}
 
 {% block content %}
-<div class= "profil-etudiant">
-<p>Nom : {{ etudiant.nom }}</p>
-<p>Prénom : {{ etudiant.prenom }}</p>
-<p>Campus : {{ etudiant.campus }}</p>
-<p>Description : {{ etudiant.description }}</p>
+<div class="container my-4">
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="fw-bold mb-4">Profil étudiant</h2>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <p class="text-secondary mb-1"><strong>Nom</strong></p>
+                    <p class="mb-0">{{ etudiant.nom }}</p>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <p class="text-secondary mb-1"><strong>Prénom</strong></p>
+                    <p class="mb-0">{{ etudiant.prenom }}</p>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <p class="text-secondary mb-1"><strong>Campus</strong></p>
+                    <p class="mb-0">{{ etudiant.campus }}</p>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <p class="text-secondary mb-1"><strong>Description</strong></p>
+                    <p class="mb-0">{{ etudiant.description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="fw-bold mb-3">Candidatures</h4>
+
+            {% for candidature in etudiant.candidatures %}
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-body">
+                        <p class="mb-2"><strong>Offre :</strong> {{ candidature.offre }}</p>
+                        <p class="mb-2"><strong>Entreprise :</strong> {{ candidature.entreprise }}</p>
+                        <p class="mb-0"><strong>Date :</strong> {{ candidature.date }}</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-secondary mb-0">
+                    Aucune candidature
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
 </div>
-
-<h2>Candidatures</h2>
-{% for candidature in etudiant.candidatures %}
-<div class= "candidature">
-<p>Offre : {{ candidature.offre }}</p>
-<p>Entreprise : {{ candidature.entreprise }}</p>
-<p>Date : {{ candidature.date }}</p>
-</div>
-
-{% else %}
-    <p>Aucune candidature</p>
-
-{% endfor %}
 {% endblock %}
