@@ -33,17 +33,19 @@
 
     <div class="d-flex flex-column gap-3 mt-3">
 
+    {%for offre in offres %}
+
         <div class="card border border-primary rounded-4">
             <div class="card-body p-2">
                 <div class="row align-items-center g-2">
                     <div class="col-4">
-                        <strong>Développeur Full Stack</strong><br>
-                        <small class="text-secondary">InnoTech</small>
+                        <strong>{{offre.nom}}</strong><br>
+                        <small class="text-secondary">{{offre.ent}}</small>
                     </div>
                     <div class="col-4">
-                        <span class="badge bg-light text-dark border me-1">6 mois</span>
-                        <span class="badge bg-light text-dark border me-1">Bac+4</span>
-                        <span class="badge bg-light text-dark border">Paris</span>
+                        <span class="badge bg-light text-dark border me-1">{{offre.duree}}</span>
+                        <span class="badge bg-light text-dark border me-1">{{offres.niveau}}</span>
+                        <span class="badge bg-light text-dark border">{{offre.ville}}</span>
                     </div>
                     <div class="col-4 text-end">
                         <a href="/offres/modifier" class="btn btn-primary btn-sm rounded-4 px-3">Modifier</a>
@@ -51,6 +53,12 @@
                 </div>
             </div>
         </div>
+
+    {% else %}
+
+        <tr>
+            <td colspan="5" class="text-center py-4">Aucune offres trouvée.</td>
+        </tr>    
 
         <div class="card border border-primary rounded-4">
             <div class="card-body p-2">

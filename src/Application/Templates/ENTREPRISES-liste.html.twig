@@ -63,19 +63,19 @@
     <ul class="pagination justify-content-center">
         {% if page > 1 %}
             <li class="page-item">
-                <a class="page-link" href="{{ url_for('entreprises', { 'page': page - 1 }) }}">Précédent</a>
+                <a class="page-link" href="{{ url_for('entreprises') }}?page={{ page - 1 }}{% if search %}&search={{ search|url_encode }}{% endif %}">Précédent</a>
             </li>
         {% endif %}
 
         {% for p in 1..totalPages %}
             <li class="page-item {% if p == page %}active{% endif %}">
-                <a class="page-link" href="{{ url_for('entreprises', { 'page': p }) }}">{{ p }}</a>
+                <a class="page-link" href="{{ url_for('entreprises') }}?page={{ p }}{% if search %}&search={{ search|url_encode }}{% endif %}">{{ p }}</a>
             </li>
         {% endfor %}
 
         {% if page < totalPages %}
             <li class="page-item">
-                <a class="page-link" href="{{ url_for('entreprises', { 'page': page + 1 }) }}">Suivant</a>
+                <a class="page-link" href="{{ url_for('entreprises') }}?page={{ page + 1 }}{% if search %}&search={{ search|url_encode }}{% endif %}">Suivant</a>
             </li>
         {% endif %}
     </ul>

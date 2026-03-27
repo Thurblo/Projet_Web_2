@@ -22,39 +22,63 @@ class EntreprisesController
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-        
         $repository = $this->em->getRepository(Entreprise::class);
-        
+
+        $queryParams = $request->getQueryParams();
+        $search = trim($queryParams['search'] ?? '');
+        $page = max(1, (int)($queryParams['page'] ?? 1));
+
         $perPage = 5;
-        $page = isset($args['page']) ? (int)$args['page'] : 1;
         $offset = ($page - 1) * $perPage;
-        
-        $totalEntreprises = $repository->createQueryBuilder('e')
-            ->select('COUNT(e.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
-        
-        $entreprises = $repository->createQueryBuilder('e')
+
+        $countQb = $repository->createQueryBuilder('e')
+            ->select('COUNT(e.id)');
+
+        $listQb = $repository->createQueryBuilder('e')
             ->orderBy('e.id', 'DESC')
             ->setFirstResult($offset)
-            ->setMaxResults($perPage)
+            ->setMaxResults($perPage);
+
+        if ($search !== '') {
+            $countQb
+                ->where('LOWER(e.nom) LIKE :search')
+                ->setParameter('search', '%' . mb_strtolower($search) . '%');
+
+            $listQb
+                ->where('LOWER(e.nom) LIKE :search')
+                ->setParameter('search', '%' . mb_strtolower($search) . '%');
+        }
+
+        $totalEntreprises = (int) $countQb
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $totalPages = max(1, (int) ceil($totalEntreprises / $perPage));
+
+        if ($page > $totalPages) {
+            $page = $totalPages;
+            $offset = ($page - 1) * $perPage;
+
+            $listQb->setFirstResult($offset);
+        }
+
+        $entreprises = $listQb
             ->getQuery()
             ->getResult();
-        
-        $totalPages = (int)ceil($totalEntreprises / $perPage);
-        
+
         return $view->render($response, 'ENTREPRISES-Liste.html.twig', [
             'entreprises' => $entreprises,
             'page' => $page,
             'totalPages' => $totalPages,
             'totalEntreprises' => $totalEntreprises,
+            'search' => $search,
         ]);
     }
 
     public function create(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-        
+
         $success = false;
         $nom = '';
         $phone = '';
@@ -125,16 +149,16 @@ class EntreprisesController
     public function modify(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-        
-        $id = (int)$args['id'];
+
+        $id = (int)($args['id'] ?? 0);
         $entreprise = $this->em->find(Entreprise::class, $id);
-        
+
         if (!$entreprise) {
             return $response->withStatus(404);
         }
-        
+
         $success = false;
-        
+
         if ($request->getMethod() === 'POST') {
             $parsedBody = $request->getParsedBody();
             $nom = trim($parsedBody['nom'] ?? '');
@@ -149,7 +173,7 @@ class EntreprisesController
             $evaluation = trim($parsedBody['evaluation'] ?? '');
             $email = trim($parsedBody['email'] ?? '');
             $statut = trim($parsedBody['statut'] ?? '');
-            
+
             if ($nom !== '' && $telephone !== '') {
                 $entreprise->setNom($nom);
                 $entreprise->setTelephone($telephone);
@@ -167,26 +191,26 @@ class EntreprisesController
                 $success = true;
             }
         }
-        
+
         return $view->render($response, 'ENTREPRISES-Modifier.html.twig', [
             'entreprise' => $entreprise,
             'success' => $success,
         ]);
     }
-    
+
     public function delete(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $id = (int)$args['id'];
         $entreprise = $this->em->find(Entreprise::class, $id);
-        
+
         if ($entreprise) {
             $this->em->remove($entreprise);
             $this->em->flush();
         }
-        
+
         $routeParser = RouteContext::fromRequest($request)->getRouteParser();
         $url = $routeParser->urlFor('entreprises');
-        
+
         return $response->withHeader('Location', $url)->withStatus(302);
     }
 }
