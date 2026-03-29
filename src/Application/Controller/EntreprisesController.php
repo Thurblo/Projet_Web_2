@@ -75,7 +75,7 @@ class EntreprisesController
         ]);
     }
 
-    public function create(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function ajoute(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
 
@@ -146,7 +146,7 @@ class EntreprisesController
         ]);
     }
 
-    public function modify(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function modifier(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
 
@@ -198,7 +198,7 @@ class EntreprisesController
         ]);
     }
 
-    public function delete(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $id = (int)$args['id'];
         $entreprise = $this->em->find(Entreprise::class, $id);
@@ -212,5 +212,20 @@ class EntreprisesController
         $url = $routeParser->urlFor('entreprises');
 
         return $response->withHeader('Location', $url)->withStatus(302);
+    }
+
+    public function description(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+    
+        $id = (int)$args['id'];
+        $entreprise = $this->em->find(Entreprise::class, $id);
+    
+        if (!$entreprise)
+        {
+            return $response->withStatus(404);
+        }
+    
+        return $view->render($response, 'ENTREPRISES-description.html.twig', ['entreprise' => $entreprise,]);
     }
 }

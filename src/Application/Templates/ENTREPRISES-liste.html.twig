@@ -27,23 +27,23 @@
     </small>
 
     <div class="d-flex flex-column gap-3 mt-3">
-        {% for entreprise in entreprises %}
+        {% for ent in entreprises %}
         <div class="card border border-primary rounded-4">
             <div class="card-body p-2">
                 <div class="row align-items-center g-2">
                     <div class="col-4">
-                        <strong>{{ entreprise.nom }}</strong><br>
-                        <small class="text-secondary">{{ entreprise.ville }} • {{ entreprise.salaries }} salariés</small>
+                        <a href="{{ url_for('entreprises.description', { 'id': ent.id }) }}" class="text-decoration-none"><strong class="text-black">{{ ent.nom }}</strong></a><br>
+                        <small class="text-secondary">{{ ent.ville }}, {{ ent.salaries }} salariés</small>
                     </div>
                     <div class="col-4">
-                        <span class="badge bg-light text-dark border me-1">{{ entreprise.type }}</span>
-                        <span class="badge {% if entreprise.statut == 'Actif' %}bg-success{% else %}bg-danger{% endif %} text-white">{{ entreprise.statut }}</span>
+                        <span class="badge bg-light text-dark border me-1">{{ ent.type }}</span>
+                        <span class="badge {% if ent.statut == 'Actif' %}bg-success{% else %}bg-danger{% endif %} text-white">{{ ent.statut }}</span>
                     </div>
                     <div class="col-4 text-end">
                         <!-- LIEN MODIFIER CORRIGÉ -->
-                        <a href="{{ url_for('entreprises.modifier', { 'id': entreprise.id }) }}" class="btn btn-primary btn-sm rounded-4 px-3">Modifier</a>
+                        <a href="{{ url_for('entreprises.modifier', { 'id': ent.id }) }}" class="btn btn-primary btn-sm rounded-4 px-3">Modifier</a>
                         <!-- FORMULAIRE SUPPRESSION -->
-                        <form action="{{ url_for('entreprises.supprimer', { 'id': entreprise.id }) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cette entreprise ?')">
+                        <form action="{{ url_for('entreprises.supprimer', { 'id': ent.id }) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cette entreprise ?')">
                             <button type="submit" class="btn btn-danger btn-sm rounded-4 px-3">Supprimer</button>
                         </form>
                     </div>
