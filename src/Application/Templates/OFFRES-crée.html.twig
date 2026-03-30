@@ -1,73 +1,82 @@
 {% extends "base.html.twig" %}
-
-{% block title %}Créer une offre{% endblock %}
-{% block head %}
-    {{ parent() }}
-{% endblock %}
+{% block title %}Ajouter une offre{% endblock %}
 {% block content %}
-    <div class="container-fluid mt-5 mb-5 d-flex justify-content-center w-75">
-        <div class="border border-primary border-5 rounded-5 ms-5 me-5 py-5 px-4 shadow-lg">
-            <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-block text-center">Ajouter une offre</h1>
+<div class="container-fluid mt-5 mb-5 d-flex justify-content-center w-75">
+    <div class="border border-primary border-5 rounded-5 ms-5 me-5 py-5 px-4 shadow-lg">
+        <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-block text-center">Ajouter une offre</h1>
+
+        {% if errors %}
+            <div class="alert alert-danger mx-4">
+                {% for e in errors %}<div>{{ e }}</div>{% endfor %}
+            </div>
+        {% endif %}
+        {% if success %}
+            <div class="alert alert-success mx-4">Offre ajoutée avec succès !</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('offres.creer') }}">
             <div class="row mx-4 my-5">
                 <div class="col-md-6">
-                    <label class="form-label" for="entreprise">Nom de l'entreprise</label>
-                    <select class="form-control border border-secondary border-3 rounded-3" id="entreprise" name="entreprise">
+                    <label class="form-label" for="entreprise_id">Entreprise</label>
+                    <select class="form-control border border-secondary border-3 rounded-3" id="entreprise_id" name="entreprise_id" required>
                         <option value="">Sélectionnez une entreprise</option>
-                        <option value="1">InnoTech</option>
-                        <option value="2">WebCorp</option>
-                        <option value="3">DevSolutions</option>
-                        <option value="4">CloudSys</option>
+                        {% for ent in entreprises %}
+                            <option value="{{ ent.id }}">{{ ent.nom }}</option>
+                        {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-6 ">
-                    <label class="form-label" for="phone">Numéro de téléphone</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="number" id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
+                <div class="col-md-6">
+                    <label class="form-label" for="titre">Titre de l'offre</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="titre" name="titre" placeholder="Ex: Développeur PHP">
                 </div>
-                <div class="col-md-6 mt-4 ">
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="telephone">Numéro de téléphone</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="telephone" name="telephone" placeholder="Entrez le numéro de téléphone">
+                </div>
+                <div class="col-md-6 mt-4">
                     <label class="form-label" for="date">Date de début</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="date" id="date" name="Date" placeholder="Entrez la date de début">
+                    <input class="form-control border border-secondary border-3 rounded-3" type="date" id="date" name="date">
                 </div>
-                <div class="col-md-6 mt-4 ">
-                    <label class="form-label" for="Durée">Durée</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="number" id="Durée" name="Durée" placeholder="Entrez la durée en mois">
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="duree">Durée (mois)</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="number" id="duree" name="duree" placeholder="Ex: 6">
                 </div>
-
-                <div class="col-md-6 mt-4 ">
-                    <label class="form-label" for="date">Ville</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="ville" name="Ville" placeholder="Entrez la ville">
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="ville">Ville</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="ville" name="ville" placeholder="Entrez la ville">
                 </div>
-                <div class="col-md-6 mt-4 ">
-                    <label class="form-label" for="rémunération">Rémunération</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="number" id="rémunération" name="Rémunération" placeholder="Entrez la rémunération mensuelle">
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="remuneration">Rémunération (€/mois)</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="number" id="remuneration" name="remuneration" placeholder="Ex: 1200">
                 </div>
-                
-                <div class="col-md-12 mt-4 ">
-                    <label class="form-label" for="description">Description de l'offre</label>
-                    <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description" placeholder="Entrez la description de l'offre" cols="30" rows="5"></textarea>
-                </div>
-                <div class="col-md-12 mt-4 ">
-                    <label class="form-label" for="niveau">Missions</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="niveau" name="niveau" placeholder="Entrez les missions">
-                </div>
-                <div class="col-md-12 mt-4 ">
+                <div class="col-md-6 mt-4">
                     <label class="form-label" for="niveau">Niveau requis</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="niveau" name="niveau" placeholder="Entrez le niveau requis">
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="niveau" name="niveau" placeholder="Ex: Bac+3">
                 </div>
-                <div class="col-md-12 mt-4 ">
+                <div class="col-md-12 mt-4">
+                    <label class="form-label" for="description">Description de l'offre</label>
+                    <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description" rows="5" placeholder="Entrez la description"></textarea>
+                </div>
+                <div class="col-md-12 mt-4">
+                    <label class="form-label" for="missions">Missions</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="missions" name="missions" placeholder="Entrez les missions">
+                </div>
+                <div class="col-md-12 mt-4">
                     <label class="form-label" for="competences">Compétences nécessaires</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="competences" name="competences" placeholder="Entrez les compétences nécessaires">
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="competences" name="competences" placeholder="Entrez les compétences">
                 </div>
-                <div class="col-md-12 mt-4 ">
+                <div class="col-md-12 mt-4">
                     <label class="form-label" for="email">Email</label>
                     <input class="form-control border border-secondary border-3 rounded-3" type="email" id="email" name="email" placeholder="Entrez l'email">
                 </div>
-                <div class="col-md-12 mt-5 ">
+                <div class="col-md-12 mt-5">
                     <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
-                        <button class="btn btn-primary btn-lg rounded-5 px-4 flex-fill" type="submit">Ajouter l'offre</button>
-                        <button class="btn btn-secondary btn-lg rounded-5 px-4 flex-fill" type="reset">Annuler</button>
+                        <button class="btn btn-primary btn-lg rounded-5 px-4 flex-fill w-50" type="submit">Ajouter l'offre</button>
+                        <a href="{{ url_for('offres') }}" class="btn btn-secondary btn-lg rounded-5 px-4 flex-fill text-center text-decoration-none w-50">Annuler</a>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
+</div>
 {% endblock %}
