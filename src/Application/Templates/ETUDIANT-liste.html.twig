@@ -11,12 +11,21 @@
             <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">
                 {{ resultats|length }} étudiants
             </span>
+            <a href="{{ url_for('etudiants.creer') }}" class="btn btn-primary rounded-5 px-3 py-1 fw-bold">
+                <i class="bi bi-person-plus"></i> Ajouter
+            </a>
         </div>
     </div>
 
     <form method="get" action="{{ url_for('etudiants') }}" class="row g-3">
         <div class="col-md-10">
-            <input type="text" class="form-control" placeholder="Tape le nom d'un étudiant" name="search" value="{{ nom }}">
+            <input
+                type="text"
+                class="form-control"
+                placeholder="Tape le nom d'un étudiant"
+                name="search"
+                value="{{ nom }}"
+            >
         </div>
         <div class="col-md-2">
             <button type="submit" class="btn btn-primary w-100">Rechercher</button>
