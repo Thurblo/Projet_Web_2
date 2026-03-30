@@ -29,7 +29,7 @@
             <div class="card-body p-2">
                 <div class="row align-items-center g-2">
                     <div class="col-4">
-                        <strong>{{ offre.titre }}</strong><br>
+                        <a href="{{ url_for('offres.description', { 'id': offre.id }) }}" class="text-decoration-none"><strong class="text-black">{{ offre.titre }}</strong></a><br>
                         <small class="text-secondary">{{ offre.entreprise.nom }}</small>
                     </div>
                     <div class="col-4">

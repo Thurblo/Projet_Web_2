@@ -85,5 +85,8 @@ $app->post('/offres/modifier/{id:\d+}', [OffresController::class, 'modify']);
 $app->post('/offres/supprimer/{id:\d+}', [OffresController::class, 'supprimer'])
     ->setName('offres.supprimer');
 
+$app->get('/offres/description/{id:\d+}', [OffresController::class, 'description'])
+    ->setName('offres.description');
+
 
 };
