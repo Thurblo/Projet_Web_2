@@ -48,18 +48,21 @@ return function (App $app) {
     $app->get('/entreprises[/{page:\d+}]', [EntreprisesController::class, 'index'])
     ->setName('entreprises');
     
-    $app->get('/entreprises/creer', [EntreprisesController::class, 'create'])
+    $app->get('/entreprises/creer', [EntreprisesController::class, 'ajoute'])
     ->setName('entreprises.creer');
     
-    $app->post('/entreprises/creer', [EntreprisesController::class, 'create']);
+    $app->post('/entreprises/creer', [EntreprisesController::class, 'ajoute']);
     
-    $app->get('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modify'])
+    $app->get('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modifier'])
     ->setName('entreprises.modifier');
     
-    $app->post('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modify']);
+    $app->post('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modifier']);
     
-    $app->post('/entreprises/supprimer/{id:\d+}', [EntreprisesController::class, 'delete'])
+    $app->post('/entreprises/supprimer/{id:\d+}', [EntreprisesController::class, 'supprimer'])
     ->setName('entreprises.supprimer');
+
+    $app->get('/entreprises/description/{id:\d+}', [EntreprisesController::class, 'description'])
+    ->setName('entreprises.description');
 
    $app->get('/compte', [CompteController::class, 'index'])
         ->setName('compte');

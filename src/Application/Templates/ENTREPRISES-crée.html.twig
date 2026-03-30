@@ -25,7 +25,6 @@
                         <label class="form-label" for="type">Type d'entreprise</label>
                         <input class="form-control border border-secondary border-3 rounded-3" type="text" id="type" name="type" placeholder="Entrez le type d'entreprise">
                     </div>
-
                     <div class="col-md-6 mt-4 ">
                         <label class="form-label" for="ville">Ville</label>
                         <input class="form-control border border-secondary border-3 rounded-3" type="text" id="ville" name="ville" placeholder="Entrez la ville">
@@ -40,16 +39,16 @@
                         <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description" placeholder="Entrez la description de l'entreprise" cols="30" rows="5"></textarea>
                     </div>
                     <div class="col-md-12 mt-4 ">
-                        <label class="form-label" for="missions">Missions</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="missions" name="missions" placeholder="Entrez les missions">
-                    </div>
-                    <div class="col-md-12 mt-4 ">
-                        <label class="form-label" for="domaines">Domaines d'expertise</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="domaines" name="domaines" placeholder="Entrez les domaines d'expertise">
-                    </div>
-                    <div class="col-md-12 mt-4 ">
                         <label class="form-label" for="evaluation">Evaluation de l'entreprise</label>
                         <input class="form-control border border-secondary border-3 rounded-3" type="text" id="evaluation" name="evaluation" placeholder="Entrez l'évaluation de l'entreprise">
+                    </div>
+                    <div class="col-md-12 mt-4 ">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="email" id="email" name="email" placeholder="Entrez l'email">
+                    </div>
+                    <div class="col-md-6 mt-4 ">
+                        <label class="form-label" for="domaines">Domaines d'expertise</label>
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="domaines" name="domaines" placeholder="Entrez les domaines d'expertise">
                     </div>
                     <div class="col-md-6 mt-4">
                         <label class="form-label" for="statut">Statut de l'entreprise</label>
@@ -57,10 +56,6 @@
                             <option value="Actif" {% if statut == 'Actif' %}selected{% endif %}>Actif</option>
                             <option value="Inactif" {% if statut == 'Inactif' %}selected{% endif %}>Inactif</option>
                         </select>
-                    </div>
-                    <div class="col-md-12 mt-4 ">
-                        <label class="form-label" for="email">Email</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="email" id="email" name="email" placeholder="Entrez l'email">
                     </div>
                     <div class="col-md-12 mt-5 ">
                         <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
