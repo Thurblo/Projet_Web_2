@@ -67,5 +67,13 @@ return function (App $app) {
     $app->post('/compte', [CompteController::class, 'create'])
         ->setName('compte.creer');
 
+  $app->get('/etudiants[/{page:\d+}]', [EtudiantController::class, 'index'])
+    ->setName('etudiants');
+
+$app->get('/etudiant/modifier/{id:\d+}', [EtudiantController::class, 'modify'])
+    ->setName('etudiants.modifier');
+
+$app->post('/etudiant/modifier/{id:\d+}', [EtudiantController::class, 'modify']);
+
 
 };

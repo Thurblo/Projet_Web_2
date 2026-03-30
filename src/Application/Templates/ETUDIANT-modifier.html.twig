@@ -1,0 +1,62 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Modifier un étudiant{% endblock %}
+
+{% block head %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 mb-5 d-flex justify-content-center w-75">
+    <div class="border border-primary border-5 rounded-5 ms-5 me-5 py-5 px-4 shadow-lg">
+
+        <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-inline-block">
+            Modifier un étudiant
+        </h1>
+
+        <form method="POST" action="{{ url_for('etudiants.modifier', { 'id': id }) }}">
+            <div class="row mx-4 my-5">
+
+                <div class="col-md-6">
+                    <label class="form-label" for="nom">Nom</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="nom" name="nom">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label" for="prenom">Prénom</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="prenom" name="prenom">
+                </div>
+
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="campus">Campus</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="campus" name="campus">
+                </div>
+
+                <div class="col-md-12 mt-4">
+                    <label class="form-label" for="description">Description</label>
+                    <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description" cols="30" rows="5"></textarea>
+                </div>
+
+                <div class="col-md-12 mt-5">
+                    <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
+                        <button class="btn btn-primary w-50 btn-lg rounded-5 px-4 flex-fill" type="submit">
+                            Modifier l'étudiant
+                        </button>
+
+                        <a href="{{ url_for('home') }}" class="btn btn-secondary w-50 btn-lg rounded-5 px-4 flex-fill text-center text-decoration-none">
+                            Annuler
+                        </a>
+                        <a href="{{ url_for('etudiants.modifier', {'id': etudiant.id}) }}" 
+   class="btn btn-primary btn-sm rounded-4 px-3">
+    Modifier
+</a>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endblock %}
+   
