@@ -69,7 +69,7 @@
         <div class="card-body p-4">
             <h4><strong>Évaluation</strong></h4>
             <div class="d-flex align-items-center mt-3">
-                <div class="display-6 fw-bold me-3">{{ entreprise.evaluation }}/5</div>
+                <strong class="me-3">{{ entreprise.evaluation }}/5</strong>
                 <div class="text-warning">
                     {% set rating = entreprise.evaluation|number_format %}
                     {% for i in 1..5 %}
