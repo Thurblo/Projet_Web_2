@@ -7,6 +7,16 @@
     <div class="container-fluid mt-5 mb-5 d-flex justify-content-center w-75">
         <div class="border border-primary border-5 rounded-5 ms-5 me-5 py-5 px-4 shadow-lg">
             <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-inline-block ">Ajouter une Entreprise</h1>
+
+            {% if errors %}
+            <div class="alert alert-danger mx-4">
+                {% for e in errors %}<div>{{ e }}</div>{% endfor %}
+            </div>
+            {% endif %}
+            {% if success %}
+                <div class="alert alert-success mx-4">Entreprise ajoutée avec succès !</div>
+            {% endif %}
+            
             <form method="POST" action="{{ url_for('entreprises.creer') }}">
                 <div class="row mx-4 my-5">
                     <div class="col-md-6 ">

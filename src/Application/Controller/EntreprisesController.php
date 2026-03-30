@@ -22,56 +22,47 @@ class EntreprisesController
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
+        
         $repository = $this->em->getRepository(Entreprise::class);
-
+        
+        // Récupérer le terme de recherche depuis la requête
         $queryParams = $request->getQueryParams();
-        $search = trim($queryParams['search'] ?? '');
-        $page = max(1, (int)($queryParams['page'] ?? 1));
-
+        $searchTerm = isset($queryParams['search']) ? trim($queryParams['search']) : '';
+        
         $perPage = 5;
+        $page = isset($args['page']) ? (int)$args['page'] : 1;
         $offset = ($page - 1) * $perPage;
-
-        $countQb = $repository->createQueryBuilder('e')
-            ->select('COUNT(e.id)');
-
-        $listQb = $repository->createQueryBuilder('e')
-            ->orderBy('e.id', 'DESC')
-            ->setFirstResult($offset)
-            ->setMaxResults($perPage);
-
-        if ($search !== '') {
-            $countQb
-                ->where('LOWER(e.nom) LIKE :search')
-                ->setParameter('search', '%' . mb_strtolower($search) . '%');
-
-            $listQb
-                ->where('LOWER(e.nom) LIKE :search')
-                ->setParameter('search', '%' . mb_strtolower($search) . '%');
+        
+        // Construction de la requête avec recherche
+        $qb = $repository->createQueryBuilder('e');
+        
+        // Ajouter la condition de recherche si un terme est fourni
+        if ($searchTerm !== '') {
+            $qb->where('e.nom LIKE :search')
+               ->setParameter('search', '%' . $searchTerm . '%');
         }
-
-        $totalEntreprises = (int) $countQb
+        
+        // Compter le nombre total d'entreprises (avec ou sans recherche)
+        $countQb = clone $qb;
+        $totalEntreprises = $countQb->select('COUNT(e.id)')
             ->getQuery()
             ->getSingleScalarResult();
-
-        $totalPages = max(1, (int) ceil($totalEntreprises / $perPage));
-
-        if ($page > $totalPages) {
-            $page = $totalPages;
-            $offset = ($page - 1) * $perPage;
-
-            $listQb->setFirstResult($offset);
-        }
-
-        $entreprises = $listQb
+        
+        // Récupérer les entreprises pour la page courante
+        $entreprises = $qb->orderBy('e.id', 'DESC')
+            ->setFirstResult($offset)
+            ->setMaxResults($perPage)
             ->getQuery()
             ->getResult();
-
+        
+        $totalPages = (int)ceil($totalEntreprises / $perPage);
+        
         return $view->render($response, 'ENTREPRISES-Liste.html.twig', [
             'entreprises' => $entreprises,
             'page' => $page,
             'totalPages' => $totalPages,
             'totalEntreprises' => $totalEntreprises,
-            'search' => $search,
+            'searchTerm' => $searchTerm, // Passer le terme de recherche à la vue
         ]);
     }
 

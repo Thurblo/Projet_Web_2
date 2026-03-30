@@ -27,15 +27,6 @@ return function (App $app) {
     $app->get('/wishlist', [WishlistController::class, 'index'])
     ->setName('wishlist');
 
-    $app->get('/offres', [OffresController::class, 'index'])
-    ->setName('offres');
-
-    $app->get('/offres/creer', [OffresController::class, 'create'])
-    ->setName('offres.creer');
-
-    $app->get('/offres/modifier', [OffresController::class, 'modify'])
-    ->setName('offres.modifier');
-
     $app->get('/profile', [ProfileController::class, 'index'])
     ->setName('profile');
 
@@ -65,10 +56,10 @@ return function (App $app) {
     ->setName('entreprises.description');
 
    $app->get('/compte', [CompteController::class, 'index'])
-        ->setName('compte');
+    ->setName('compte');
 
     $app->post('/compte', [CompteController::class, 'create'])
-        ->setName('compte.creer');
+    ->setName('compte.creer');
 
         $app->get('/etudiant/compte', [EtudiantController::class, 'create'])
     ->setName('etudiants.compte');
@@ -76,10 +67,26 @@ return function (App $app) {
   $app->get('/etudiants[/{page:\d+}]', [EtudiantController::class, 'index'])
     ->setName('etudiants');
 
-$app->get('/etudiant/modifier/{id:\d+}', [EtudiantController::class, 'modify'])
+    $app->get('/etudiant/modifier/{id:\d+}', [EtudiantController::class, 'modify'])
     ->setName('etudiants.modifier');
 
-$app->post('/etudiant/modifier/{id:\d+}', [EtudiantController::class, 'modify']);
+    $app->post('/etudiant/modifier/{id:\d+}', [EtudiantController::class, 'modify']);
+
+$app->get('/offres', [OffresController::class, 'index'])
+    ->setName('offres');
+
+$app->get('/offres/creer', [OffresController::class, 'create'])
+    ->setName('offres.creer');
+
+$app->post('/offres/creer', [OffresController::class, 'create']);
+
+$app->get('/offres/modifier/{id:\d+}', [OffresController::class, 'modify'])
+    ->setName('offres.modifier');
+
+$app->post('/offres/modifier/{id:\d+}', [OffresController::class, 'modify']);
+
+$app->post('/offres/supprimer/{id:\d+}', [OffresController::class, 'supprimer'])
+    ->setName('offres.supprimer');
 
 
 };

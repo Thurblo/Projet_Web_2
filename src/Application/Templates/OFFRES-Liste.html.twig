@@ -1,160 +1,77 @@
 {% extends "base.html.twig" %}
-
 {% block title %}Offres{% endblock %}
-
-{% block head %}
-    {{ parent() }}
-{% endblock %}
-
 {% block content %}
 <div class="container-fluid p-3">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-primary m-0">Offres</h2>
         <div class="d-flex gap-2">
-            <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">6 Offres</span>
-            <a href="/offres/creer" class="btn btn-primary rounded-5 px-3 py-1 fw-bold"><i class="bi bi-building-add"></i> Ajouter</a>
+            <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">{{ totalOffres }} Offres</span>
+            <a href="{{ url_for('offres.creer') }}" class="btn btn-primary rounded-5 px-3 py-1 fw-bold">
+                <i class="bi bi-building-add"></i> Ajouter
+            </a>
         </div>
     </div>
 
-    <form method="get" action="/offres" class="row g-3">
+    <form method="get" action="{{ url_for('offres') }}" class="row g-3">
         <div class="col-md-10">
-            <input type="text" class="form-control" placeholder="Tape le nom d'une offre" name="search">
+            <input type="text" class="form-control" placeholder="Tape le nom d'une offre" name="search" value="{{ search }}">
         </div>
-
         <div class="col-md-2">
             <button type="submit" class="btn btn-primary w-100">Rechercher</button>
         </div>
     </form>
-
-    <small class="text-secondary">
-        Recherchez une entreprise puis consultez les résultats.
-    </small>
+    <small class="text-secondary">Recherchez une offre puis consultez les résultats.</small>
 
     <div class="d-flex flex-column gap-3 mt-3">
-
-    {%for offre in offres %}
-
+        {% for offre in offres %}
         <div class="card border border-primary rounded-4">
             <div class="card-body p-2">
                 <div class="row align-items-center g-2">
                     <div class="col-4">
-                        <strong>{{offre.nom}}</strong><br>
-                        <small class="text-secondary">{{offre.ent}}</small>
+                        <strong>{{ offre.titre }}</strong><br>
+                        <small class="text-secondary">{{ offre.entreprise.nom }}</small>
                     </div>
                     <div class="col-4">
-                        <span class="badge bg-light text-dark border me-1">{{offre.duree}}</span>
-                        <span class="badge bg-light text-dark border me-1">{{offres.niveau}}</span>
-                        <span class="badge bg-light text-dark border">{{offre.ville}}</span>
+                        <span class="badge bg-light text-dark border me-1">{{ offre.duree }} mois</span>
+                        <span class="badge bg-light text-dark border me-1">{{ offre.niveau }}</span>
+                        <span class="badge bg-light text-dark border">{{ offre.ville }}</span>
                     </div>
                     <div class="col-4 text-end">
-                        <a href="/offres/modifier" class="btn btn-primary btn-sm rounded-4 px-3">Modifier</a>
+                        <a href="{{ url_for('offres.modifier', { 'id': offre.id }) }}" class="btn btn-primary btn-sm rounded-4 px-3">Modifier</a>
+                        <form action="{{ url_for('offres.supprimer', { 'id': offre.id }) }}" method="POST" class="d-inline"
+                              onsubmit="return confirm('Supprimer cette offre ?')">
+                            <button type="submit" class="btn btn-danger btn-sm rounded-4 px-3">Supprimer</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-
-    {% else %}
-
-        <tr>
-            <td colspan="5" class="text-center py-4">Aucune offres trouvée.</td>
-        </tr>    
-
-        <div class="card border border-primary rounded-4">
-            <div class="card-body p-2">
-                <div class="row align-items-center g-2">
-                    <div class="col-4">
-                        <strong>Magicien JavaScript</strong><br>
-                        <small class="text-secondary">La Compagnie du Code</small>
-                    </div>
-                    <div class="col-4">
-                        <span class="badge bg-light text-dark border me-1">CDI</span>
-                        <span class="badge bg-light text-dark border me-1">Sénior</span>
-                        <span class="badge bg-light text-dark border">Télétravail</span>
-                    </div>
-                    <div class="col-4 text-end">
-                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card border border-primary rounded-4">
-            <div class="card-body p-2">
-                <div class="row align-items-center g-2">
-                    <div class="col-4">
-                        <strong>Chef de Projet Digital</strong><br>
-                        <small class="text-secondary">Agence Créative</small>
-                    </div>
-                    <div class="col-4">
-                        <span class="badge bg-light text-dark border me-1">Stage</span>
-                        <span class="badge bg-light text-dark border me-1">Bac+5</span>
-                        <span class="badge bg-light text-dark border">Lyon</span>
-                    </div>
-                    <div class="col-4 text-end">
-                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card border border-primary rounded-4">
-            <div class="card-body p-2">
-                <div class="row align-items-center g-2">
-                    <div class="col-4">
-                        <strong>UI/UX Designer</strong><br>
-                        <small class="text-secondary">Design Studio</small>
-                    </div>
-                    <div class="col-4">
-                        <span class="badge bg-light text-dark border me-1">Alternance</span>
-                        <span class="badge bg-light text-dark border me-1">12 mois</span>
-                        <span class="badge bg-light text-dark border">Bordeaux</span>
-                    </div>
-                    <div class="col-4 text-end">
-                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card border border-primary rounded-4">
-            <div class="card-body p-2">
-                <div class="row align-items-center g-2">
-                    <div class="col-4">
-                        <strong>Data Scientist</strong><br>
-                        <small class="text-secondary">DataCorp</small>
-                    </div>
-                    <div class="col-4">
-                        <span class="badge bg-light text-dark border me-1">CDI</span>
-                        <span class="badge bg-light text-dark border me-1">Bac+8</span>
-                        <span class="badge bg-light text-dark border">Toulouse</span>
-                    </div>
-                    <div class="col-4 text-end">
-                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card border border-primary rounded-4">
-            <div class="card-body p-2">
-                <div class="row align-items-center g-2">
-                    <div class="col-4">
-                        <strong>Community Manager</strong><br>
-                        <small class="text-secondary">SocialMedia Agency</small>
-                    </div>
-                    <div class="col-4">
-                        <span class="badge bg-light text-dark border me-1">Freelance</span>
-                        <span class="badge bg-light text-dark border me-1">Confirmé</span>
-                        <span class="badge bg-light text-dark border">Remote</span>
-                    </div>
-                    <div class="col-4 text-end">
-                        <button class="btn btn-primary btn-sm rounded-4 px-3">Modifier</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        {% else %}
+        <div class="alert alert-info text-center">Aucune offre trouvée.</div>
+        {% endfor %}
     </div>
 </div>
+
+{% if totalPages > 1 %}
+<nav class="mt-3">
+    <ul class="pagination justify-content-center">
+        {% if page > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('offres') }}?page={{ page - 1 }}{% if search %}&search={{ search|url_encode }}{% endif %}">Précédent</a>
+            </li>
+        {% endif %}
+        {% for p in 1..totalPages %}
+            <li class="page-item {% if p == page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('offres') }}?page={{ p }}{% if search %}&search={{ search|url_encode }}{% endif %}">{{ p }}</a>
+            </li>
+        {% endfor %}
+        {% if page < totalPages %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('offres') }}?page={{ page + 1 }}{% if search %}&search={{ search|url_encode }}{% endif %}">Suivant</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 {% endblock %}
