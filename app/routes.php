@@ -72,18 +72,18 @@ return function (App $app) {
 
     $app->post('/etudiant/modifier/{id:\d+}', [EtudiantController::class, 'modify']);
 
-$app->get('/offres', [OffresController::class, 'index'])
+$app->get('/offres[/{page:\d+}]', [OffresController::class, 'index'])
     ->setName('offres');
 
-$app->get('/offres/creer', [OffresController::class, 'create'])
+$app->get('/offres/creer', [OffresController::class, 'ajoute'])
     ->setName('offres.creer');
 
-$app->post('/offres/creer', [OffresController::class, 'create']);
+$app->post('/offres/creer', [OffresController::class, 'ajoute']);
 
-$app->get('/offres/modifier/{id:\d+}', [OffresController::class, 'modify'])
+$app->get('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier'])
     ->setName('offres.modifier');
 
-$app->post('/offres/modifier/{id:\d+}', [OffresController::class, 'modify']);
+$app->post('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier']);
 
 $app->post('/offres/supprimer/{id:\d+}', [OffresController::class, 'supprimer'])
     ->setName('offres.supprimer');
