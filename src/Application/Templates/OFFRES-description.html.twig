@@ -63,34 +63,21 @@
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
             <h4><strong>Description du poste</strong></h4>
-            <p class="text-secondary mt-3">{{ offre.description|nl2br }}</p>
+            <p class="text-secondary mt-3">{{ offre.description}}</p>
         </div>
     </div>
 
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
             <h4><strong>Missions principales</strong></h4>
-            <p class="text-secondary mt-3">{{ offre.missions|nl2br }}</p>
+            <p class="text-secondary mt-3">{{ offre.missions}}</p>
         </div>
     </div>
 
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
             <h4><strong>Compétences requises</strong></h4>
-            <p class="text-secondary mt-3">{{ offre.competences|nl2br }}</p>
-        </div>
-    </div>
-
-    <div class="card border-0 shadow-sm mb-5">
-        <div class="card-body p-4">
-            <div class="d-flex gap-3 justify-content-end">
-                <a href="{{ url_for('offres.modifier', { 'id': offre.id }) }}" class="btn btn-primary rounded-4 px-4">Modifier l'offre</a>
-                <form action="{{ url_for('offres.supprimer', { 'id': offre.id }) }}" method="POST" class="d-inline"
-                      onsubmit="return confirm('Supprimer cette offre ?')">
-                    <button type="submit" class="btn btn-danger rounded-4 px-4">Supprimer</button>
-                </form>
-                <a href="{{ url_for('offres') }}" class="btn btn-secondary rounded-4 px-4">Retour à la liste</a>
-            </div>
+            <p class="text-secondary mt-3">{{ offre.competences}}</p>
         </div>
     </div>
 </div>
