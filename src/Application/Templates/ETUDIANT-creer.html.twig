@@ -53,10 +53,14 @@
                     </div>
 
                     <div class="col-md-6 mt-4">
-                        <label class="form-label" for="promo">Promotion</label>
-                        <input class="form-control border border-secondary border-3 rounded-3"
-                               type="text" id="promo" name="promo" placeholder="Entrez la promotion">
-                    </div>
+    <label class="form-label" for="promo">Promotion</label>
+    <select class="form-control border border-secondary border-3 rounded-3" id="promo" name="promo">
+        <option value="">Choisir une année</option>
+        {% for annee in 2020..2030 %}
+            <option value="{{ annee }}">{{ annee }}</option>
+        {% endfor %}
+    </select>
+</div>
 
                     <div class="col-md-12 mt-4">
                         <label class="form-label" for="formation">Formation</label>

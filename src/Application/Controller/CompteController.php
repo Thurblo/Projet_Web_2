@@ -12,9 +12,9 @@ class CompteController
    public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
 {
     $view = Twig::fromRequest($request);
-    $queryParams = $request->getQueryParams(); // On regarde dans l'URL
+    $queryParams = $request->getQueryParams(); 
     
-    // On récupère le type s'il est dans l'URL (ex: /compte?type=etudiant)
+    
     $type = $queryParams['type'] ?? null;
 
     return $view->render($response, 'Compte.html.twig', [

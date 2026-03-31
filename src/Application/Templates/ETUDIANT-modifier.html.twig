@@ -14,42 +14,90 @@
             Modifier un étudiant
         </h1>
 
+        {% if errors %}
+        <div class="alert alert-danger mx-4">
+            {% for e in errors %}<div>{{ e }}</div>{% endfor %}
+        </div>
+        {% endif %}
+
+        {% if success %}
+            <div class="alert alert-success mx-4">Étudiant modifié avec succès !</div>
+        {% endif %}
+
         <form method="POST" action="{{ url_for('etudiants.modifier', { 'id': id }) }}">
             <div class="row mx-4 my-5">
 
                 <div class="col-md-6">
                     <label class="form-label" for="nom">Nom</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="nom" name="nom">
+                    <input class="form-control border border-secondary border-3 rounded-3"
+                           type="text" id="nom" name="nom"
+                           value="{{ etudiant.nom|default('') }}" placeholder="Entrez le nom">
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label" for="prenom">Prénom</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="prenom" name="prenom">
+                    <input class="form-control border border-secondary border-3 rounded-3"
+                           type="text" id="prenom" name="prenom"
+                           value="{{ etudiant.prenom|default('') }}" placeholder="Entrez le prénom">
+                </div>
+
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="phone">Numéro de téléphone</label>
+                    <input class="form-control border border-secondary border-3 rounded-3"
+                           type="text" id="phone" name="phone"
+                           value="{{ etudiant.phone|default('') }}" placeholder="Entrez le numéro de téléphone">
+                </div>
+
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="email">Email</label>
+                    <input class="form-control border border-secondary border-3 rounded-3"
+                           type="email" id="email" name="email"
+                           value="{{ etudiant.email|default('') }}" placeholder="Entrez l'email">
                 </div>
 
                 <div class="col-md-6 mt-4">
                     <label class="form-label" for="campus">Campus</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="campus" name="campus">
+                    <input class="form-control border border-secondary border-3 rounded-3"
+                           type="text" id="campus" name="campus"
+                           value="{{ etudiant.campus|default('') }}" placeholder="Entrez le campus">
+                </div>
+
+                <div class="col-md-6 mt-4">
+                    <label class="form-label" for="promo">Promotion</label>
+                    <select class="form-control border border-secondary border-3 rounded-3" id="promo" name="promo">
+                        <option value="">Choisir une année</option>
+                        {% for annee in 2020..2030 %}
+                            <option value="{{ annee }}" {% if etudiant.promo is defined and etudiant.promo == annee %}selected{% endif %}>
+                                {{ annee }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
 
                 <div class="col-md-12 mt-4">
-                    <label class="form-label" for="description">Description</label>
-                    <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description" cols="30" rows="5"></textarea>
+                    <label class="form-label" for="formation">Formation</label>
+                    <input class="form-control border border-secondary border-3 rounded-3"
+                           type="text" id="formation" name="formation"
+                           value="{{ etudiant.formation|default('') }}" placeholder="Entrez la formation">
+                </div>
+
+                <div class="col-md-12 mt-4">
+                    <label class="form-label" for="description">Description de l'étudiant</label>
+                    <textarea class="form-control border border-secondary border-3 rounded-3"
+                              id="description" name="description" cols="30" rows="5"
+                              placeholder="Entrez la description de l'étudiant">{{ etudiant.description|default('') }}</textarea>
                 </div>
 
                 <div class="col-md-12 mt-5">
                     <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
-                        <button class="btn btn-primary w-50 btn-lg rounded-5 px-4 flex-fill" type="submit">
+                        <button class="btn btn-primary btn-lg rounded-5 px-4 flex-fill w-50" type="submit">
                             Modifier l'étudiant
                         </button>
 
-                        <a href="{{ url_for('home') }}" class="btn btn-secondary w-50 btn-lg rounded-5 px-4 flex-fill text-center text-decoration-none">
+                        <a href="{{ url_for('etudiants') }}"
+                           class="btn btn-secondary btn-lg rounded-5 px-4 flex-fill text-center text-decoration-none w-50">
                             Annuler
                         </a>
-                        <a href="{{ url_for('etudiants.modifier', {'id': etudiant.id}) }}" 
-   class="btn btn-primary btn-sm rounded-4 px-3">
-    Modifier
-</a>
                     </div>
                 </div>
 
