@@ -2,7 +2,6 @@
 
 namespace App\Domain;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -17,7 +16,8 @@ class Offre
     #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
     private int $id;
 
-    #[ManyToOne(targetEntity: Entreprise::class)]
+    #[ManyToOne(targetEntity: Entreprise::class, inversedBy: 'offres')]
+    
     #[JoinColumn(name: 'entreprise_id', referencedColumnName: 'id', nullable: false)]
     private Entreprise $entreprise;
 
@@ -27,17 +27,17 @@ class Offre
     #[Column(type: 'string', nullable: false)]
     private string $telephone;
 
-    #[Column(name: 'date_debut', type: 'date_immutable', nullable: false)]
-    private DateTimeImmutable $dateDebut;
+    #[Column(type: 'string', nullable: false)]
+    private string $dateDebut;
 
-    #[Column(type: 'integer', nullable: false)]
-    private int $duree;
+    #[Column(type: 'string', nullable: false)]
+    private string $duree;
 
     #[Column(type: 'string', nullable: false)]
     private string $ville;
 
-    #[Column(type: 'integer', nullable: false)]
-    private int $remuneration;
+    #[Column(type: 'string', nullable: false)]
+    private string $remuneration;
 
     #[Column(type: 'text', nullable: false)]
     private string $description;
@@ -58,16 +58,17 @@ class Offre
         Entreprise $entreprise,
         string $titre,
         string $telephone,
-        DateTimeImmutable $dateDebut,
-        int $duree,
+        string $dateDebut,
+        string $duree,
         string $ville,
-        int $remuneration,
+        string $remuneration,
         string $description,
         string $missions,
         string $niveau,
         string $competences,
         string $email,
-    ) {
+    ) 
+    {
         $this->entreprise = $entreprise;
         $this->titre = $titre;
         $this->telephone = $telephone;
@@ -114,20 +115,20 @@ class Offre
         $this->telephone = $telephone; 
     }
 
-    public function getDateDebut(): DateTimeImmutable 
+    public function getDateDebut(): string
     { 
         return $this->dateDebut; 
     }
-    public function setDateDebut(DateTimeImmutable $dateDebut): void 
+    public function setDateDebut(string $dateDebut): void
     { 
         $this->dateDebut = $dateDebut; 
     }
 
-    public function getDuree(): int 
+    public function getDuree(): string
     { 
         return $this->duree; 
     }
-    public function setDuree(int $duree): void 
+    public function setDuree(string $duree): void
     { 
         $this->duree = $duree; 
     }
@@ -141,11 +142,11 @@ class Offre
         $this->ville = $ville; 
     }
 
-    public function getRemuneration(): int 
+    public function getRemuneration(): string 
     { 
         return $this->remuneration; 
     }
-    public function setRemuneration(int $remuneration): void 
+    public function setRemuneration(string $remuneration): void
     { 
         $this->remuneration = $remuneration; 
     }
