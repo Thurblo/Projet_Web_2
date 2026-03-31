@@ -2,29 +2,19 @@
 
 namespace App\Application\Controller;
 
+use App\Domain\Etudiant;
+use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
 
 class EtudiantController
 {
-    public function modify(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    private EntityManager $em;
+
+    public function __construct(EntityManager $em)
     {
-        $view = Twig::fromRequest($request);
-        $id = $args['id'];
-
-        if ($request->getMethod() === 'POST') {
-            $data = $request->getParsedBody();
-
-            $nom = $data['nom'] ?? '';
-            $prenom = $data['prenom'] ?? '';
-            $campus = $data['campus'] ?? '';
-            $description = $data['description'] ?? '';
-        }
-
-        return $view->render($response, 'Etudiant-modifier.html.twig', [
-            'id' => $id,
-        ]);
+        $this->em = $em;
     }
 
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
@@ -46,6 +36,67 @@ class EtudiantController
     {
         $view = Twig::fromRequest($request);
 
-        return $view->render($response, 'Etudiant-creer.html.twig');
+        $success = false;
+        $nom = '';
+        $prenom = '';
+        $email = '';
+        $telephone = '';
+        $campus = '';
+        $promo = '';
+        $formation = '';
+        $description = '';
+
+        if ($request->getMethod() === 'POST') {
+            $parsedBody = $request->getParsedBody();
+
+            $nom = trim($parsedBody['nom'] ?? '');
+            $prenom = trim($parsedBody['prenom'] ?? '');
+            $email = trim($parsedBody['email'] ?? '');
+            $telephone = trim($parsedBody['telephone'] ?? '');
+            $campus = trim($parsedBody['campus'] ?? '');
+            $promo = trim($parsedBody['promo'] ?? '');
+            $formation = trim($parsedBody['formation'] ?? '');
+            $description = trim($parsedBody['description'] ?? '');
+
+            if ($nom !== '' && $prenom !== '' && $email !== '') {
+                $nouvelEtudiant = new Etudiant(
+                    $nom,
+                    $prenom,
+                    $email,
+                    $telephone,
+                    $campus,
+                    $promo,
+                    $formation,
+                    $description
+                );
+
+                $this->em->persist($nouvelEtudiant);
+                $this->em->flush();
+
+                $success = true;
+            }
+        }
+
+        return $view->render($response, 'etudiant-creer.html.twig', [
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'email' => $email,
+            'telephone' => $telephone,
+            'campus' => $campus,
+            'promo' => $promo,
+            'formation' => $formation,
+            'description' => $description,
+            'success' => $success,
+        ]);
+    }
+
+    public function modify(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+        $id = $args['id'];
+
+        return $view->render($response, 'Etudiant-modifier.html.twig', [
+            'id' => $id,
+        ]);
     }
 }
