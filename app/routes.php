@@ -61,8 +61,8 @@ return function (App $app) {
     $app->post('/compte', [CompteController::class, 'create'])
     ->setName('compte.creer');
 
-        $app->get('/etudiant/compte', [EtudiantController::class, 'create'])
-    ->setName('etudiants.compte');
+       $app->get('/etudiant/compte', [EtudiantController::class, 'create'])
+    ->setName('etudiants.creer');
 
   $app->get('/etudiants[/{page:\d+}]', [EtudiantController::class, 'index'])
     ->setName('etudiants');

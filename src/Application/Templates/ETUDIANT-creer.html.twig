@@ -1,0 +1,89 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Ajouter un étudiant{% endblock %}
+
+{% block content %}
+    <div class="container-fluid mt-5 mb-5 d-flex justify-content-center w-75">
+        <div class="border border-primary border-5 rounded-5 ms-5 me-5 py-5 px-4 shadow-lg">
+            <h1 class="card-title h1 m-3 border-bottom border-primary border-4 d-inline-block">
+                Ajouter un étudiant
+            </h1>
+
+            {% if errors %}
+            <div class="alert alert-danger mx-4">
+                {% for e in errors %}<div>{{ e }}</div>{% endfor %}
+            </div>
+            {% endif %}
+
+            {% if success %}
+                <div class="alert alert-success mx-4">Étudiant ajouté avec succès !</div>
+            {% endif %}
+
+            <form method="POST" action="{{ url_for('etudiants.creer') }}">
+                <div class="row mx-4 my-5">
+
+                    <div class="col-md-6">
+                        <label class="form-label" for="nom">Nom</label>
+                        <input class="form-control border border-secondary border-3 rounded-3"
+                               type="text" id="nom" name="nom" placeholder="Entrez le nom">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label" for="prenom">Prénom</label>
+                        <input class="form-control border border-secondary border-3 rounded-3"
+                               type="text" id="prenom" name="prenom" placeholder="Entrez le prénom">
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <label class="form-label" for="phone">Numéro de téléphone</label>
+                        <input class="form-control border border-secondary border-3 rounded-3"
+                               type="text" id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control border border-secondary border-3 rounded-3"
+                               type="email" id="email" name="email" placeholder="Entrez l'email">
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <label class="form-label" for="campus">Campus</label>
+                        <input class="form-control border border-secondary border-3 rounded-3"
+                               type="text" id="campus" name="campus" placeholder="Entrez le campus">
+                    </div>
+
+                    <div class="col-md-6 mt-4">
+                        <label class="form-label" for="promo">Promotion</label>
+                        <input class="form-control border border-secondary border-3 rounded-3"
+                               type="text" id="promo" name="promo" placeholder="Entrez la promotion">
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                        <label class="form-label" for="formation">Formation</label>
+                        <input class="form-control border border-secondary border-3 rounded-3"
+                               type="text" id="formation" name="formation" placeholder="Entrez la formation">
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                        <label class="form-label" for="description">Description de l'étudiant</label>
+                        <textarea class="form-control border border-secondary border-3 rounded-3"
+                                  id="description" name="description" placeholder="Entrez la description de l'étudiant" cols="30" rows="5"></textarea>
+                    </div>
+
+                    <div class="col-md-12 mt-5">
+                        <div class="d-flex flex-column flex-md-row gap-3 justify-content-between">
+                            <button class="btn btn-primary btn-lg rounded-5 px-4 flex-fill w-50" type="submit">
+                                Ajouter l'étudiant
+                            </button>
+                            <a href="{{ url_for('etudiants') }}"
+                               class="btn btn-secondary btn-lg rounded-5 px-4 flex-fill text-center text-decoration-none w-50">
+                                Annuler
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

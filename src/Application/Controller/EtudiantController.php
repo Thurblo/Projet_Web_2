@@ -20,29 +20,32 @@ class EtudiantController
             $prenom = $data['prenom'] ?? '';
             $campus = $data['campus'] ?? '';
             $description = $data['description'] ?? '';
-
-        
         }
 
-      return $view->render($response, 'Etudiant-modifier.html.twig', [
-    'id' => $id,
-]);
+        return $view->render($response, 'Etudiant-modifier.html.twig', [
+            'id' => $id,
+        ]);
     }
 
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
-{
-    $view = Twig::fromRequest($request);
+    {
+        $view = Twig::fromRequest($request);
 
-    
-    $params = $request->getQueryParams();
-    $nom = $params['nom'] ?? '';
+        $params = $request->getQueryParams();
+        $nom = $params['nom'] ?? '';
 
-   
-    $resultats = []; 
+        $resultats = [];
 
-    return $view->render($response, 'Etudiant-liste.html.twig', [
-        'resultats' => $resultats,
-        'nom' => $nom,
-    ]);
-}
+        return $view->render($response, 'Etudiant-liste.html.twig', [
+            'resultats' => $resultats,
+            'nom' => $nom,
+        ]);
+    }
+
+    public function create(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'Etudiant-creer.html.twig');
+    }
 }
