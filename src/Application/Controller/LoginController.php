@@ -16,27 +16,26 @@ class LoginController
     }
     
     public function login(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
-    {
-        $model = [];
-        if ($request->getMethod() === 'POST') {
-            var_dump($request->getParsedBody());
-            $email = $request->getParsedBody()['email'] ?? '';
-            $password = $request->getParsedBody()['password'] ?? '';
-            $password_hash = password_hash($password, PASSWORD_DEFAULT);
-            var_dump($password_hash);
-            $userRepo  = $this->em->getRepository(User::class);
-            $user = $userRepo->findOneBy(['email' => $email]);
-            if($user == NULL){   
-                $model['error'] = "Email introuvable";
-            } else if (password_verify($password, $user->getMotDePasse())) {
-                // Authentification réussie
-                $_SESSION['user_id'] = $user->getId();
-                return $response->withHeader('Location', '/')->withStatus(302);
-            } else {
-                $model['error'] = "Mot de passe incorrect";
-            }
+{
+    $model = [];
+    if ($request->getMethod() === 'POST') {
+        $email = $request->getParsedBody()['email'] ?? '';
+        $password = $request->getParsedBody()['password'] ?? '';
+        
+        $userRepo = $this->em->getRepository(User::class);
+        $user = $userRepo->findOneBy(['email' => $email]);
+        
+        if ($user == NULL) {   
+            $model['error'] = "Email introuvable";
+        } else if (password_verify($password, $user->getMotDePasse())) {
+            // Authentification réussie
+            $_SESSION['user_id'] = $user->getId();
+            return $response->withHeader('Location', '/')->withStatus(302);
+        } else {
+            $model['error'] = "Mot de passe incorrect";
         }
-        $view = Twig::fromRequest($request);
-        return $view->render($response, 'Bases/Page_Login.html.twig', $model);
     }
+    $view = Twig::fromRequest($request);
+    return $view->render($response, 'Bases/Page_Login.html.twig', $model);
+}
 }
