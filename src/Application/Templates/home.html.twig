@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Index{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block head %}
     {{ parent() }}
@@ -9,8 +9,8 @@
 {% block content %}
 <div class="container-xl py-4">
 
-    <h5 class="fw-bold mb-0">Emplois recommandés</h5>
-    <p class="text-muted small mb-3">Emplois basés sur votre activité</p>
+    <h5 class="fw-bold mb-0">Dernières offres ajoutées</h5>
+    <p class="text-muted small mb-3">Consultez les offres les plus récentes</p>
 
     <div class="row g-3 align-items-start">
 
@@ -18,33 +18,25 @@
             <div class="bg-white border rounded-3 overflow-hidden">
 
                 {% for offre in offres %}
-                    <div class="job-card {% if loop.first %}active{% endif %} p-3 {% if not loop.last %}border-bottom{% endif %}">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <span class="badge {{ offre.badgeClass }} rounded-pill fw-semibold" style="font-size:.68rem">
-                                {{ offre.badge }}
-                            </span>
-                            <div class="d-flex gap-1">
-                                <button class="icon-btn" type="button">🔖</button>
-                                <button class="icon-btn" type="button">👎</button>
-                            </div>
-                        </div>
-
+                    <a href="?offre={{ offre.id }}"
+                       class="job-card d-block text-decoration-none text-dark {% if offreSelectionnee and offre.id == offreSelectionnee.id %}active{% endif %} p-3 {% if not loop.last %}border-bottom{% endif %}">
                         <p class="fw-bold mb-1" style="font-size:.95rem">{{ offre.titre }}</p>
                         <p class="text-muted small mb-1">{{ offre.entreprise }}</p>
-                        <p class="text-muted small mb-2">{{ offre.lieuCourt }}</p>
+                        <p class="text-muted small mb-1">{{ offre.ville }}</p>
 
                         <div class="d-flex flex-wrap gap-1 mb-2">
-                            <span class="badge badge-salary rounded-pill fw-semibold" style="font-size:.72rem">
-                                ✓ {{ offre.salaire }}
+                            <span class="badge bg-light text-dark border rounded-pill">
+                                {{ offre.duree }} mois
                             </span>
-                            {% for tag in offre.tags %}
-                                <span class="tag-pill">{{ tag }}</span>
-                            {% endfor %}
+                            <span class="badge bg-light text-dark border rounded-pill">
+                                {{ offre.niveau }}
+                            </span>
                         </div>
 
-                        <a class="apply-link">➤ {{ offre.candidature }}</a>
-                        <p class="text-muted mb-0 mt-1" style="font-size:.7rem">{{ offre.annonceType }}</p>
-                    </div>
+                        <p class="text-primary fw-semibold mb-0" style="font-size:.85rem">
+                            {{ offre.remuneration }}
+                        </p>
+                    </a>
                 {% else %}
                     <div class="p-3 text-center text-muted">
                         Aucune offre disponible.
@@ -57,51 +49,73 @@
         <div class="col-12 col-md-7 col-lg-8">
             <div class="detail-panel bg-white border rounded-3 overflow-hidden">
 
-                <div class="p-4 border-bottom">
-                    <h4 class="fw-bold mb-1">{{ offreSelectionnee.titre }}</h4>
-                    <p class="mb-1" style="font-size:.85rem">
-                        <a href="#" class="text-primary">{{ offreSelectionnee.entrepriseDetail }}</a>
-                    </p>
-                    <p class="text-muted mb-1" style="font-size:.85rem">{{ offreSelectionnee.lieu }}</p>
-                    <p class="fw-semibold mb-0" style="font-size:.85rem">{{ offreSelectionnee.typeLine }}</p>
-                    <div class="d-flex align-items-center gap-2 mt-2 text-success" style="font-size:.75rem">
-                        <span>⚡</span><span>{{ offreSelectionnee.response }}</span>
+                {% if offreSelectionnee %}
+                    <div class="p-4 border-bottom">
+                        <h4 class="fw-bold mb-1">{{ offreSelectionnee.titre }}</h4>
+                        <p class="mb-1 text-primary" style="font-size:.9rem">{{ offreSelectionnee.entreprise }}</p>
+                        <p class="text-muted mb-1" style="font-size:.85rem">{{ offreSelectionnee.ville }}</p>
+                        <p class="fw-semibold mb-0" style="font-size:.85rem">{{ offreSelectionnee.remuneration }}</p>
                     </div>
-                    <div class="d-flex align-items-center gap-2 mt-3">
-                        <button class="btn btn-primary btn-postuler px-4" type="button">Postuler maintenant</button>
-                        <button class="icon-btn" type="button">🔖</button>
-                        <button class="icon-btn" type="button">👎</button>
-                        <button class="icon-btn" type="button">↗</button>
+
+                    <div class="p-4 border-bottom">
+                        <p class="fw-bold mb-3">Détails de l'offre</p>
+
+                        <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Date de début</p>
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark border">{{ offreSelectionnee.dateDebut }}</span>
+                        </div>
+
+                        <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Durée</p>
+                        <div class="mb-3">
+                            <span class="badge bg-light text-dark border">{{ offreSelectionnee.duree }} mois</span>
+                        </div>
+
+                        <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Niveau</p>
+                        <div>
+                            <span class="badge bg-light text-dark border">{{ offreSelectionnee.niveau }}</span>
+                        </div>
                     </div>
-                </div>
 
-                <div class="p-4 border-bottom">
-                    <p class="fw-bold mb-3">Détails de l'emploi</p>
-                    <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Type de poste</p>
-                    <div class="mb-3"><span class="meta-chip">{{ offreSelectionnee.contrat }}</span></div>
-                    <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Horaires de travail</p>
-                    <div><span class="meta-chip">{{ offreSelectionnee.horaires }}</span></div>
-                </div>
-
-                <div class="p-4 border-bottom">
-                    <p class="fw-bold mb-1">Avantages</p>
-                    <p class="text-muted mb-2" style="font-size:.75rem">Extraits de la description complète du poste</p>
-                    <ul class="mb-0 ps-3" style="font-size:.85rem;line-height:1.9">
-                        {% for avantage in offreSelectionnee.avantages %}
-                            <li>{{ avantage }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <div class="p-4">
-                    <p class="fw-bold mb-2">Description du poste</p>
-                    <p style="font-size:.85rem;line-height:1.7">{{ offreSelectionnee.description }}</p>
-                    <div class="d-flex flex-wrap gap-2 mt-3">
-                        {% for competence in offreSelectionnee.competences %}
-                            <span class="skill-chip">{{ competence }}</span>
-                        {% endfor %}
+                    <div class="p-4 border-bottom">
+                        <p class="fw-bold mb-2">Missions</p>
+                        {% if offreSelectionnee.missionsListe is not empty %}
+                            <ul class="mb-0 ps-3" style="font-size:.85rem; line-height:1.8">
+                                {% for mission in offreSelectionnee.missionsListe %}
+                                    <li>{{ mission }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted mb-0">Aucune mission renseignée.</p>
+                        {% endif %}
                     </div>
-                </div>
+
+                    <div class="p-4 border-bottom">
+                        <p class="fw-bold mb-2">Description</p>
+                        <p style="font-size:.85rem; line-height:1.7">{{ offreSelectionnee.description }}</p>
+                    </div>
+
+                    <div class="p-4">
+                        <p class="fw-bold mb-2">Compétences</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% if offreSelectionnee.competencesListe is not empty %}
+                                {% for competence in offreSelectionnee.competencesListe %}
+                                    <span class="badge bg-light text-dark border rounded-pill">{{ competence }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <p class="text-muted mb-0">Aucune compétence renseignée.</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="mt-4">
+                            <p class="mb-1"><strong>Email :</strong> {{ offreSelectionnee.email }}</p>
+                            <p class="mb-0"><strong>Téléphone :</strong> {{ offreSelectionnee.telephone }}</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="p-4 text-center text-muted">
+                        Aucune offre disponible.
+                    </div>
+                {% endif %}
 
             </div>
         </div>
