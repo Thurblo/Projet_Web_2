@@ -21,7 +21,8 @@ class LoginController
     if ($request->getMethod() === 'POST') {
         $email = $request->getParsedBody()['email'] ?? '';
         $password = $request->getParsedBody()['password'] ?? '';
-        
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+            var_dump($password_hash);
         $userRepo = $this->em->getRepository(User::class);
         $user = $userRepo->findOneBy(['email' => $email]);
         
