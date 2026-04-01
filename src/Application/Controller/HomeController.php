@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
+use App\Domain\Wishlist;
 
 class HomeController
 {
@@ -109,9 +110,19 @@ class HomeController
             $offreSelectionnee = $offres[0] ?? null;
         }
 
+        // Pour wishlist
+        $user = $request->getAttribute('user');
+    $wishlistIds = [];
+    if ($user) {
+        $wishlists = $this->em->getRepository(Wishlist::class)
+            ->findBy(['user' => $user]);
+        $wishlistIds = array_map(fn($w) => $w->getOffre()->getId(), $wishlists);
+}
+
         return $view->render($response, 'home.html.twig', [
             'offres' => $offres,
             'offreSelectionnee' => $offreSelectionnee,
+            'wishlistIds' => $wishlistIds, // Ajout pour la wishlist
         ]);
     }
 

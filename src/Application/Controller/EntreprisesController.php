@@ -207,15 +207,26 @@ class EntreprisesController
     public function description(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-    
+
         $id = (int)$args['id'];
         $entreprise = $this->em->find(Entreprise::class, $id);
-    
-        if (!$entreprise)
-        {
+
+        if (!$entreprise) {
             return $response->withStatus(404);
         }
-    
-        return $view->render($response, 'ENTREPRISES-description.html.twig', ['entreprise' => $entreprise,]);
-    }
+
+        $user = $request->getAttribute('user');
+        $wishlistIds = [];
+
+        if ($user) {
+            $wishlists = $this->em->getRepository(\App\Domain\Wishlist::class)
+                ->findBy(['user' => $user]);
+            $wishlistIds = array_map(fn($w) => $w->getOffre()->getId(), $wishlists);
+        }
+
+        return $view->render($response, 'ENTREPRISES-description.html.twig', [
+            'entreprise'  => $entreprise,
+            'wishlistIds' => $wishlistIds,
+        ]);
+    }   
 }

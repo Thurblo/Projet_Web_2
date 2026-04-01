@@ -17,6 +17,12 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Psr7\Factory\ResponseFactory;
+use App\Application\Controller\WishlistController;
+use App\Application\Controller\CompteController;
+use App\Application\Controller\ProfileController;
+use App\Application\Controller\EtudiantController;
+use App\Application\Controller\PiloteController;
+
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -79,6 +85,10 @@ return function (ContainerBuilder $containerBuilder) {
 
         PiloteController::class => function (ContainerInterface $c) {
             return new PiloteController($c->get(EntityManager::class));
+        },
+
+        WishlistController::class => function (ContainerInterface $c) {
+            return new WishlistController($c->get(EntityManager::class));
         },
 
     ]);

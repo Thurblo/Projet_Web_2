@@ -32,8 +32,6 @@ return function (App $app) {
     $app->get('/home', [HomeController::class, 'home'])
         ->setName('home');
 
-    $app->get('/wishlist', [WishlistController::class, 'index'])
-        ->setName('wishlist');
 
     $app->get('/profile', [ProfileController::class, 'index'])->setName('profile');
     $app->post('/profile', [ProfileController::class, 'edit'])->setName('profile.edit');
@@ -108,5 +106,8 @@ return function (App $app) {
         $group->post('/modifier/{id:\d+}', [PiloteController::class, 'modify']);
         $group->post('/supprimer/{id:\d+}', [PiloteController::class, 'supprimer'])->setName('pilotes.supprimer');
     })->add(new RoleCheckMiddleware($factory, [Role::ADMIN]));
+
+    $app->get('/wishlist', [WishlistController::class, 'index'])->setName('wishlist');
+    $app->get('/wishlist/toggle/{id}', [WishlistController::class, 'toggle'])->setName('wishlist.toggle');
 
 };
