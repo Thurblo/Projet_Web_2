@@ -15,16 +15,18 @@
             <div class="row mx-4 my-5">
 
                 <div class="col-md-12">
-    <label class="form-label" for="type">Type de compte</label>
-    <div class="d-flex gap-2">
-        <select class="form-select border border-secondary border-3 rounded-3" id="type" name="type">
-            <option value="">Choisir un type</option>
-            <option value="etudiant" {% if typeCompte == 'etudiant' %}selected{% endif %}>Étudiant</option>
-            <option value="pilote" {% if typeCompte == 'pilote' %}selected{% endif %}>Pilote</option>
-        </select>
-        <button type="submit" name="action" value="select_type" class="btn btn-outline-primary">OK</button>
-    </div>
-</div>
+                    <label class="form-label" for="type">Type de compte</label>
+                    <div class="d-flex gap-2">
+                        <select class="form-select border border-secondary border-3 rounded-3" id="type" name="type">
+                            <option value="">Choisir un type</option>
+                            <option value="etudiant" {% if typeCompte == 'etudiant' %}selected{% endif %}>Étudiant</option>
+                            {% if isAdmin %}
+                                <option value="pilote" {% if typeCompte == 'pilote' %}selected{% endif %}>Pilote</option>
+                            {% endif %}
+                        </select>
+                        <button type="submit" name="action" value="select_type" class="btn btn-outline-primary">OK</button>
+                    </div>
+                </div>
 
                 <div class="col-md-6 mt-4">
                     <label class="form-label" for="nom">Nom</label>
@@ -34,7 +36,7 @@
 
                 <div class="col-md-6 mt-4">
                     <label class="form-label" for="phone">Numéro de téléphone</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="tel"id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
+                    <input class="form-control border border-secondary border-3 rounded-3" type="tel" id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
                 </div>
 
                 <div class="col-md-12 mt-4">
@@ -44,7 +46,7 @@
 
                 <div class="col-md-12 mt-4">
                     <label class="form-label" for="email">Email</label>
-                    <input class="form-control border border-secondary border-3 rounded-3"type="email" id="email" name="email" placeholder="Entrez l'email">
+                    <input class="form-control border border-secondary border-3 rounded-3" type="email" id="email" name="email" placeholder="Entrez l'email">
                 </div>
 
                 {% if typeCompte is defined and typeCompte == 'etudiant' %}
@@ -57,6 +59,7 @@
                         <label class="form-label" for="campus">Campus</label>
                         <input class="form-control border border-secondary border-3 rounded-3" type="text" id="campus" name="campus" placeholder="Ex : CESI Reims">
                     </div>
+
                 {% elseif typeCompte is defined and typeCompte == 'pilote' %}
                     <div class="col-md-12 mt-4">
                         <label class="form-label" for="entreprise">Entreprise</label>
@@ -65,7 +68,7 @@
 
                     <div class="col-md-12 mt-4">
                         <label class="form-label" for="poste">Poste</label>
-                        <input class="form-control border border-secondary border-3 rounded-3"type="text" id="poste" name="poste" placeholder="Ex : Responsable RH">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="poste" name="poste" placeholder="Ex : Responsable RH">
                     </div>
                 {% endif %}
 
@@ -82,6 +85,11 @@
 
             </div>
         </form>
+        {% if error is defined %}
+            <div class="alert alert-danger rounded-3 mx-4 mt-3">
+                <i class="bi bi-exclamation-circle me-2"></i>{{ error }}
+            </div>
+        {% endif %}
      </div>
   </div>
  </div>

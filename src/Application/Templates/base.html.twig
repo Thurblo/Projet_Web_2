@@ -40,12 +40,16 @@
         .icon-btn:hover { background: #e4e2e0; }
 
         .apply-link { color: #2d6ef5; font-size: .75rem; font-weight: 600; text-decoration: none; }
+
+        html, body { height: 100%; }
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        main#content { flex: 1; }
     </style>
 </head>
 
 <body>
 
-{# ── NAVBAR ── #}
+    {# ── NAVBAR ── #}
     <header>
         <nav class="navbar navbar-expand-lg bg-white border-bottom px-4">
             <a class="navbar-brand fw-bold" href="/home">
@@ -64,63 +68,99 @@
                 <ul class="navbar-nav me-auto"></ul>
 
                 <ul class="navbar-nav align-items-center">
-                    <li class="nav-item"><a class="nav-link text-dark" href="/wishlist">Wishlist</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="/etudiants">Étudiants</a></li>
-                    <li class="nav-item"><a class="nav-link text-dark" href="/profile">Profil</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark d-flex align-items-center gap-1" href="/home/connexion">
-                            <i class="bi bi-person-circle"></i> Connexion
-                        </a>
-                    </li>
+
+                    {% if user %}
+
+                        {# ── ETUDIANT ── #}
+                        {% if user.isEtudiant() %}
+                            <li class="nav-item"><a class="nav-link text-dark" href="/wishlist">Wishlist</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
+                        {% endif %}
+
+                        {# ── PILOTE ── #}
+                        {% if user.isPilote() %}
+                            <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
+                        {% endif %}
+
+                        {# ── ADMIN ── #}
+                        {% if user.isAdmin() %}
+                            <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
+                        {% endif %}
+
+                        {# ── PROFIL + DÉCONNEXION (tous les connectés) ── #}
+                        <li class="nav-item"><a class="nav-link text-dark" href="/profile">
+                            <i class="bi bi-person-circle me-1"></i>Profil
+                        </a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger d-flex align-items-center gap-1" href="/logout">
+                                <i class="bi bi-box-arrow-right"></i> Déconnexion
+                            </a>
+                        </li>
+
+                    {% else %}
+                        {# ── NON CONNECTÉ ── #}
+                        <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark d-flex align-items-center gap-1" href="/Login">
+                                <i class="bi bi-person-circle"></i> Connexion
+                            </a>
+                        </li>
+                    {% endif %}
+
                 </ul>
             </div>
         </nav>
     </header>
 
-    <title>{% block title %}{% endblock %} - My Webpage</title>
-    </head>
-    <body>
-        <style>
-            html, body { height: 100%; }
-            body { display: flex; flex-direction: column; min-height: 100vh; }
-            main#content { flex: 1; }
-        </style>
 
-        {# ── BARRE DE RECHERCHE ── #}
-        <div class="d-flex align-items-center border border-2 border-primary rounded-pill px-2 py-1 mx-auto my-2 w-50">
-            <div class="dropdown me-1">
-                <button class="btn btn-primary btn-sm rounded-pill dropdown-toggle fw-semibold px-3"
-                        type="button" data-bs-toggle="dropdown">
-                    Offre
-                </button>
-                <ul class="dropdown-menu shadow-sm border-0 mt-1">
-                    <li><a class="dropdown-item" href="#">Offre</a></li>
-                    <li><a class="dropdown-item" href="#">Entreprise</a></li>
-                    <li><a class="dropdown-item" href="#">Étudiant</a></li>
-                    <li><a class="dropdown-item" href="#">Pilote</a></li>
-                </ul>
-            </div>
 
-            <input type="text"
-                   class="form-control border-0 shadow-none bg-transparent"
-                   placeholder="Rechercher...">
-
-            <button class="btn btn-primary btn-sm rounded-pill px-3" type="submit">
-                <i class="bi bi-search"></i>
+    {# ── BARRE DE RECHERCHE ── #}
+    <div class="d-flex align-items-center border border-2 border-primary rounded-pill px-2 py-1 mx-auto my-2 w-50">
+        <div class="dropdown me-1">
+            <button class="btn btn-primary btn-sm rounded-pill dropdown-toggle fw-semibold px-3"
+                    type="button" data-bs-toggle="dropdown">
+                Offre
             </button>
+            <ul class="dropdown-menu shadow-sm border-0 mt-1">
+                <li><a class="dropdown-item" href="/offres">Offre</a></li>
+                <li><a class="dropdown-item" href="/entreprises">Entreprise</a></li>
+                {% if user and user.isAtLeastPilote() %}
+                    <li><a class="dropdown-item" href="{{ url_for('liste_etudiants') }}">Les Étudiants</a></li>
+                {% endif %}
+                {% if user and user.isAdmin() %}
+                    <li><a class="dropdown-item" href="{{ url_for('liste_pilotes') }}">Les Pilotes</a></li>
+                    <li><a class="dropdown-item" href="/compte">Créer un compte</a></li>
+                {% endif %}
+            </ul>
         </div>
 
-        <main id="content">{% block content %}{% endblock %}</main>
-        <footer id="footer">
-            {% block footer %}
-            <div class="container-fluid bg-white py-3 border-top border-1 d-flex justify-content-center shadow">
-                <a href="/mentions" class="text-black text-decoration-none small">
-                    <i class="bi bi-file-text text-black me-1"></i>Mentions légales
-                </a>
-            </div>
-            {% endblock %}
-        </footer>
-    </body>
+        <input type="text"
+               class="form-control border-0 shadow-none bg-transparent"
+               placeholder="Rechercher...">
+
+        <button class="btn btn-primary btn-sm rounded-pill px-3" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+
+    <title>{% block title %}{% endblock %} - My Webpage</title>
+
+    <main id="content">{% block content %}{% endblock %}</main>
+
+    <footer id="footer">
+        {% block footer %}
+        <div class="container-fluid bg-white py-3 border-top border-1 d-flex justify-content-center shadow">
+            <a href="/mentions" class="text-black text-decoration-none small">
+                <i class="bi bi-file-text text-black me-1"></i>Mentions légales
+            </a>
+        </div>
+        {% endblock %}
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

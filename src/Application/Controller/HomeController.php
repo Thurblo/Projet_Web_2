@@ -103,4 +103,23 @@ class HomeController
             'name' => 'John',
         ]);
     }
+
+    public function logout(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        // Vider complètement la session
+        $_SESSION = [];
+
+        // Supprimer le cookie de session
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+
+        session_destroy();
+
+        return $response->withHeader('Location', '/Login')->withStatus(302);
+    }
 }

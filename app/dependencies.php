@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Application\Controller\LoginController;
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\DriverManager;
@@ -14,6 +15,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Slim\Psr7\Factory\ResponseFactory;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -31,12 +34,12 @@ return function (ContainerBuilder $containerBuilder) {
 
             return $logger;
         },
+
         EntityManager::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
             $doctrine = $settings->get('doctrine');
 
-            // Use the ArrayAdapter or the FilesystemAdapter depending on the value of the 'dev_mode' setting
-            // You can substitute the FilesystemAdapter for any other cache you prefer from the symfony/cache library
+
             $cache = $doctrine['dev_mode'] ?
                 new ArrayAdapter() :
                 new FilesystemAdapter(directory: $doctrine['cache_dir']);
@@ -48,9 +51,34 @@ return function (ContainerBuilder $containerBuilder) {
                 $cache
             );
 
-            $connection = DriverManager::getConnection($doctrine['connection']);
-
+            $connection = DriverManager::getConnection($doctrine['connection'])
+            ;
             return new EntityManager($connection, $config);
+        },
+
+        ResponseFactoryInterface::class => function (ContainerInterface $container) {
+            return $container->get(ResponseFactory::class);
+        },
+
+        // ↓ Ajout du LoginController
+        LoginController::class => function (ContainerInterface $c) {
+            return new LoginController($c->get(EntityManager::class));
+        },
+
+        CompteController::class => function (ContainerInterface $c) {
+            return new CompteController($c->get(EntityManager::class));
+        },
+
+        ProfileController::class => function (ContainerInterface $c) {
+            return new ProfileController($c->get(EntityManager::class));
+        },
+
+        EtudiantController::class => function (ContainerInterface $c) {
+            return new EtudiantController($c->get(EntityManager::class));
+        },
+
+        PiloteController::class => function (ContainerInterface $c) {
+            return new PiloteController($c->get(EntityManager::class));
         },
 
     ]);
