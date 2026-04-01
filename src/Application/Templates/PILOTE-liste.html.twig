@@ -3,60 +3,80 @@
 {% block title %}Liste des pilotes{% endblock %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-5" style="max-width: 1400px;">
 
-    <h1 class="fw-bold mb-4">Liste des pilotes</h1>
-
-    <p class="text-muted">
-        Recherchez un pilote puis consultez les résultats.
-    </p>
-
-    <form method="get" action="/pilote" class="row g-3 mb-4">
-        <div class="col-md-10">
-            <input
-                type="text"
-                name="search"
-                class="form-control"
-                placeholder="Tape le nom d'un pilote"
-            >
+    {# ── EN-TÊTE ── #}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">
+                Liste des pilotes
+                {% if nom %}<span class="text-warning">« {{ nom }} »</span>{% endif %}
+            </h3>
+            <p class="text-muted small mb-0">{{ resultats|length }} pilote(s) trouvé(s)</p>
         </div>
-
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100">
-                Rechercher
-            </button>
-        </div>
-    </form>
-
-    <div class="row g-4">
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow-sm h-100">
-
-                <div class="card-body">
-
-                    <h5 class="card-title fw-bold">
-                        Jean Dupont
-                    </h5>
-
-                    <p class="text-muted">
-                        Entreprise : Amazon
-                    </p>
-
-                    <p class="card-text">
-                        Responsable du suivi des étudiants en stage.
-                    </p>
-
-                    <a href="#" class="btn btn-outline-primary btn-sm">
-                        Voir le profil
-                    </a>
-
-                </div>
-
-            </div>
-        </div>
-
+        <a href="/compte?type=pilote" class="btn btn-warning rounded-3 fw-semibold text-dark">
+            <i class="bi bi-person-plus-fill me-2"></i>Ajouter un pilote
+        </a>
     </div>
+
+    {# ── LISTE ── #}
+    {% if resultats|length > 0 %}
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4 py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Pilote</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Email</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Rôle</th>
+                    <th class="pe-4 py-3 text-end text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pilote in resultats %}
+                <tr>
+                    <td class="ps-4 py-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-warning bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center text-warning fw-bold"
+                                 style="width:42px;height:42px;flex-shrink:0;font-size:1rem;">
+                                {{ pilote.prenom|first|upper }}
+                            </div>
+                            <div>
+                                <div class="fw-semibold">{{ pilote.prenom }} {{ pilote.nom }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3 text-muted small">{{ pilote.email }}</td>
+                    <td class="py-3">
+                        <span class="badge text-bg-warning rounded-pill px-3">
+                            <i class="bi bi-person-badge-fill me-1"></i>Pilote
+                        </span>
+                    </td>
+                    <td class="pe-4 py-3 text-end">
+                        <a href="{{ url_for('pilotes.modifier', {'id': pilote.id}) }}"
+                           class="btn btn-outline-warning btn-sm rounded-3 fw-semibold me-1">
+                            <i class="bi bi-pencil-fill me-1"></i>Modifier
+                        </a>
+                        <form method="POST" action="/pilote/supprimer/{{ pilote.id }}"
+                              class="d-inline"
+                              onsubmit="return confirm('Supprimer ce pilote ?')">
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-3 fw-semibold">
+                                <i class="bi bi-trash-fill me-1"></i>Supprimer
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+        <i class="bi bi-people text-muted" style="font-size:3rem;"></i>
+        <h5 class="fw-bold mt-3 mb-1">Aucun pilote trouvé</h5>
+        <p class="text-muted small mb-0">Essayez une autre recherche ou ajoutez un pilote.</p>
+    </div>
+    {% endif %}
 
 </div>
 {% endblock %}

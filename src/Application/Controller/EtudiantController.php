@@ -2,7 +2,8 @@
 
 namespace App\Application\Controller;
 
-use App\Domain\Etudiant;
+use App\Domain\User;
+use App\Domain\Role;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,73 +21,26 @@ class EtudiantController
     public function index(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-
         $params = $request->getQueryParams();
         $nom = $params['nom'] ?? '';
 
-        $resultats = [];
+        $repo = $this->em->getRepository(User::class);
+
+        if ($nom !== '') {
+            $resultats = $repo->createQueryBuilder('u')
+                ->where('u.role = :role')
+                ->andWhere('u.nom LIKE :nom OR u.prenom LIKE :nom')
+                ->setParameter('role', Role::ETUDIANT)
+                ->setParameter('nom', '%' . $nom . '%')
+                ->getQuery()
+                ->getResult();
+        } else {
+            $resultats = $repo->findBy(['role' => Role::ETUDIANT]);
+        }
 
         return $view->render($response, 'Etudiant-liste.html.twig', [
             'resultats' => $resultats,
             'nom' => $nom,
-        ]);
-    }
-
-    public function create(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
-    {
-        $view = Twig::fromRequest($request);
-
-        $success = false;
-        $nom = '';
-        $prenom = '';
-        $email = '';
-        $telephone = '';
-        $campus = '';
-        $promo = '';
-        $formation = '';
-        $description = '';
-
-        if ($request->getMethod() === 'POST') {
-            $parsedBody = $request->getParsedBody();
-
-            $nom = trim($parsedBody['nom'] ?? '');
-            $prenom = trim($parsedBody['prenom'] ?? '');
-            $email = trim($parsedBody['email'] ?? '');
-            $telephone = trim($parsedBody['telephone'] ?? '');
-            $campus = trim($parsedBody['campus'] ?? '');
-            $promo = trim($parsedBody['promo'] ?? '');
-            $formation = trim($parsedBody['formation'] ?? '');
-            $description = trim($parsedBody['description'] ?? '');
-
-            if ($nom !== '' && $prenom !== '' && $email !== '') {
-                $nouvelEtudiant = new Etudiant(
-                    $nom,
-                    $prenom,
-                    $email,
-                    $telephone,
-                    $campus,
-                    $promo,
-                    $formation,
-                    $description
-                );
-
-                $this->em->persist($nouvelEtudiant);
-                $this->em->flush();
-
-                $success = true;
-            }
-        }
-
-        return $view->render($response, 'etudiant-creer.html.twig', [
-            'nom' => $nom,
-            'prenom' => $prenom,
-            'email' => $email,
-            'telephone' => $telephone,
-            'campus' => $campus,
-            'promo' => $promo,
-            'formation' => $formation,
-            'description' => $description,
-            'success' => $success,
         ]);
     }
 
@@ -95,8 +49,44 @@ class EtudiantController
         $view = Twig::fromRequest($request);
         $id = $args['id'];
 
+        $user = $this->em->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            return $response->withHeader('Location', '/etudiant/liste')->withStatus(302);
+        }
+
+        if ($request->getMethod() === 'POST') {
+            $data = $request->getParsedBody();
+
+            $user->setNom($data['nom'] ?? $user->getNom());
+            $user->setPrenom($data['prenom'] ?? $user->getPrenom());
+            $user->setEmail($data['email'] ?? $user->getEmail());
+
+            if (!empty($data['password'])) {
+                $user->setMotDePasse(password_hash($data['password'], PASSWORD_DEFAULT));
+            }
+
+            $this->em->flush();
+
+            return $response->withHeader('Location', '/etudiant/liste')->withStatus(302);
+        }
+
         return $view->render($response, 'Etudiant-modifier.html.twig', [
+            'etudiant' => $user,
             'id' => $id,
         ]);
+    }
+
+    public function supprimer(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $id = $args['id'];
+        $user = $this->em->getRepository(User::class)->find($id);
+
+        if ($user && $user->getRole() === Role::ETUDIANT) {
+            $this->em->remove($user);
+            $this->em->flush();
+        }
+
+        return $response->withHeader('Location', '/etudiant/liste')->withStatus(302);
     }
 }

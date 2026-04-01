@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Modifier un pilote{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 1400px;">
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+
+        {# ── EN-TÊTE ── #}
+        <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+            <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center text-primary fw-bold"
+                 style="width:52px;height:52px;flex-shrink:0;font-size:1.3rem;">
+                {{ pilote.prenom|first|upper }}
+            </div>
+            <div>
+                <h5 class="fw-bold mb-0">{{ pilote.prenom }} {{ pilote.nom }}</h5>
+                <p class="text-muted small mb-0">{{ pilote.email }}</p>
+            </div>
+        </div>
+
+        {# ── FORMULAIRE ── #}
+        <form method="POST" action="/pilote/modifier/{{ id }}">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Prénom</label>
+                    <input type="text" name="prenom" class="form-control rounded-3"
+                           value="{{ pilote.prenom }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Nom</label>
+                    <input type="text" name="nom" class="form-control rounded-3"
+                           value="{{ pilote.nom }}">
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label fw-semibold small">Email</label>
+                    <input type="email" name="email" class="form-control rounded-3"
+                           value="{{ pilote.email }}">
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label fw-semibold small">
+                        Nouveau mot de passe 
+                        <span class="text-muted fw-normal">(laisser vide pour ne pas changer)</span>
+                    </label>
+                    <input type="password" name="password" class="form-control rounded-3"
+                           placeholder="••••••••">
+                </div>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-primary rounded-3 fw-semibold flex-fill">
+                    <i class="bi bi-check-lg me-2"></i>Enregistrer
+                </button>
+                <a href="{{ url_for('liste_pilotes') }}" class="btn btn-outline-secondary rounded-3 fw-semibold flex-fill">
+                    <i class="bi bi-arrow-left me-2"></i>Annuler
+                </a>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+{% endblock %}

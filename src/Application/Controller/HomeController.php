@@ -2,87 +2,127 @@
 
 namespace App\Application\Controller;
 
+use App\Domain\Offre;
+use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Views\Twig;
+use App\Domain\Wishlist;
 
 class HomeController
 {
-    public function home(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function __construct(private EntityManager $em)
+    {
+    }
+
+    public function home(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $view = Twig::fromRequest($request);
 
-        $offres = [
-            [
-                'id' => 1,
-                'badge' => 'Urgent',
-                'badgeClass' => 'badge-urgent',
-                'titre' => 'Développeur Web Full Stack',
-                'entreprise' => 'TechCorp',
-                'entrepriseDetail' => 'TechCorp ↗',
-                'lieuCourt' => '🌐 Télétravail',
-                'lieu' => 'Télétravail',
-                'salaire' => '800 €/mois',
-                'tags' => ['Temps plein', 'React'],
-                'candidature' => 'Candidature simplifiée',
-                'annonceType' => 'Annonce',
-                'typeLine' => 'Temps plein',
-                'contrat' => 'Temps plein',
-                'horaires' => 'Flextime',
-                'response' => 'A répondu à 90 % des candidatures sur les 30 derniers jours, généralement en 1 jour.',
-                'avantages' => ['Télétravail complet', 'Flextime', 'Intéressement et participation'],
-                'description' => "Vous rejoindrez une équipe dynamique pour développer et maintenir des applications web modernes. Vous interviendrez sur l'ensemble de la stack technique, du backend API au frontend responsive.",
-                'competences' => ['PHP', 'Symfony', 'JavaScript', 'React', 'SQL', 'Git']
-            ],
-            [
-                'id' => 2,
-                'badge' => 'Répond souvent dans un délai de 5 jours',
-                'badgeClass' => 'badge-delay',
-                'titre' => 'Intégrateur HTML/CSS',
-                'entreprise' => 'AgenceWeb',
-                'entrepriseDetail' => 'AgenceWeb ↗',
-                'lieuCourt' => '📍 15 min · Lyon (69)',
-                'lieu' => 'Lyon (69)',
-                'salaire' => 'Gratification légale',
-                'tags' => ['Temps partiel', 'Figma'],
-                'candidature' => 'Candidature simplifiée',
-                'annonceType' => 'Annonce',
-                'typeLine' => 'Temps partiel',
-                'contrat' => 'Temps partiel',
-                'horaires' => 'Horaires flexibles',
-                'response' => 'Répond souvent dans un délai de 5 jours.',
-                'avantages' => ['Flextime', 'Formation continue', 'Tickets restaurant'],
-                'description' => 'Au sein de notre agence créative, vous intégrerez des maquettes Figma en pages web responsive. Vous travaillerez en binôme avec un développeur senior.',
-                'competences' => ['HTML', 'CSS', 'Bootstrap', 'Figma', 'Git']
-            ],
-            [
-                'id' => 3,
-                'badge' => 'Répond souvent dans un délai de 11 jours',
-                'badgeClass' => 'badge-delay',
-                'titre' => 'Développeur PHP/Symfony',
-                'entreprise' => 'StartupIO',
-                'entrepriseDetail' => 'StartupIO ↗',
-                'lieuCourt' => '📍 Bordeaux (33)',
-                'lieu' => 'Bordeaux (33)',
-                'salaire' => '1 200 €/mois',
-                'tags' => ['Temps plein', '+1'],
-                'candidature' => 'Candidature simplifiée',
-                'annonceType' => 'Annonce',
-                'typeLine' => 'Temps plein',
-                'contrat' => 'Temps plein',
-                'horaires' => 'Flextime',
-                'response' => 'Répond souvent dans un délai de 11 jours.',
-                'avantages' => ['Intéressement', 'Participation', "Mutuelle d'entreprise"],
-                'description' => "Intégrez notre startup en pleine croissance et participez au développement de notre plateforme SaaS. Environnement agile, beaucoup d'autonomie et de montée en compétences.",
-                'competences' => ['PHP', 'Symfony', 'Twig', 'MySQL', 'Docker', 'API REST']
-            ]
-        ];
+        $queryParams = $request->getQueryParams();
+        $offreId = isset($queryParams['offre']) ? (int) $queryParams['offre'] : null;
 
-        $offreSelectionnee = $offres[0];
+        $repo = $this->em->getRepository(Offre::class);
+
+        // On récupère les dernières offres ajoutées
+        $offresEntities = $repo->createQueryBuilder('o')
+            ->join('o.entreprise', 'e')
+            ->addSelect('e')
+            ->orderBy('o.id', 'DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+
+        $offres = array_map(function (Offre $offre) {
+            $competences = $offre->getCompetences()
+                ? array_filter(array_map('trim', preg_split('/[,;]+/', $offre->getCompetences())))
+                : [];
+
+            $missions = $offre->getMissions()
+                ? array_filter(array_map('trim', preg_split('/[\r\n,;]+/', $offre->getMissions())))
+                : [];
+
+            return [
+                'id' => $offre->getId(),
+                'titre' => $offre->getTitre(),
+                'entreprise' => $offre->getEntreprise()->getNom(),
+                'telephone' => $offre->getTelephone(),
+                'dateDebut' => $offre->getDateDebut(),
+                'duree' => $offre->getDuree(),
+                'ville' => $offre->getVille(),
+                'remuneration' => $offre->getRemuneration(),
+                'description' => $offre->getDescription(),
+                'niveau' => $offre->getNiveau(),
+                'email' => $offre->getEmail(),
+                'competencesListe' => $competences,
+                'missionsListe' => $missions,
+            ];
+        }, $offresEntities);
+
+        $offreSelectionnee = null;
+
+        if ($offreId !== null) {
+            foreach ($offres as $offre) {
+                if ($offre['id'] === $offreId) {
+                    $offreSelectionnee = $offre;
+                    break;
+                }
+            }
+
+            if ($offreSelectionnee === null) {
+                $selectedEntity = $repo->createQueryBuilder('o')
+                    ->join('o.entreprise', 'e')
+                    ->addSelect('e')
+                    ->where('o.id = :id')
+                    ->setParameter('id', $offreId)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+
+                if ($selectedEntity) {
+                    $competences = $selectedEntity->getCompetences()
+                        ? array_filter(array_map('trim', preg_split('/[,;]+/', $selectedEntity->getCompetences())))
+                        : [];
+
+                    $missions = $selectedEntity->getMissions()
+                        ? array_filter(array_map('trim', preg_split('/[\r\n,;]+/', $selectedEntity->getMissions())))
+                        : [];
+
+                    $offreSelectionnee = [
+                        'id' => $selectedEntity->getId(),
+                        'titre' => $selectedEntity->getTitre(),
+                        'entreprise' => $selectedEntity->getEntreprise()->getNom(),
+                        'telephone' => $selectedEntity->getTelephone(),
+                        'dateDebut' => $selectedEntity->getDateDebut(),
+                        'duree' => $selectedEntity->getDuree(),
+                        'ville' => $selectedEntity->getVille(),
+                        'remuneration' => $selectedEntity->getRemuneration(),
+                        'description' => $selectedEntity->getDescription(),
+                        'niveau' => $selectedEntity->getNiveau(),
+                        'email' => $selectedEntity->getEmail(),
+                        'competencesListe' => $competences,
+                        'missionsListe' => $missions,
+                    ];
+                }
+            }
+        }
+
+        if ($offreSelectionnee === null) {
+            $offreSelectionnee = $offres[0] ?? null;
+        }
+
+        // Pour wishlist
+        $user = $request->getAttribute('user');
+    $wishlistIds = [];
+    if ($user) {
+        $wishlists = $this->em->getRepository(Wishlist::class)
+            ->findBy(['user' => $user]);
+        $wishlistIds = array_map(fn($w) => $w->getOffre()->getId(), $wishlists);
+}
 
         return $view->render($response, 'home.html.twig', [
             'offres' => $offres,
-            'offreSelectionnee' => $offreSelectionnee
+            'offreSelectionnee' => $offreSelectionnee,
+            'wishlistIds' => $wishlistIds, // Ajout pour la wishlist
         ]);
     }
 
@@ -102,5 +142,24 @@ class HomeController
         return $view->render($response, '/mentions.html.twig', [
             'name' => 'John',
         ]);
+    }
+
+    public function logout(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        // Vider complètement la session
+        $_SESSION = [];
+
+        // Supprimer le cookie de session
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+
+        session_destroy();
+
+        return $response->withHeader('Location', '/Login')->withStatus(302);
     }
 }

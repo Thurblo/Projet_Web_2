@@ -83,5 +83,38 @@
             </div>
         </div>
     </div>
+     <!-- SECTION OFFRES DE L'ENTREPRISE -->
+    {% if entreprise.offres|length > 0 %}
+    <div class="mt-5">
+        <h3 class="fw-bold mb-4">Offres d'emploi ({{ entreprise.offres|length }})</h3>
+        <div class="row row-cols-3 g-4">
+            {% for offre in entreprise.offres %}
+            <div class="col-md-4">
+                <div class="card shadow card-hover border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <h5 class="fw-bold mb-1 me-2">{{ offre.titre }}</h5>
+                            <a href="{{ url_for('wishlist.toggle', { 'id': offre.id }) }}" class="text-decoration-none"><i class="bi bi-bookmark{% if offre.id in wishlistIds %}-fill text-primary{% else %} text-secondary{% endif %} fs-4"></i></a>
+                        </div>
+                        <p class="text-secondary mb-2"><i class="bi bi-building me-1"></i>{{ entreprise.nom }}</p>
+                        <div class="mt-3">
+                            <span class="badge bg-light text-dark me-2 px-3 py-2">{{ offre.duree }} mois</span>
+                            <span class="badge bg-light text-dark me-2 px-3 py-2">{{ offre.niveau }}</span>
+                            <span class="badge bg-light text-dark px-3 py-2">{{ offre.ville }}</span>
+                        </div>
+                        <p class="text-secondary mt-3 small">{{ offre.description}}</p>
+                        <div class="d-flex gap-2 mt-3">
+                            <a href="{{ url_for('offres.description', { 'id': offre.id }) }}" class="btn btn-outline-primary flex-fill rounded-4 py-2 text-decoration-none">Voir</a>
+                            <button class="btn btn-primary flex-fill rounded-4 py-2">Postuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">Aucune offre d'emploi disponible pour cette entreprise pour le moment.</div>
+    {% endif %}
 </div>
 {% endblock %}

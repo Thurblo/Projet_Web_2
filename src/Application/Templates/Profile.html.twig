@@ -1,209 +1,213 @@
 {% extends "base.html.twig" %}
 
-{% block title %}profile{% endblock %}
-
-{% block head %}
-    {{ parent() }}
-{% endblock %}
+{% block title %}Mon Profil{% endblock %}
 
 {% block content %}
-<div class="container py-4" style="max-width:680px;">
- 
-    <!-- En-tête profil -->
-    <div class="d-flex align-items-center gap-3 mb-4">
-        <div class="bg-primary rounded-3 d-flex align-items-center justify-content-center text-white fw-bold fs-5"
-             style="width:52px;height:52px;flex-shrink:0;">S</div>
-        <div>
-            <div class="text-primary text-uppercase fw-semibold small mb-1"
-                 style="font-size:.7rem;letter-spacing:.1em;">Mon profil</div>
-            <div class="fw-bold fs-5">Son nom</div>
-        </div>
-    </div>
- 
-    <!-- CV -->
-    <div class="card border rounded-3 shadow-sm mb-3">
-        <div class="card-body p-4">
-            <p class="text-uppercase text-secondary fw-semibold small mb-3">Vos CV</p>
- 
-            <div class="border border-2 rounded-3 p-3 d-flex align-items-center gap-3 bg-light"
-                 role="button" onclick="document.getElementById('cvFile').click()">
-                <div class="bg-white border rounded-2 d-flex align-items-center justify-content-center text-primary"
-                     style="width:36px;height:36px;flex-shrink:0;">
-                    <i class="bi bi-file-earmark-person"></i>
+<div class="container py-5" style="max-width: 750px;">
+
+    {# ── EN-TÊTE ── #}
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <div class="d-flex align-items-center gap-4">
+            <div class="bg-primary rounded-3 d-flex align-items-center justify-content-center text-white fw-bold"
+                 style="width:80px;height:80px;font-size:2rem;flex-shrink:0;">
+                {{ user.prenom|first|upper }}
+            </div>
+            <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <h4 class="fw-bold mb-0">{{ user.prenom }} {{ user.nom }}</h4>
+                    {% if user.isAdmin() %}
+                        <span class="badge text-bg-danger rounded-pill px-3">
+                            <i class="bi bi-shield-fill me-1"></i>Administrateur
+                        </span>
+                    {% elseif user.isPilote() %}
+                        <span class="badge text-bg-warning rounded-pill px-3">
+                            <i class="bi bi-person-badge-fill me-1"></i>Pilote
+                        </span>
+                    {% else %}
+                        <span class="badge text-bg-primary rounded-pill px-3">
+                            <i class="bi bi-mortarboard-fill me-1"></i>Étudiant
+                        </span>
+                    {% endif %}
                 </div>
-                <div class="flex-grow-1">
-                    <div class="fw-semibold small">Glissez ou cliquez pour importer</div>
-                    <div class="text-muted small">PDF, DOCX — max 10 Mo</div>
-                </div>
-                <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                    <i class="bi bi-upload me-1"></i>Choisir
-                </button>
+                <p class="text-muted small mb-0">{{ user.email }}</p>
             </div>
-            <input type="file" id="cvFile" class="d-none" accept=".pdf,.doc,.docx"/>
- 
-            <div id="cvBadge" class="d-none mt-2">
-                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 fw-normal">
-                    <i class="bi bi-check-circle-fill me-1"></i><span id="cvName"></span>
-                </span>
-            </div>
- 
-            <div class="d-flex align-items-center gap-2 my-3">
-                <hr class="flex-grow-1 my-0"/>
-                <span class="text-muted small fw-semibold">OU</span>
-                <hr class="flex-grow-1 my-0"/>
-            </div>
- 
-            <button class="btn btn-light border w-100 small text-secondary"
-                    data-bs-toggle="modal" data-bs-target="#textModal" data-target="cv">
-                <i class="bi bi-clipboard-plus me-1"></i>Coller du texte
+            <button class="btn btn-outline-primary btn-sm rounded-3 fw-semibold"
+                    data-bs-toggle="modal" data-bs-target="#editModal">
+                <i class="bi bi-pencil-fill me-1"></i>Modifier
             </button>
         </div>
     </div>
- 
-    <!-- Lettre de motivation -->
-    <div class="card border rounded-3 shadow-sm mb-3">
-        <div class="card-body p-4">
-            <p class="text-uppercase text-secondary fw-semibold small mb-3">Vos lettres de motivation</p>
- 
-            <div class="border border-2 rounded-3 p-3 d-flex align-items-center gap-3 bg-light"
-                 role="button" onclick="document.getElementById('lmFile').click()">
-                <div class="bg-white border rounded-2 d-flex align-items-center justify-content-center text-primary"
-                     style="width:36px;height:36px;flex-shrink:0;">
-                    <i class="bi bi-file-earmark-text"></i>
+
+    {# ── STATISTIQUES ADMIN ── #}
+    {% if user.isAdmin() and stats is defined %}
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <p class="text-uppercase text-secondary fw-semibold small mb-4" style="letter-spacing:.1em;">
+            Statistiques globales
+        </p>
+        <div class="row g-3">
+            <div class="col-6 col-md-3">
+                <div class="card border-0 bg-primary bg-opacity-10 rounded-3 p-3 text-center">
+                    <div class="fw-bold fs-3 text-primary">{{ stats.nb_etudiants }}</div>
+                    <div class="text-muted small">Étudiants</div>
                 </div>
-                <div class="flex-grow-1">
-                    <div class="fw-semibold small">Glissez ou cliquez pour importer</div>
-                    <div class="text-muted small">PDF, DOCX — max 10 Mo</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 bg-warning bg-opacity-10 rounded-3 p-3 text-center">
+                    <div class="fw-bold fs-3 text-warning">{{ stats.nb_pilotes }}</div>
+                    <div class="text-muted small">Pilotes</div>
                 </div>
-                <button class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                    <i class="bi bi-upload me-1"></i>Choisir
-                </button>
             </div>
-            <input type="file" id="lmFile" class="d-none" accept=".pdf,.doc,.docx"/>
- 
-            <div id="lmBadge" class="d-none mt-2">
-                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2 fw-normal">
-                    <i class="bi bi-check-circle-fill me-1"></i><span id="lmName"></span>
-                </span>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 bg-success bg-opacity-10 rounded-3 p-3 text-center">
+                    <div class="fw-bold fs-3 text-success">{{ stats.nb_offres }}</div>
+                    <div class="text-muted small">Offres</div>
+                </div>
             </div>
- 
-            <div class="d-flex align-items-center gap-2 my-3">
-                <hr class="flex-grow-1 my-0"/>
-                <span class="text-muted small fw-semibold">OU</span>
-                <hr class="flex-grow-1 my-0"/>
+            <div class="col-6 col-md-3">
+                <div class="card border-0 bg-info bg-opacity-10 rounded-3 p-3 text-center">
+                    <div class="fw-bold fs-3 text-info">{{ stats.nb_entreprises }}</div>
+                    <div class="text-muted small">Entreprises</div>
+                </div>
             </div>
- 
-            <button class="btn btn-light border w-100 small text-secondary"
-                    data-bs-toggle="modal" data-bs-target="#textModal" data-target="lm">
-                <i class="bi bi-clipboard-plus me-1"></i>Coller du texte
-            </button>
         </div>
     </div>
- 
-    <!-- Compétences -->
-    <div class="card border rounded-3 shadow-sm mb-3">
-        <div class="card-body p-4">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <p class="text-uppercase text-secondary fw-semibold small mb-0">Compétences</p>
-                <div class="dropdown">
-                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-plus-circle me-1"></i>Ajouter
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end border shadow-sm rounded-3 p-2"
-                         style="min-width:220px;" onclick="event.stopPropagation()">
-                        <div class="input-group input-group-sm mb-2">
-                            <span class="input-group-text bg-light border-end-0 text-muted">
-                                <i class="bi bi-search"></i>
-                            </span>
-                            <input type="text" class="form-control form-control-sm bg-light border-start-0"
-                                   placeholder="Rechercher…" id="skillSearch" oninput="filterSkills()"/>
-                        </div>
-                        <div id="skillOptions" style="max-height:200px;overflow-y:auto;"></div>
-                    </div>
+    {% endif %}
+
+    {# ── STATISTIQUES PILOTE ── #}
+    {% if user.isPilote() and stats is defined %}
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <p class="text-uppercase text-secondary fw-semibold small mb-4" style="letter-spacing:.1em;">
+            Statistiques
+        </p>
+        <div class="row g-3">
+            <div class="col-6">
+                <div class="card border-0 bg-primary bg-opacity-10 rounded-3 p-3 text-center">
+                    <div class="fw-bold fs-3 text-primary">{{ stats.nb_etudiants }}</div>
+                    <div class="text-muted small">Étudiants</div>
                 </div>
             </div>
- 
-            <div class="d-flex flex-wrap gap-2" id="skillsGrid"></div>
-            <p id="noSkills" class="text-muted small text-center mb-0 d-none">
-                Aucune compétence — cliquez sur Ajouter
-            </p>
+            <div class="col-6">
+                <div class="card border-0 bg-success bg-opacity-10 rounded-3 p-3 text-center">
+                    <div class="fw-bold fs-3 text-success">{{ stats.nb_offres }}</div>
+                    <div class="text-muted small">Offres</div>
+                </div>
+            </div>
         </div>
     </div>
- 
+    {% endif %}
+
+    {# ── INFORMATIONS PERSONNELLES ── #}
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <p class="text-uppercase text-secondary fw-semibold small mb-4" style="letter-spacing:.1em;">
+            Informations personnelles
+        </p>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <p class="text-muted small mb-1">Prénom</p>
+                <p class="fw-semibold mb-0">{{ user.prenom }}</p>
+            </div>
+            <div class="col-md-6">
+                <p class="text-muted small mb-1">Nom</p>
+                <p class="fw-semibold mb-0">{{ user.nom }}</p>
+            </div>
+            <div class="col-md-6">
+                <p class="text-muted small mb-1">Email</p>
+                <p class="fw-semibold mb-0">{{ user.email }}</p>
+            </div>
+            <div class="col-md-6">
+                <p class="text-muted small mb-1">Rôle</p>
+                <p class="fw-semibold mb-0">{{ user.getRole().value|capitalize }}</p>
+            </div>
+        </div>
+    </div>
+
+    {# ── ACTIONS SELON RÔLE ── #}
+    {% if user.isAdmin() or user.isPilote() %}
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <p class="text-uppercase text-secondary fw-semibold small mb-4" style="letter-spacing:.1em;">
+            Actions disponibles
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+            <a href="{{ url_for('liste_etudiants') }}" class="btn btn-outline-primary rounded-3 fw-semibold">
+                <i class="bi bi-people-fill me-2"></i>Liste des étudiants
+            </a>
+            {% if user.isAdmin() %}
+                <a href="{{ url_for('liste_pilotes') }}" class="btn btn-outline-warning rounded-3 fw-semibold">
+                    <i class="bi bi-person-badge-fill me-2"></i>Liste des pilotes
+                </a>
+            {% endif %}
+            <a href="/compte" class="btn btn-primary rounded-3 fw-semibold">
+                <i class="bi bi-person-plus-fill me-2"></i>Créer un compte
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
 </div>
- 
-{# ── MODAL TEXTE ── #}
-<div class="modal fade" id="textModal" tabindex="-1">
+
+{# ── MODAL MODIFIER PROFIL ── #}
+<div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow rounded-4">
-            <div class="modal-header px-4 py-3">
-                <h6 class="modal-title fw-bold" id="textModalTitle">Ajouter du texte</h6>
+            <div class="modal-header px-4 py-3 border-0">
+                <h6 class="modal-title fw-bold">Modifier mon profil</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body px-4 py-3">
-                <textarea class="form-control bg-light" id="textArea" rows="7"
-                          placeholder="Collez ou écrivez votre contenu ici…"></textarea>
-            </div>
-            <div class="modal-footer px-4 py-3 gap-2">
-                <button class="btn btn-light border rounded-pill px-4 btn-sm"
-                        data-bs-dismiss="modal">Annuler</button>
-                <button class="btn btn-primary rounded-pill px-4 btn-sm fw-semibold"
-                        onclick="saveText()">Enregistrer</button>
-            </div>
+            <form method="POST" action="/profile">
+                <div class="modal-body px-4 py-3">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Prénom</label>
+                        <input type="text" name="prenom" class="form-control rounded-3"
+                               value="{{ user.prenom }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Nom</label>
+                        <input type="text" name="nom" class="form-control rounded-3"
+                               value="{{ user.nom }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Email</label>
+                        <input type="email" name="email" class="form-control rounded-3"
+                               value="{{ user.email }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">
+                            Nouveau mot de passe <span class="text-muted fw-normal">(laisser vide pour ne pas changer)</span>
+                        </label>
+                        <input type="password" name="password" class="form-control rounded-3"
+                               placeholder="••••••••">
+                    </div>
+                </div>
+                <div class="modal-footer px-4 py-3 border-0 gap-2">
+                    <button type="button" class="btn btn-light border rounded-pill px-4 btn-sm"
+                            data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 btn-sm fw-semibold">
+                        Enregistrer
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
- 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-    // ── Upload ──
-    ['cv','lm'].forEach(id => {
-        document.getElementById(id+'File').addEventListener('change', function() {
-            const f = this.files[0];
-            if (!f) return;
-            document.getElementById(id+'Name').textContent = f.name;
-            document.getElementById(id+'Badge').classList.remove('d-none');
-        });
-    });
- 
-    // ── Modal ──
-    let modalTarget = '';
-    document.querySelectorAll('[data-target]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            modalTarget = btn.dataset.target;
-            document.getElementById('textModalTitle').textContent =
-                modalTarget === 'cv' ? 'Ajouter votre CV (texte)' : 'Ajouter votre lettre (texte)';
-        });
-    });
- 
-    function saveText() {
-        const val = document.getElementById('textArea').value.trim();
-        if (val) {
-            document.getElementById(modalTarget+'Name').textContent = val.length > 50 ? val.slice(0,50)+'…' : val;
-            document.getElementById(modalTarget+'Badge').classList.remove('d-none');
-        }
-        bootstrap.Modal.getInstance(document.getElementById('textModal')).hide();
-    }
- 
-    // ── Skills ──
     const ALL = ['HTML','CSS','JavaScript','TypeScript','React','Vue.js','Angular','Bootstrap',
         'Python','Node.js','SQL','Git','Figma','PHP','Java','C#','Ruby','Swift','Kotlin','Docker'];
-    const active = new Set(['HTML']);
- 
+    const active = new Set();
+
     function renderSkills() {
         const grid = document.getElementById('skillsGrid');
         grid.innerHTML = '';
         active.forEach(s => {
             const chip = document.createElement('span');
-            chip.className = 'badge bg-light text-dark border rounded-pill px-3 py-2 fw-normal d-inline-flex align-items-center gap-2';
-            chip.innerHTML = `${s}<button class="btn-close" style="font-size:.55rem;" onclick="removeSkill('${s}')"></button>`;
+            chip.className = 'badge rounded-pill border border-primary text-primary bg-white px-3 py-2 fw-normal d-inline-flex align-items-center gap-2';
+            chip.innerHTML = `${s}<button class="btn-close" style="font-size:.5rem;" onclick="removeSkill('${s}')"></button>`;
             grid.appendChild(chip);
         });
         document.getElementById('noSkills').classList.toggle('d-none', active.size > 0);
         filterSkills();
     }
- 
+
     function filterSkills() {
         const q = (document.getElementById('skillSearch').value || '').toLowerCase();
         const wrap = document.getElementById('skillOptions');
@@ -216,9 +220,9 @@
             wrap.appendChild(btn);
         });
     }
- 
+
     function removeSkill(s) { active.delete(s); renderSkills(); }
- 
+
     renderSkills();
 </script>
 
