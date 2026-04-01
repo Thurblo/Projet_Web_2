@@ -26,7 +26,7 @@
             <div class="row mt-4">
                 <div class="col-md-6 mb-3">
                     <p class="text-secondary mb-1"><i class="bi bi-calendar3 me-2"></i>Date de création</p>
-                    <strong>{{ entreprise.dateCreation|date('d F Y') }}</strong>
+                    <strong>{{ entreprise.dateCreation }}</strong>
                 </div>
                 <div class="col-md-6 mb-3">
                     <p class="text-secondary mb-1"><i class="bi bi-tag me-2"></i>Type d'entreprise</p>
@@ -83,5 +83,38 @@
             </div>
         </div>
     </div>
+     <!-- SECTION OFFRES DE L'ENTREPRISE -->
+    {% if entreprise.offres|length > 0 %}
+    <div class="mt-5">
+        <h3 class="fw-bold mb-4">Offres d'emploi ({{ entreprise.offres|length }})</h3>
+        <div class="row row-cols-3 g-4">
+            {% for offre in entreprise.offres %}
+            <div class="col-md-4">
+                <div class="card shadow card-hover border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <h5 class="fw-bold mb-1">{{ offre.titre }}</h5>
+                            <i class="bi bi-bookmark fs-4 text-secondary"></i>
+                        </div>
+                        <p class="text-secondary mb-2"><i class="bi bi-building me-1"></i>{{ entreprise.nom }}</p>
+                        <div class="mt-3">
+                            <span class="badge bg-light text-dark me-2 px-3 py-2">{{ offre.duree }} mois</span>
+                            <span class="badge bg-light text-dark me-2 px-3 py-2">{{ offre.niveau }}</span>
+                            <span class="badge bg-light text-dark px-3 py-2">{{ offre.ville }}</span>
+                        </div>
+                        <p class="text-secondary mt-3 small">{{ offre.description}}</p>
+                        <div class="d-flex gap-2 mt-3">
+                            <a href="{{ url_for('offres.description', { 'id': offre.id }) }}" class="btn btn-outline-primary flex-fill rounded-4 py-2 text-decoration-none">Voir</a>
+                            <button class="btn btn-primary flex-fill rounded-4 py-2">Postuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">Aucune offre d'emploi disponible pour cette entreprise pour le moment.</div>
+    {% endif %}
 </div>
 {% endblock %}

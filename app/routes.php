@@ -63,30 +63,32 @@ return function (App $app) {
     $app->get('/entreprises/description/{id:\d+}', [EntreprisesController::class, 'description'])
         ->setName('entreprises.description');
 
+    $app->get('/offres[/{page:\d+}]', [OffresController::class, 'index'])
+    ->setName('offres');
+
+    $app->get('/offres/creer', [OffresController::class, 'ajoute'])
+    ->setName('offres.creer');
+
+    $app->post('/offres/creer', [OffresController::class, 'ajoute']);
+
+    $app->get('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier'])
+    ->setName('offres.modifier');
+
+    $app->post('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier']);
+
+    $app->post('/offres/supprimer/{id:\d+}', [OffresController::class, 'supprimer'])
+    ->setName('offres.supprimer');
+
+    $app->get('/offres/description/{id:\d+}', [OffresController::class, 'description'])
+    ->setName('offres.description');
+
+
     $app->get('/compte', [CompteController::class, 'index'])
         ->setName('compte');
 
     $app->post('/compte', [CompteController::class, 'create'])
         ->setName('compte.creer');
 
-    $app->get('/offres[/{page:\d+}]', [OffresController::class, 'index'])
-        ->setName('offres');
-
-    $app->get('/offres/creer', [OffresController::class, 'ajoute'])
-        ->setName('offres.creer');
-
-    $app->post('/offres/creer', [OffresController::class, 'ajoute']);
-
-    $app->get('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier'])
-        ->setName('offres.modifier');
-
-    $app->post('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier']);
-
-    $app->post('/offres/supprimer/{id:\d+}', [OffresController::class, 'supprimer'])
-        ->setName('offres.supprimer');
-
-    $app->get('/offres/description/{id:\d+}', [OffresController::class, 'description'])
-        ->setName('offres.description');
 
     $app->get('/Login', [LoginController::class, 'login'])->setName('login');
     $app->post('/Login', [LoginController::class, 'login']);

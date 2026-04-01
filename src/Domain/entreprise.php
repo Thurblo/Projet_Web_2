@@ -2,12 +2,14 @@
 
 namespace App\Domain;
 
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\OneToMany;
 
 #[Entity, Table(name: 'entreprises')]
 class Entreprise
@@ -21,8 +23,8 @@ class Entreprise
     #[Column(type: 'string', nullable: false)]
     private string $telephone;
 
-    #[Column(name: 'date_creation', type: 'date_immutable', nullable: false)]
-    private DateTimeImmutable $dateCreation;
+    #[Column(type: 'string', nullable: false)]
+    private string $dateCreation;
 
     #[Column(type: 'string', nullable: false)]
     private string $type;
@@ -51,11 +53,14 @@ class Entreprise
     #[Column(type: 'string', nullable: false)]
     private string $statut;
 
+    #[OneToMany(mappedBy: 'entreprise', targetEntity: Offre::class, cascade: ['remove'])]
+    private Collection $offres;
+
 
     public function __construct(
         string $nom,
         string $telephone,
-        DateTimeImmutable $dateCreation,
+        string $dateCreation,
         string $type,
         string $ville,
         string $salaries,
@@ -65,7 +70,8 @@ class Entreprise
         string $evaluation,
         string $email,
         string $statut = 'Actif'
-    ) {
+    ) 
+    {
         $this->nom = $nom;
         $this->telephone = $telephone;
         $this->dateCreation = $dateCreation;
@@ -78,6 +84,7 @@ class Entreprise
         $this->evaluation = $evaluation;
         $this->email = $email;
         $this->statut = $statut;
+        $this->offres = new ArrayCollection();
     }
 
     public function getId(): int
@@ -105,12 +112,12 @@ class Entreprise
         $this->telephone = $telephone;
     }
 
-    public function getDateCreation(): DateTimeImmutable
+    public function getDateCreation(): string
     {
         return $this->dateCreation;
     }
 
-    public function setDateCreation(DateTimeImmutable $dateCreation): void
+    public function setDateCreation(string $dateCreation): void
     {
         $this->dateCreation = $dateCreation;
     }
@@ -203,5 +210,10 @@ class Entreprise
     public function setStatut(string $statut): void
     {
         $this->statut = $statut;
+    }
+
+    public function getOffres(): Collection 
+    { 
+        return $this->offres; 
     }
 }

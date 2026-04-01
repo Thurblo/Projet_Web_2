@@ -3,7 +3,6 @@
 namespace App\Application\Controller;
 
 use App\Domain\Entreprise;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -103,7 +102,7 @@ class EntreprisesController
                 $nouvelleEntreprise = new Entreprise(
                     $nom,
                     $phone,
-                    DateTimeImmutable::createFromFormat('Y-m-d', $date),
+                    $date,
                     $type,
                     $ville,
                     $salaries,
@@ -168,7 +167,7 @@ class EntreprisesController
             if ($nom !== '' && $telephone !== '') {
                 $entreprise->setNom($nom);
                 $entreprise->setTelephone($telephone);
-                $entreprise->setDateCreation(DateTimeImmutable::createFromFormat('Y-m-d', $dateCreation));
+                $entreprise->setDateCreation($dateCreation);
                 $entreprise->setType($type);
                 $entreprise->setVille($ville);
                 $entreprise->setSalaries($salaries);
