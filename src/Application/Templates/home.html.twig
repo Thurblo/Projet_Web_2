@@ -14,10 +14,10 @@
         <h1 class="fw-bold display-5 mb-2">Trouve ton stage idéal</h1>
         <p class="lead mb-4 opacity-75">Des centaines d'offres de stage vous attendent. Commencez votre recherche dès maintenant.</p>
         <div class="d-flex justify-content-center gap-3">
-            <a href="{{ url_for('offres') }}" class="btn btn-light btn-lg rounded-pill fw-bold px-4">
+            <a href="{{ url_for('offres') }}" class="btn btn-light btn-lg rounded-pill fw-bold px-4 w-25">
                 <i class="bi bi-search me-2"></i>Voir toutes les offres
             </a>
-            <a href="{{ url_for('entreprises') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
+            <a href="{{ url_for('entreprises') }}" class="btn btn-outline-light btn-lg rounded-pill px-4 w-25">
                 <i class="bi bi-building me-2"></i>Les entreprises
             </a>
         </div>
@@ -59,7 +59,9 @@
                     <div class="bg-primary bg-opacity-10 px-4 pt-4 pb-3">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h5 class="fw-bold mb-1 text-dark">{{ offre.titre }}</h5>
+                                <a href="{{ url_for('offres.description', { 'id': offre.id }) }}" class="text-decoration-none">
+                                    <h5 class="fw-bold mb-1 text-dark">{{ offre.titre }}</h5>
+                                </a>
                                 <p class="text-primary fw-semibold small mb-0">{{ offre.entreprise }}</p>
                             </div>
                             <span class="badge text-bg-primary rounded-pill px-3 py-2 fw-semibold">
