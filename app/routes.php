@@ -30,49 +30,77 @@ return function (App $app) {
 
     $factory = $app->getContainer()->get(ResponseFactoryInterface::class);
 
+    // ── PUBLIQUES ──
     $app->get('/', [HomeController::class, 'home']);
     $app->get('/home', [HomeController::class, 'home'])->setName('home');
-
-    $app->get('/profile', [ProfileController::class, 'index'])->setName('profile');
-    $app->post('/profile', [ProfileController::class, 'edit'])->setName('profile.edit');
-
     $app->get('/home/connexion', [HomeController::class, 'connexion'])->setName('home.connexion');
     $app->get('/mentions', [HomeController::class, 'mention'])->setName('mentions');
-
-    $app->get('/entreprises[/{page:\d+}]', [EntreprisesController::class, 'index'])->setName('entreprises');
-    $app->get('/entreprises/creer', [EntreprisesController::class, 'ajoute'])->setName('entreprises.creer');
-    $app->post('/entreprises/creer', [EntreprisesController::class, 'ajoute']);
-    $app->get('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modifier'])->setName('entreprises.modifier');
-    $app->post('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modifier']);
-    $app->post('/entreprises/supprimer/{id:\d+}', [EntreprisesController::class, 'supprimer'])->setName('entreprises.supprimer');
-    $app->get('/entreprises/description/{id:\d+}', [EntreprisesController::class, 'description'])->setName('entreprises.description');
-
-    $app->get('/offres[/{page:\d+}]', [OffresController::class, 'index'])->setName('offres');
-    $app->get('/offres/creer', [OffresController::class, 'ajoute'])->setName('offres.creer');
-    $app->post('/offres/creer', [OffresController::class, 'ajoute']);
-    $app->get('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier'])->setName('offres.modifier');
-    $app->post('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier']);
-    $app->post('/offres/supprimer/{id:\d+}', [OffresController::class, 'supprimer'])->setName('offres.supprimer');
-    $app->get('/offres/description/{id:\d+}', [OffresController::class, 'description'])->setName('offres.description');
-
-    $app->get('/compte', [CompteController::class, 'index'])->setName('compte');
-    $app->post('/compte', [CompteController::class, 'create'])->setName('compte.creer');
-
     $app->get('/Login', [LoginController::class, 'login'])->setName('login');
     $app->post('/Login', [LoginController::class, 'login']);
-
     $app->get('/logout', [HomeController::class, 'logout'])->setName('logout');
 
-    $app->get('/wishlist', [WishlistController::class, 'index'])->setName('wishlist');
-    $app->get('/wishlist/toggle/{id}', [WishlistController::class, 'toggle'])->setName('wishlist.toggle');
+    // ── CONNECTÉS ──
+    $app->get('/profile', [ProfileController::class, 'index'])->setName('profile')
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/profile', [ProfileController::class, 'edit'])->setName('profile.edit')
+        ->add(new LoggedMiddleware($factory));
+
+    $app->get('/search', [SearchController::class, 'search'])->setName('search')
+        ->add(new LoggedMiddleware($factory));
+
+    $app->get('/wishlist', [WishlistController::class, 'index'])->setName('wishlist')
+        ->add(new LoggedMiddleware($factory));
+    $app->get('/wishlist/toggle/{id}', [WishlistController::class, 'toggle'])->setName('wishlist.toggle')
+        ->add(new LoggedMiddleware($factory));
+
+    $app->get('/entreprises[/{page:\d+}]', [EntreprisesController::class, 'index'])->setName('entreprises')
+        ->add(new LoggedMiddleware($factory));
+    $app->get('/entreprises/creer', [EntreprisesController::class, 'ajoute'])->setName('entreprises.creer')
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/entreprises/creer', [EntreprisesController::class, 'ajoute'])
+        ->add(new LoggedMiddleware($factory));
+    $app->get('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modifier'])->setName('entreprises.modifier')
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/entreprises/modifier/{id:\d+}', [EntreprisesController::class, 'modifier'])
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/entreprises/supprimer/{id:\d+}', [EntreprisesController::class, 'supprimer'])->setName('entreprises.supprimer')
+        ->add(new LoggedMiddleware($factory));
+    $app->get('/entreprises/description/{id:\d+}', [EntreprisesController::class, 'description'])->setName('entreprises.description')
+        ->add(new LoggedMiddleware($factory));
+
+    $app->get('/offres[/{page:\d+}]', [OffresController::class, 'index'])->setName('offres')
+        ->add(new LoggedMiddleware($factory));
+    $app->get('/offres/creer', [OffresController::class, 'ajoute'])->setName('offres.creer')
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/offres/creer', [OffresController::class, 'ajoute'])
+        ->add(new LoggedMiddleware($factory));
+    $app->get('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier'])->setName('offres.modifier')
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/offres/modifier/{id:\d+}', [OffresController::class, 'modifier'])
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/offres/supprimer/{id:\d+}', [OffresController::class, 'supprimer'])->setName('offres.supprimer')
+        ->add(new LoggedMiddleware($factory));
+    $app->get('/offres/description/{id:\d+}', [OffresController::class, 'description'])->setName('offres.description')
+        ->add(new LoggedMiddleware($factory));
+
+    $app->get('/compte', [CompteController::class, 'index'])->setName('compte')
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/compte', [CompteController::class, 'create'])->setName('compte.creer')
+        ->add(new LoggedMiddleware($factory));
 
     // ── CANDIDATURES ──
-    $app->get('/candidatures', [CandidatureController::class, 'mesCandidatures'])->setName('candidatures');
-    $app->get('/candidatures/postuler/{id:\d+}', [CandidatureController::class, 'postuler'])->setName('candidatures.postuler.form');
-    $app->post('/candidatures/postuler/{id:\d+}', [CandidatureController::class, 'postuler'])->setName('candidatures.postuler');
-    $app->post('/candidatures/annuler/{id:\d+}', [CandidatureController::class, 'annuler'])->setName('candidatures.annuler');
-    $app->get('/candidatures/gestion', [CandidatureController::class, 'gestion'])->setName('candidatures.gestion');
-    $app->post('/candidatures/statut/{id:\d+}', [CandidatureController::class, 'changerStatut'])->setName('candidatures.statut');
+    $app->get('/candidatures', [CandidatureController::class, 'mesCandidatures'])->setName('candidatures')
+        ->add(new LoggedMiddleware($factory));
+    $app->get('/candidatures/postuler/{id:\d+}', [CandidatureController::class, 'postuler'])->setName('candidatures.postuler.form')
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/candidatures/postuler/{id:\d+}', [CandidatureController::class, 'postuler'])->setName('candidatures.postuler')
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/candidatures/annuler/{id:\d+}', [CandidatureController::class, 'annuler'])->setName('candidatures.annuler')
+        ->add(new LoggedMiddleware($factory));
+    $app->get('/candidatures/gestion', [CandidatureController::class, 'gestion'])->setName('candidatures.gestion')
+        ->add(new LoggedMiddleware($factory));
+    $app->post('/candidatures/statut/{id:\d+}', [CandidatureController::class, 'changerStatut'])->setName('candidatures.statut')
+        ->add(new LoggedMiddleware($factory));
 
     // ── CAMPUS ──
     $app->group('/campus', function (RouteCollectorProxy $group) {
@@ -105,6 +133,6 @@ return function (App $app) {
         $group->post('/supprimer/{id:\d+}', [PiloteController::class, 'supprimer'])->setName('pilotes.supprimer');
     })->add(new RoleCheckMiddleware($factory, [Role::ADMIN]));
 
-    $app->get('/search', [SearchController::class, 'search'])->setName('search');
+
 
 };

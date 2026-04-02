@@ -21,6 +21,7 @@
                     <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Offre</th>
                     <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Entreprise</th>
                     <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Date</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Documents</th>
                     <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Statut</th>
                     <th class="pe-4 py-3 text-end text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Actions</th>
                 </tr>
@@ -43,6 +44,18 @@
                     <td class="py-3 fw-semibold small">{{ candidature.offre.titre }}</td>
                     <td class="py-3 text-muted small">{{ candidature.offre.entreprise.nom }}</td>
                     <td class="py-3 text-muted small">{{ candidature.datePostulation|date('d/m/Y') }}</td>
+
+                    {# ── DOCUMENTS ── #}
+                    <td class="py-3">
+                        <div class="d-flex gap-1">
+                            <button class="btn btn-outline-primary btn-sm rounded-3"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modal-{{ candidature.id }}">
+                                <i class="bi bi-file-earmark-text me-1"></i>Voir
+                            </button>
+                        </div>
+                    </td>
+
                     <td class="py-3">
                         {% if candidature.statut == 'acceptee' %}
                             <span class="badge text-bg-success rounded-pill px-3">
@@ -58,6 +71,7 @@
                             </span>
                         {% endif %}
                     </td>
+
                     <td class="pe-4 py-3 text-end">
                         <form method="POST" action="/candidatures/statut/{{ candidature.id }}" class="d-flex gap-1 justify-content-end">
                             <select name="statut" class="form-select form-select-sm rounded-3" style="width:140px;">
@@ -71,6 +85,59 @@
                         </form>
                     </td>
                 </tr>
+
+                {# ── MODAL DOCUMENTS ── #}
+                <div class="modal fade" id="modal-{{ candidature.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content border-0 shadow rounded-4">
+                            <div class="modal-header border-0 px-4 pt-4">
+                                <div>
+                                    <h5 class="modal-title fw-bold">Documents de {{ candidature.etudiant.prenom }} {{ candidature.etudiant.nom }}</h5>
+                                    <p class="text-muted small mb-0">Candidature pour : {{ candidature.offre.titre }}</p>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body px-4 pb-4">
+
+                                {# CV #}
+                                <div class="card border-0 bg-light rounded-3 p-3 mb-3">
+                                    <p class="text-uppercase text-muted fw-semibold small mb-2" style="letter-spacing:.1em;">
+                                        <i class="bi bi-file-earmark-person me-2"></i>CV
+                                    </p>
+                                    {% if candidature.cvTexte %}
+                                        <p class="small mb-0" style="white-space:pre-wrap;">{{ candidature.cvTexte }}</p>
+                                    {% else %}
+                                        <p class="text-muted small mb-0"><i class="bi bi-dash me-1"></i>Aucun CV fourni</p>
+                                    {% endif %}
+                                </div>
+
+                                {# LETTRE DE MOTIVATION #}
+                                <div class="card border-0 bg-light rounded-3 p-3 mb-3">
+                                    <p class="text-uppercase text-muted fw-semibold small mb-2" style="letter-spacing:.1em;">
+                                        <i class="bi bi-file-earmark-text me-2"></i>Lettre de motivation
+                                    </p>
+                                    {% if candidature.lmTexte %}
+                                        <p class="small mb-0" style="white-space:pre-wrap;">{{ candidature.lmTexte }}</p>
+                                    {% else %}
+                                        <p class="text-muted small mb-0"><i class="bi bi-dash me-1"></i>Aucune lettre fournie</p>
+                                    {% endif %}
+                                </div>
+
+                                {# COMMENTAIRE #}
+                                {% if candidature.commentaire %}
+                                <div class="card border-0 bg-light rounded-3 p-3">
+                                    <p class="text-uppercase text-muted fw-semibold small mb-2" style="letter-spacing:.1em;">
+                                        <i class="bi bi-chat-text me-2"></i>Message additionnel
+                                    </p>
+                                    <p class="small mb-0" style="white-space:pre-wrap;">{{ candidature.commentaire }}</p>
+                                </div>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 {% endfor %}
             </tbody>
         </table>
