@@ -9,7 +9,11 @@
         <h2 class="fw-bold text-primary m-0">Entreprises</h2>
         <div class="d-flex gap-2">
             <span class="badge bg-primary rounded-pill px-3 py-2 fs-6">{{ totalEntreprises }} Entreprises</span>
-            <a href="{{ url_for('entreprises.creer') }}" class="btn btn-primary rounded-5 px-3 py-1 fw-bold"><i class="bi bi-building-add"></i> Ajouter</a>
+            {% if user and not user.isEtudiant() %}
+                <a href="{{ url_for('entreprises.creer') }}" class="btn btn-primary rounded-5 px-3 py-1 fw-bold">
+                    <i class="bi bi-building-add"></i> Ajouter
+                </a>
+            {% endif %}
         </div>
     </div>
 
@@ -32,7 +36,9 @@
             <div class="card-body p-2">
                 <div class="row align-items-center g-2">
                     <div class="col-4">
-                        <a href="{{ url_for('entreprises.description', { 'id': ent.id }) }}" class="text-decoration-none"><strong class="text-black">{{ ent.nom }}</strong></a><br>
+                        <a href="{{ url_for('entreprises.description', { 'id': ent.id }) }}" class="text-decoration-none">
+                            <strong class="text-black">{{ ent.nom }}</strong>
+                        </a><br>
                         <small class="text-secondary">{{ ent.ville }}, {{ ent.salaries }} salariés</small>
                     </div>
                     <div class="col-4">
@@ -40,12 +46,16 @@
                         <span class="badge {% if ent.statut == 'Actif' %}bg-success{% else %}bg-danger{% endif %} text-white">{{ ent.statut }}</span>
                     </div>
                     <div class="col-4 text-end">
-                        <!-- LIEN MODIFIER CORRIGÉ -->
-                        <a href="{{ url_for('entreprises.modifier', { 'id': ent.id }) }}" class="btn btn-primary btn-sm rounded-4 px-3">Modifier</a>
-                        <!-- FORMULAIRE SUPPRESSION -->
-                        <form action="{{ url_for('entreprises.supprimer', { 'id': ent.id }) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cette entreprise ?')">
-                            <button type="submit" class="btn btn-danger btn-sm rounded-4 px-3">Supprimer</button>
-                        </form>
+                        {% if user and user.isEtudiant() %}
+                            <a href="{{ url_for('entreprises.description', { 'id': ent.id }) }}" class="btn btn-outline-primary btn-sm rounded-4 px-3">
+                                <i class="bi bi-eye-fill me-1"></i>Voir
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('entreprises.modifier', { 'id': ent.id }) }}" class="btn btn-primary btn-sm rounded-4 px-3">Modifier</a>
+                            <form action="{{ url_for('entreprises.supprimer', { 'id': ent.id }) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer cette entreprise ?')">
+                                <button type="submit" class="btn btn-danger btn-sm rounded-4 px-3">Supprimer</button>
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>

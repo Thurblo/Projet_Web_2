@@ -24,7 +24,6 @@ class EntreprisesController
         
         $repository = $this->em->getRepository(Entreprise::class);
         
-        // Récupérer le terme de recherche depuis la requête
         $queryParams = $request->getQueryParams();
         $searchTerm = isset($queryParams['search']) ? trim($queryParams['search']) : '';
         
@@ -32,22 +31,18 @@ class EntreprisesController
         $page = isset($args['page']) ? (int)$args['page'] : 1;
         $offset = ($page - 1) * $perPage;
         
-        // Construction de la requête avec recherche
         $qb = $repository->createQueryBuilder('e');
         
-        // Ajouter la condition de recherche si un terme est fourni
         if ($searchTerm !== '') {
             $qb->where('e.nom LIKE :search')
                ->setParameter('search', '%' . $searchTerm . '%');
         }
         
-        // Compter le nombre total d'entreprises (avec ou sans recherche)
         $countQb = clone $qb;
         $totalEntreprises = $countQb->select('COUNT(e.id)')
             ->getQuery()
             ->getSingleScalarResult();
         
-        // Récupérer les entreprises pour la page courante
         $entreprises = $qb->orderBy('e.id', 'DESC')
             ->setFirstResult($offset)
             ->setMaxResults($perPage)
@@ -61,7 +56,7 @@ class EntreprisesController
             'page' => $page,
             'totalPages' => $totalPages,
             'totalEntreprises' => $totalEntreprises,
-            'searchTerm' => $searchTerm, // Passer le terme de recherche à la vue
+            'searchTerm' => $searchTerm,
         ]);
     }
 
@@ -69,7 +64,6 @@ class EntreprisesController
     {
         $view = Twig::fromRequest($request);
 
-        $success = false;
         $nom = '';
         $phone = '';
         $date = '';
@@ -115,7 +109,8 @@ class EntreprisesController
                 );
                 $this->em->persist($nouvelleEntreprise);
                 $this->em->flush();
-                $success = true;
+
+                return $response->withHeader('Location', '/entreprises')->withStatus(302);
             }
         }
 
@@ -132,7 +127,6 @@ class EntreprisesController
             'evaluation' => $evaluation,
             'email' => $email,
             'statut' => $statut,
-            'success' => $success,
         ]);
     }
 
@@ -146,8 +140,6 @@ class EntreprisesController
         if (!$entreprise) {
             return $response->withStatus(404);
         }
-
-        $success = false;
 
         if ($request->getMethod() === 'POST') {
             $parsedBody = $request->getParsedBody();
@@ -178,13 +170,13 @@ class EntreprisesController
                 $entreprise->setEmail($email);
                 $entreprise->setStatut($statut);
                 $this->em->flush();
-                $success = true;
+
+                return $response->withHeader('Location', '/entreprises')->withStatus(302);
             }
         }
 
         return $view->render($response, 'ENTREPRISES-Modifier.html.twig', [
             'entreprise' => $entreprise,
-            'success' => $success,
         ]);
     }
 
@@ -228,5 +220,5 @@ class EntreprisesController
             'entreprise'  => $entreprise,
             'wishlistIds' => $wishlistIds,
         ]);
-    }   
+    }
 }

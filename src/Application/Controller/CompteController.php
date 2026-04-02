@@ -46,7 +46,6 @@ class CompteController
 
         $view = Twig::fromRequest($request);
 
-        
         $donnees = $request->getParsedBody();
         $type    = $donnees['type'] ?? null;
         $action  = $donnees['action'] ?? null;
@@ -65,7 +64,6 @@ class CompteController
                 return $response->withHeader('Location', '/')->withStatus(302);
             }
 
-            // Vérifier si l'email existe déjà
             $existingUser = $this->em->getRepository(User::class)->findOneBy(['email' => $donnees['email'] ?? '']);
             if ($existingUser) {
                 return $view->render($response, 'Compte.html.twig', [
@@ -85,7 +83,12 @@ class CompteController
             $this->em->persist($user);
             $this->em->flush();
 
-            return $response->withHeader('Location', '/compte')->withStatus(302);
+            // Redirection selon le rôle créé
+            if ($targetRole === Role::ETUDIANT) {
+                return $response->withHeader('Location', '/etudiant/liste')->withStatus(302);
+            }
+
+            return $response->withHeader('Location', '/pilote/liste')->withStatus(302);
         }
 
         return $view->render($response, 'Compte.html.twig', [

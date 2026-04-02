@@ -44,6 +44,21 @@ class PiloteController
         ]);
     }
 
+    public function voir(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+        $id = $args['id'];
+        $pilote = $this->em->getRepository(User::class)->find($id);
+
+        if (!$pilote || $pilote->getRole() !== Role::PILOTE) {
+            return $response->withHeader('Location', '/pilote/liste')->withStatus(302);
+        }
+
+        return $view->render($response, 'Pilote-voir.html.twig', [
+            'pilote' => $pilote,
+        ]);
+    }
+
     public function modify(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);

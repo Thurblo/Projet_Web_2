@@ -1,0 +1,84 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Mes candidatures{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 900px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Mes candidatures</h3>
+            <p class="text-muted small mb-0">{{ candidatures|length }} candidature(s)</p>
+        </div>
+        <a href="/offres" class="btn btn-primary rounded-3 fw-semibold">
+            <i class="bi bi-search me-2"></i>Voir les offres
+        </a>
+    </div>
+
+    {% if candidatures|length > 0 %}
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4 py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Offre</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Entreprise</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Date</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Statut</th>
+                    <th class="pe-4 py-3 text-end text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for candidature in candidatures %}
+                <tr>
+                    <td class="ps-4 py-3 fw-semibold">{{ candidature.offre.titre }}</td>
+                    <td class="py-3 text-muted small">{{ candidature.offre.entreprise.nom }}</td>
+                    <td class="py-3 text-muted small">{{ candidature.datePostulation|date('d/m/Y') }}</td>
+                    <td class="py-3">
+                        {% if candidature.statut == 'acceptee' %}
+                            <span class="badge text-bg-success rounded-pill px-3">
+                                <i class="bi bi-check-circle-fill me-1"></i>Acceptée
+                            </span>
+                        {% elseif candidature.statut == 'refusee' %}
+                            <span class="badge text-bg-danger rounded-pill px-3">
+                                <i class="bi bi-x-circle-fill me-1"></i>Refusée
+                            </span>
+                        {% else %}
+                            <span class="badge text-bg-warning rounded-pill px-3">
+                                <i class="bi bi-clock-fill me-1"></i>En attente
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="pe-4 py-3 text-end">
+                        <a href="{{ url_for('offres.description', {'id': candidature.offre.id}) }}"
+                           class="btn btn-outline-primary btn-sm rounded-3 fw-semibold me-1">
+                            <i class="bi bi-eye-fill me-1"></i>Voir
+                        </a>
+                        {% if candidature.statut == 'en_attente' %}
+                        <form method="POST" action="/candidatures/annuler/{{ candidature.id }}"
+                              class="d-inline"
+                              onsubmit="return confirm('Annuler cette candidature ?')">
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-3 fw-semibold">
+                                <i class="bi bi-x-lg me-1"></i>Annuler
+                            </button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+        <i class="bi bi-inbox text-muted" style="font-size:3rem;"></i>
+        <h5 class="fw-bold mt-3 mb-1">Aucune candidature</h5>
+        <p class="text-muted small mb-3">Vous n'avez pas encore postulé à une offre.</p>
+        <a href="/offres" class="btn btn-primary rounded-3 fw-semibold mx-auto" style="width:fit-content;">
+            <i class="bi bi-search me-2"></i>Voir les offres
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -44,6 +44,21 @@ class EtudiantController
         ]);
     }
 
+    public function voir(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    {
+        $view = Twig::fromRequest($request);
+        $id = $args['id'];
+        $etudiant = $this->em->getRepository(User::class)->find($id);
+
+        if (!$etudiant || $etudiant->getRole() !== Role::ETUDIANT) {
+            return $response->withHeader('Location', '/etudiant/liste')->withStatus(302);
+        }
+
+        return $view->render($response, 'Etudiant-voir.html.twig', [
+            'etudiant' => $etudiant,
+        ]);
+    }
+
     public function modify(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);

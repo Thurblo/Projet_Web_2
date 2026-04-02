@@ -16,6 +16,16 @@
                     <span class="badge bg-light text-secondary my-2"><i class="bi bi-cash me-1"></i>{{ offre.remuneration }} €/mois</span>
                 </div>
             </div>
+
+            {# ── BOUTON POSTULER (étudiant uniquement) ── #}
+            {% if user and user.isEtudiant() %}
+            <form method="POST" action="/candidatures/postuler/{{ offre.id }}">
+                <button type="submit" class="btn btn-primary rounded-3 fw-semibold px-4">
+                    <i class="bi bi-send-fill me-2"></i>Postuler
+                </button>
+            </form>
+            {% endif %}
+
         </div>
     </div>
 
@@ -63,22 +73,30 @@
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
             <h4><strong>Description du poste</strong></h4>
-            <p class="text-secondary mt-3">{{ offre.description}}</p>
+            <p class="text-secondary mt-3">{{ offre.description }}</p>
         </div>
     </div>
 
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
             <h4><strong>Missions principales</strong></h4>
-            <p class="text-secondary mt-3">{{ offre.missions}}</p>
+            <p class="text-secondary mt-3">{{ offre.missions }}</p>
         </div>
     </div>
 
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
             <h4><strong>Compétences requises</strong></h4>
-            <p class="text-secondary mt-3">{{ offre.competences}}</p>
+            <p class="text-secondary mt-3">{{ offre.competences }}</p>
         </div>
     </div>
+
+    {# ── BOUTON RETOUR ── #}
+    <div class="mb-4">
+        <a href="/offres" class="btn btn-outline-secondary rounded-3 fw-semibold">
+            <i class="bi bi-arrow-left me-2"></i>Retour aux offres
+        </a>
+    </div>
+
 </div>
 {% endblock %}

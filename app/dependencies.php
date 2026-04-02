@@ -91,5 +91,9 @@ return function (ContainerBuilder $containerBuilder) {
             return new WishlistController($c->get(EntityManager::class));
         },
 
+        CandidatureController::class => function (ContainerInterface $c) {
+            return new CandidatureController($c->get(EntityManager::class));
+        },
+
     ]);
 };

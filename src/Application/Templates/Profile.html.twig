@@ -127,18 +127,25 @@
         <p class="text-uppercase text-secondary fw-semibold small mb-4" style="letter-spacing:.1em;">
             Actions disponibles
         </p>
-        <div class="d-flex flex-wrap gap-3">
-            <a href="{{ url_for('liste_etudiants') }}" class="btn btn-outline-primary rounded-3 fw-semibold">
-                <i class="bi bi-people-fill me-2"></i>Liste des étudiants
-            </a>
-            {% if user.isAdmin() %}
-                <a href="{{ url_for('liste_pilotes') }}" class="btn btn-outline-warning rounded-3 fw-semibold">
-                    <i class="bi bi-person-badge-fill me-2"></i>Liste des pilotes
+        <div class="row g-3">
+            <div class="col-6">
+                <a href="{{ url_for('liste_etudiants') }}" class="card border-0 shadow-sm rounded-4 p-4 text-center text-decoration-none h-100">
+                    <div class="text-primary mb-2" style="font-size:2rem;">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="fw-bold text-primary">Liste des étudiants</div>
                 </a>
+            </div>
+            {% if user.isAdmin() %}
+            <div class="col-6">
+                <a href="{{ url_for('liste_pilotes') }}" class="card border-0 shadow-sm rounded-4 p-4 text-center text-decoration-none h-100">
+                    <div class="text-warning mb-2" style="font-size:2rem;">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <div class="fw-bold text-warning">Liste des pilotes</div>
+                </a>
+            </div>
             {% endif %}
-            <a href="/compte" class="btn btn-primary rounded-3 fw-semibold">
-                <i class="bi bi-person-plus-fill me-2"></i>Créer un compte
-            </a>
         </div>
     </div>
     {% endif %}

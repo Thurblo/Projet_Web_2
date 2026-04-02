@@ -7,6 +7,23 @@
 {% endblock %}
 
 {% block content %}
+
+{# ── BANNIÈRE HERO ── #}
+<div class="bg-primary text-white py-5 mb-4">
+    <div class="container-xl text-center">
+        <h1 class="fw-bold display-5 mb-2">Trouve ton stage idéal</h1>
+        <p class="lead mb-4 opacity-75">Des centaines d'offres de stage vous attendent. Commencez votre recherche dès maintenant.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('offres') }}" class="btn btn-light btn-lg rounded-pill fw-bold px-4">
+                <i class="bi bi-search me-2"></i>Voir toutes les offres
+            </a>
+            <a href="{{ url_for('entreprises') }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                <i class="bi bi-building me-2"></i>Les entreprises
+            </a>
+        </div>
+    </div>
+</div>
+
 <div class="container-xl py-4">
 
     <h5 class="fw-bold mb-0">Dernières offres ajoutées</h5>
@@ -21,7 +38,9 @@
                     <div class="job-card {% if offreSelectionnee and offre.id == offreSelectionnee.id %}active{% endif %} p-3 {% if not loop.last %}border-bottom{% endif %}">
                         <div class="d-flex justify-content-between align-items-start">
                             <a href="{{ url_for('offres.description', { 'id': offre.id }) }}" class="fw-bold mb-1 text-dark text-decoration-none" style="font-size:.95rem">{{ offre.titre }}</a>
-                            <a href="{{ url_for('wishlist.toggle', { 'id': offre.id }) }}" class="text-decoration-none flex-shrink-0 ms-2"><i class="bi bi-bookmark{% if offre.id in wishlistIds %}-fill text-primary{% else %} text-secondary{% endif %} fs-4"></i></a>
+                            <a href="{{ url_for('wishlist.toggle', { 'id': offre.id }) }}" class="text-decoration-none flex-shrink-0 ms-2">
+                                <i class="bi bi-bookmark{% if offre.id in wishlistIds %}-fill text-primary{% else %} text-secondary{% endif %} fs-4"></i>
+                            </a>
                         </div>
                         <p class="text-muted small mb-1">{{ offre.entreprise }}</p>
                         <p class="text-muted small mb-1">{{ offre.ville }}</p>
@@ -56,7 +75,7 @@
                         <h4 class="fw-bold mb-1">{{ offreSelectionnee.titre }}</h4>
                         <p class="mb-1 text-primary" style="font-size:.9rem">{{ offreSelectionnee.entreprise }}</p>
                         <p class="text-muted mb-1" style="font-size:.85rem">{{ offreSelectionnee.ville }}</p>
-                        <p class="fw-semibold mb-0" style="font-size:.85rem">{{ offreSelectionnee.remuneration }}</p>
+                        <p class="fw-semibold text-success mb-0" style="font-size:.85rem">{{ offreSelectionnee.remuneration }}</p>
                     </div>
 
                     <div class="p-4 border-bottom">
@@ -96,7 +115,7 @@
                         <p style="font-size:.85rem; line-height:1.7">{{ offreSelectionnee.description }}</p>
                     </div>
 
-                    <div class="p-4">
+                    <div class="p-4 border-bottom">
                         <p class="fw-bold mb-2">Compétences</p>
                         <div class="d-flex flex-wrap gap-2">
                             {% if offreSelectionnee.competencesListe is not empty %}
@@ -107,12 +126,25 @@
                                 <p class="text-muted mb-0">Aucune compétence renseignée.</p>
                             {% endif %}
                         </div>
-
-                        <div class="mt-4">
-                            <p class="mb-1"><strong>Email :</strong> {{ offreSelectionnee.email }}</p>
-                            <p class="mb-0"><strong>Téléphone :</strong> {{ offreSelectionnee.telephone }}</p>
-                        </div>
                     </div>
+
+                    <div class="p-4 border-bottom">
+                        <p class="fw-bold mb-2">Contact</p>
+                        <p class="mb-1"><strong>Email :</strong> {{ offreSelectionnee.email }}</p>
+                        <p class="mb-0"><strong>Téléphone :</strong> {{ offreSelectionnee.telephone }}</p>
+                    </div>
+
+                    <div class="p-4 d-flex gap-3">
+                        <a href="{{ url_for('offres.description', { 'id': offreSelectionnee.id }) }}"
+                           class="btn btn-primary rounded-3 fw-semibold flex-fill">
+                            <i class="bi bi-send-fill me-2"></i>Postuler
+                        </a>
+                        <a href="{{ url_for('entreprises.description', { 'id': offreSelectionnee.entreprise.id }) }}"
+                           class="btn btn-outline-primary rounded-3 fw-semibold flex-fill">
+                            <i class="bi bi-building me-2"></i>Voir l'entreprise
+                        </a>
+                    </div>
+
                 {% else %}
                     <div class="p-4 text-center text-muted">
                         Aucune offre disponible.
@@ -123,5 +155,27 @@
         </div>
 
     </div>
+
+    {# ── STATISTIQUES ── #}
+    {% if stats is defined %}
+    <div class="row g-3 mt-5">
+        <div class="col-12">
+            <h5 class="fw-bold mb-3">StageFinder en chiffres</h5>
+        </div>
+        <div class="col-6 col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+                <div class="fw-bold fs-2 text-primary">{{ stats.nb_offres }}</div>
+                <div class="text-muted small mt-1"><i class="bi bi-briefcase-fill me-1"></i>Offres disponibles</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
+                <div class="fw-bold fs-2 text-success">{{ stats.nb_entreprises }}</div>
+                <div class="text-muted small mt-1"><i class="bi bi-building-fill me-1"></i>Entreprises partenaires</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 </div>
 {% endblock %}

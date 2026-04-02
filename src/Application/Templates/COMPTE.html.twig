@@ -35,8 +35,8 @@
                 </div>
 
                 <div class="col-md-6 mt-4">
-                    <label class="form-label" for="phone">Numéro de téléphone</label>
-                    <input class="form-control border border-secondary border-3 rounded-3" type="tel" id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
+                    <label class="form-label" for="prenom">Prénom</label>
+                    <input class="form-control border border-secondary border-3 rounded-3" type="text" id="prenom" name="prenom" placeholder="Entrez le prénom">
                 </div>
 
                 <div class="col-md-12 mt-4">
@@ -82,19 +82,31 @@
                         <button class="btn btn-primary btn-lg rounded-5 px-4 flex-fill" type="submit">
                             Créer le profil
                         </button>
-                        <button class="btn btn-outline-secondary btn-lg rounded-5 px-4 flex-fill" type="reset">
-                            Annuler
-                        </button>
+                        {% if typeCompte == 'etudiant' %}
+                            <a href="/etudiant/liste" class="btn btn-outline-secondary btn-lg rounded-5 px-4 flex-fill text-center text-decoration-none">
+                                Annuler
+                            </a>
+                        {% elseif typeCompte == 'pilote' %}
+                            <a href="/pilote/liste" class="btn btn-outline-secondary btn-lg rounded-5 px-4 flex-fill text-center text-decoration-none">
+                                Annuler
+                            </a>
+                        {% else %}
+                            <a href="/home" class="btn btn-outline-secondary btn-lg rounded-5 px-4 flex-fill text-center text-decoration-none">
+                                Annuler
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
 
             </div>
         </form>
+
         {% if error is defined %}
             <div class="alert alert-danger rounded-3 mx-4 mt-3">
                 <i class="bi bi-exclamation-circle me-2"></i>{{ error }}
             </div>
         {% endif %}
+
      </div>
   </div>
  </div>

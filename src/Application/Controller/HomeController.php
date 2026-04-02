@@ -3,6 +3,9 @@
 namespace App\Application\Controller;
 
 use App\Domain\Offre;
+use App\Domain\User;
+use App\Domain\Role;
+use App\Domain\Entreprise;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,7 +27,7 @@ class HomeController
 
         $repo = $this->em->getRepository(Offre::class);
 
-        // On récupère les dernières offres ajoutées
+        
         $offresEntities = $repo->createQueryBuilder('o')
             ->join('o.entreprise', 'e')
             ->addSelect('e')
@@ -46,6 +49,7 @@ class HomeController
                 'id' => $offre->getId(),
                 'titre' => $offre->getTitre(),
                 'entreprise' => $offre->getEntreprise()->getNom(),
+                'entreprise_id' => $offre->getEntreprise()->getId(),
                 'telephone' => $offre->getTelephone(),
                 'dateDebut' => $offre->getDateDebut(),
                 'duree' => $offre->getDuree(),
@@ -91,6 +95,7 @@ class HomeController
                         'id' => $selectedEntity->getId(),
                         'titre' => $selectedEntity->getTitre(),
                         'entreprise' => $selectedEntity->getEntreprise()->getNom(),
+                        'entreprise_id' => $selectedEntity->getEntreprise()->getId(),
                         'telephone' => $selectedEntity->getTelephone(),
                         'dateDebut' => $selectedEntity->getDateDebut(),
                         'duree' => $selectedEntity->getDuree(),
@@ -110,46 +115,49 @@ class HomeController
             $offreSelectionnee = $offres[0] ?? null;
         }
 
-        // Pour wishlist
+        // Wishlist
         $user = $request->getAttribute('user');
-    $wishlistIds = [];
-    if ($user) {
-        $wishlists = $this->em->getRepository(Wishlist::class)
-            ->findBy(['user' => $user]);
-        $wishlistIds = array_map(fn($w) => $w->getOffre()->getId(), $wishlists);
-}
+        $wishlistIds = [];
+        if ($user) {
+            $wishlists = $this->em->getRepository(Wishlist::class)
+                ->findBy(['user' => $user]);
+            $wishlistIds = array_map(fn($w) => $w->getOffre()->getId(), $wishlists);
+        }
+
+        // Statistiques
+        $stats = [
+            'nb_offres'      => $this->em->getRepository(Offre::class)->count([]),
+            'nb_entreprises' => $this->em->getRepository(Entreprise::class)->count([]),
+            'nb_etudiants'   => $this->em->getRepository(User::class)->count(['role' => Role::ETUDIANT]),
+            'nb_pilotes'     => $this->em->getRepository(User::class)->count(['role' => Role::PILOTE]),
+        ];
 
         return $view->render($response, 'home.html.twig', [
-            'offres' => $offres,
+            'offres'            => $offres,
             'offreSelectionnee' => $offreSelectionnee,
-            'wishlistIds' => $wishlistIds, // Ajout pour la wishlist
+            'wishlistIds'       => $wishlistIds,
+            'stats'             => $stats,
         ]);
     }
 
     public function connexion(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-    
-        return $view->render($response, 'Connexion.html.twig', [
-            'name' => 'John',
-        ]);
+        return $view->render($response, 'Connexion.html.twig', ['name' => 'John']);
     }
 
     public function mention(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $view = Twig::fromRequest($request);
-    
-        return $view->render($response, '/mentions.html.twig', [
-            'name' => 'John',
-        ]);
+        return $view->render($response, '/mentions.html.twig', ['name' => 'John']);
     }
 
     public function logout(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
-        // Vider complètement la session
+
         $_SESSION = [];
 
-        // Supprimer le cookie de session
+
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(session_name(), '', time() - 42000,

@@ -68,7 +68,6 @@ class OffresController
     {
         $view        = Twig::fromRequest($request);
         $entreprises = $this->em->getRepository(Entreprise::class)->findBy([], ['nom' => 'ASC']);
-        $success     = false;
         $errors      = [];
 
         if ($request->getMethod() === 'POST') {
@@ -88,8 +87,8 @@ class OffresController
             $competences  = trim($b['competences'] ?? '');
             $email        = trim($b['email'] ?? '');
 
-            if (!$entreprise)   { $errors[] = 'Veuillez sélectionner une entreprise.'; }
-            if ($titre === '')  { $errors[] = 'Le titre est obligatoire.'; }
+            if (!$entreprise)  { $errors[] = 'Veuillez sélectionner une entreprise.'; }
+            if ($titre === '') { $errors[] = 'Le titre est obligatoire.'; }
 
             if (empty($errors)) {
                 $offre = new Offre(
@@ -108,13 +107,13 @@ class OffresController
                 );
                 $this->em->persist($offre);
                 $this->em->flush();
-                $success = true;
+
+                return $response->withHeader('Location', '/offres')->withStatus(302);
             }
         }
 
         return $view->render($response, 'OFFRES-Crée.html.twig', [
             'entreprises' => $entreprises,
-            'success'     => $success,
             'errors'      => $errors,
         ]);
     }
@@ -131,8 +130,7 @@ class OffresController
             return $response->withStatus(404);
         }
 
-        $success = false;
-        $errors  = [];
+        $errors = [];
 
         if ($request->getMethod() === 'POST') {
             $b = $request->getParsedBody();
@@ -151,8 +149,8 @@ class OffresController
             $competences  = trim($b['competences'] ?? '');
             $email        = trim($b['email'] ?? '');
 
-            if (!$entreprise)   { $errors[] = 'Veuillez sélectionner une entreprise.'; }
-            if ($titre === '')  { $errors[] = 'Le titre est obligatoire.'; }
+            if (!$entreprise)  { $errors[] = 'Veuillez sélectionner une entreprise.'; }
+            if ($titre === '') { $errors[] = 'Le titre est obligatoire.'; }
 
             if (empty($errors)) {
                 $offre->setEntreprise($entreprise);
@@ -168,14 +166,14 @@ class OffresController
                 $offre->setCompetences($competences);
                 $offre->setEmail($email);
                 $this->em->flush();
-                $success = true;
+
+                return $response->withHeader('Location', '/offres')->withStatus(302);
             }
         }
 
         return $view->render($response, 'OFFRES-Modifier.html.twig', [
             'offre'       => $offre,
             'entreprises' => $entreprises,
-            'success'     => $success,
             'errors'      => $errors,
         ]);
     }

@@ -20,56 +20,28 @@ class Campus
     private string $ville;
 
     #[ManyToOne(targetEntity: Offre::class)]
-    #[JoinColumn(name: 'idOffre', referencedColumnName: 'idOffre', nullable: false)]
-    private Offre $offre;
+    #[JoinColumn(name: 'offre_id', referencedColumnName: 'id', nullable: true)]
+    private ?Offre $offre = null;
 
     #[ManyToOne(targetEntity: User::class)]
-    #[JoinColumn(name: 'id_user', referencedColumnName: 'id', nullable: false)]
-    private User $user;
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
+    private ?User $user = null;
 
-    public function __construct(string $ville, User $user, Offre $offre) 
+    public function __construct(string $ville, ?User $user = null, ?Offre $offre = null) 
     {
         $this->ville = $ville;
         $this->user = $user;
         $this->offre = $offre;
     }
 
+    public function getId(): int { return $this->id; }
 
-    public function getId(): int 
-    { 
-        return $this->id; 
-    }
+    public function getVille(): string { return $this->ville; }
+    public function setVille(string $ville): self { $this->ville = $ville; return $this; }
 
-    public function getVille(): string 
-    { 
-        return $this->ville; 
-    }
+    public function getOffre(): ?Offre { return $this->offre; }
+    public function setOffre(?Offre $offre): self { $this->offre = $offre; return $this; }
 
-    public function getOffre(): Offre 
-    { 
-        return $this->offre; 
-    }
-
-    public function getUser(): User 
-    { 
-        return $this->user; 
-    }
-
-    public function setVille(string $ville): self 
-    {
-        $this->ville = $ville;
-        return $this;
-    }
-
-    public function setOffre(Offre $offre): self 
-    {
-        $this->offre = $offre;
-        return $this;
-    }
-
-    public function setUser(User $user): self 
-    {
-        $this->user = $user;
-        return $this;
-    }
-} 
+    public function getUser(): ?User { return $this->user; }
+    public function setUser(?User $user): self { $this->user = $user; return $this; }
+}

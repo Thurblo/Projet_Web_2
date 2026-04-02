@@ -76,18 +76,33 @@
                             <li class="nav-item"><a class="nav-link text-dark" href="/wishlist">Wishlist</a></li>
                             <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
                             <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/candidatures">
+                                    <i class="bi bi-file-earmark-text me-1"></i>Mes candidatures
+                                </a>
+                            </li>
                         {% endif %}
 
                         {# ── PILOTE ── #}
                         {% if user.isPilote() %}
                             <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
                             <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/candidatures/gestion">
+                                    <i class="bi bi-clipboard-check me-1"></i>Candidatures
+                                </a>
+                            </li>
                         {% endif %}
 
                         {# ── ADMIN ── #}
                         {% if user.isAdmin() %}
                             <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
                             <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/candidatures/gestion">
+                                    <i class="bi bi-clipboard-check me-1"></i>Candidatures
+                                </a>
+                            </li>
                         {% endif %}
 
                         {# ── PROFIL + DÉCONNEXION (tous les connectés) ── #}
@@ -116,8 +131,6 @@
         </nav>
     </header>
 
-
-
     {# ── BARRE DE RECHERCHE ── #}
     <div class="d-flex align-items-center border border-2 border-primary rounded-pill px-2 py-1 mx-auto my-2 w-50">
         <div class="dropdown me-1">
@@ -128,8 +141,12 @@
             <ul class="dropdown-menu shadow-sm border-0 mt-1">
                 <li><a class="dropdown-item" href="/offres">Offre</a></li>
                 <li><a class="dropdown-item" href="/entreprises">Entreprise</a></li>
+                {% if user and user.isEtudiant() %}
+                    <li><a class="dropdown-item" href="/candidatures">Mes candidatures</a></li>
+                {% endif %}
                 {% if user and user.isAtLeastPilote() %}
                     <li><a class="dropdown-item" href="{{ url_for('liste_etudiants') }}">Les Étudiants</a></li>
+                    <li><a class="dropdown-item" href="/candidatures/gestion">Candidatures</a></li>
                 {% endif %}
                 {% if user and user.isAdmin() %}
                     <li><a class="dropdown-item" href="{{ url_for('liste_pilotes') }}">Les Pilotes</a></li>

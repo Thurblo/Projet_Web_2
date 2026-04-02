@@ -17,7 +17,6 @@ class Offre
     private int $id;
 
     #[ManyToOne(targetEntity: Entreprise::class, inversedBy: 'offres')]
-    
     #[JoinColumn(name: 'entreprise_id', referencedColumnName: 'id', nullable: false)]
     private Entreprise $entreprise;
 
@@ -42,13 +41,13 @@ class Offre
     #[Column(type: 'text', nullable: false)]
     private string $description;
 
-    #[Column(type: 'string', nullable: false)]
+    #[Column(type: 'text', nullable: false)]
     private string $missions;
 
     #[Column(type: 'string', nullable: false)]
     private string $niveau;
 
-    #[Column(type: 'string', nullable: false)]
+    #[Column(type: 'text', nullable: false)]
     private string $competences;
 
     #[Column(type: 'string', nullable: false)]
@@ -67,8 +66,7 @@ class Offre
         string $niveau,
         string $competences,
         string $email,
-    ) 
-    {
+    ) {
         $this->entreprise = $entreprise;
         $this->titre = $titre;
         $this->telephone = $telephone;
@@ -83,116 +81,41 @@ class Offre
         $this->email = $email;
     }
 
-    public function getId(): int 
-    { 
-        return $this->id; 
-    }
+    public function getId(): int { return $this->id; }
 
-    public function getEntreprise(): Entreprise 
-    { 
-        return $this->entreprise; 
-    }
-    public function setEntreprise(Entreprise $entreprise): void 
-    { 
-        $this->entreprise = $entreprise; 
-    }
+    public function getEntreprise(): Entreprise { return $this->entreprise; }
+    public function setEntreprise(Entreprise $entreprise): void { $this->entreprise = $entreprise; }
 
-    public function getTitre(): string 
-    { 
-        return $this->titre; 
-    }
-    public function setTitre(string $titre): void 
-    { 
-        $this->titre = $titre; 
-    }
+    public function getTitre(): string { return $this->titre; }
+    public function setTitre(string $titre): void { $this->titre = $titre; }
 
-    public function getTelephone(): string 
-    { 
-        return $this->telephone; 
-    }
-    public function setTelephone(string $telephone): void 
-    { 
-        $this->telephone = $telephone; 
-    }
+    public function getTelephone(): string { return $this->telephone; }
+    public function setTelephone(string $telephone): void { $this->telephone = $telephone; }
 
-    public function getDateDebut(): string
-    { 
-        return $this->dateDebut; 
-    }
-    public function setDateDebut(string $dateDebut): void
-    { 
-        $this->dateDebut = $dateDebut; 
-    }
+    public function getDateDebut(): string { return $this->dateDebut; }
+    public function setDateDebut(string $dateDebut): void { $this->dateDebut = $dateDebut; }
 
-    public function getDuree(): string
-    { 
-        return $this->duree; 
-    }
-    public function setDuree(string $duree): void
-    { 
-        $this->duree = $duree; 
-    }
+    public function getDuree(): string { return $this->duree; }
+    public function setDuree(string $duree): void { $this->duree = $duree; }
 
-    public function getVille(): string 
-    { 
-        return $this->ville; 
-    }
-    public function setVille(string $ville): void 
-    { 
-        $this->ville = $ville; 
-    }
+    public function getVille(): string { return $this->ville; }
+    public function setVille(string $ville): void { $this->ville = $ville; }
 
-    public function getRemuneration(): string 
-    { 
-        return $this->remuneration; 
-    }
-    public function setRemuneration(string $remuneration): void
-    { 
-        $this->remuneration = $remuneration; 
-    }
+    public function getRemuneration(): string { return $this->remuneration; }
+    public function setRemuneration(string $remuneration): void { $this->remuneration = $remuneration; }
 
-    public function getDescription(): string 
-    { 
-        return $this->description; 
-    }
-    public function setDescription(string $description): void 
-    { 
-        $this->description = $description; 
-    }
+    public function getDescription(): string { return $this->description; }
+    public function setDescription(string $description): void { $this->description = $description; }
 
-    public function getMissions(): string 
-    { 
-        return $this->missions; 
-    }
-    public function setMissions(string $missions): void 
-    { 
-        $this->missions = $missions; 
-    }
+    public function getMissions(): string { return $this->missions; }
+    public function setMissions(string $missions): void { $this->missions = $missions; }
 
-    public function getNiveau(): string 
-    { 
-        return $this->niveau; 
-    }
-    public function setNiveau(string $niveau): void 
-    { 
-        $this->niveau = $niveau; 
-    }
+    public function getNiveau(): string { return $this->niveau; }
+    public function setNiveau(string $niveau): void { $this->niveau = $niveau; }
 
-    public function getCompetences(): string 
-    { 
-        return $this->competences; 
-    }
-    public function setCompetences(string $competences): void 
-    { 
-        $this->competences = $competences; 
-    }
+    public function getCompetences(): string { return $this->competences; }
+    public function setCompetences(string $competences): void { $this->competences = $competences; }
 
-    public function getEmail(): string 
-    { 
-        return $this->email; 
-    }
-    public function setEmail(string $email): void 
-    { 
-        $this->email = $email; 
-    }
+    public function getEmail(): string { return $this->email; }
+    public function setEmail(string $email): void { $this->email = $email; }
 }
