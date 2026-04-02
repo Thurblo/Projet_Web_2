@@ -1,0 +1,82 @@
+{% extends "base.html.twig" %}
+{% block title %}Campus - {{ campus.nom ?? campus.ville }}{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width: 900px;">
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <div class="d-flex align-items-center gap-4">
+            <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center text-primary"
+                 style="width:70px;height:70px;flex-shrink:0;font-size:1.8rem;">
+                <i class="bi bi-building-fill"></i>
+            </div>
+            <div class="flex-grow-1">
+                <h4 class="fw-bold mb-1">{{ campus.nom ?? campus.ville }}</h4>
+                <p class="text-muted mb-0"><i class="bi bi-geo-alt me-1"></i>{{ campus.ville }}</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="/campus/rattacher/{{ campus.id }}" class="btn btn-outline-primary rounded-3 fw-semibold">
+                    <i class="bi bi-person-plus-fill me-2"></i>Rattacher un étudiant
+                </a>
+                <a href="/campus/modifier/{{ campus.id }}" class="btn btn-primary rounded-3 fw-semibold">
+                    <i class="bi bi-pencil-fill me-2"></i>Modifier
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <p class="text-uppercase text-secondary fw-semibold small mb-0" style="letter-spacing:.1em;">
+                Étudiants rattachés
+            </p>
+            <span class="badge text-bg-primary rounded-pill px-3">{{ campus.etudiants|length }}</span>
+        </div>
+
+        {% if campus.etudiants|length > 0 %}
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-3 py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Étudiant</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Email</th>
+                    <th class="pe-3 py-3 text-end text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for etudiant in campus.etudiants %}
+                <tr>
+                    <td class="ps-3 py-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center text-primary fw-bold"
+                                 style="width:36px;height:36px;flex-shrink:0;">
+                                {{ etudiant.prenom|first|upper }}
+                            </div>
+                            <div class="fw-semibold">{{ etudiant.prenom }} {{ etudiant.nom }}</div>
+                        </div>
+                    </td>
+                    <td class="py-3 text-muted small">{{ etudiant.email }}</td>
+                    <td class="pe-3 py-3 text-end">
+                        <a href="{{ url_for('etudiant.voir', {'id': etudiant.id}) }}"
+                           class="btn btn-outline-primary btn-sm rounded-3 fw-semibold">
+                            <i class="bi bi-eye-fill me-1"></i>Voir
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="bi bi-people text-muted" style="font-size:2rem;"></i>
+            <p class="text-muted small mt-2 mb-0">Aucun étudiant rattaché à ce campus.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="mt-3">
+        <a href="/campus/liste" class="btn btn-outline-secondary rounded-3 fw-semibold">
+            <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+        </a>
+    </div>
+
+</div>
+{% endblock %}

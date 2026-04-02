@@ -13,6 +13,7 @@ use App\Application\Controller\EtudiantController;
 use App\Application\Controller\EntreprisesController;
 use App\Application\Controller\CompteController;
 use App\Application\Controller\PiloteController;
+use App\Application\Controller\CampusController;
 use App\Application\Middleware\LoggedMiddleware;
 use App\Application\Middleware\RoleCheckMiddleware;
 use App\Domain\Role;
@@ -66,11 +67,26 @@ return function (App $app) {
 
     // ── CANDIDATURES ──
     $app->get('/candidatures', [CandidatureController::class, 'mesCandidatures'])->setName('candidatures');
+    $app->get('/candidatures/postuler/{id:\d+}', [CandidatureController::class, 'postuler'])->setName('candidatures.postuler.form');
     $app->post('/candidatures/postuler/{id:\d+}', [CandidatureController::class, 'postuler'])->setName('candidatures.postuler');
     $app->post('/candidatures/annuler/{id:\d+}', [CandidatureController::class, 'annuler'])->setName('candidatures.annuler');
     $app->get('/candidatures/gestion', [CandidatureController::class, 'gestion'])->setName('candidatures.gestion');
     $app->post('/candidatures/statut/{id:\d+}', [CandidatureController::class, 'changerStatut'])->setName('candidatures.statut');
 
+    // ── CAMPUS ──
+    $app->group('/campus', function (RouteCollectorProxy $group) {
+        $group->get('/liste', [CampusController::class, 'index'])->setName('campus.liste');
+        $group->get('/creer', [CampusController::class, 'creer'])->setName('campus.creer');
+        $group->post('/creer', [CampusController::class, 'creer']);
+        $group->get('/voir/{id:\d+}', [CampusController::class, 'voir'])->setName('campus.voir');
+        $group->get('/modifier/{id:\d+}', [CampusController::class, 'modifier'])->setName('campus.modifier');
+        $group->post('/modifier/{id:\d+}', [CampusController::class, 'modifier']);
+        $group->post('/supprimer/{id:\d+}', [CampusController::class, 'supprimer'])->setName('campus.supprimer');
+        $group->get('/rattacher/{id:\d+}', [CampusController::class, 'rattacher'])->setName('campus.rattacher');
+        $group->post('/rattacher/{id:\d+}', [CampusController::class, 'rattacher']);
+    })->add(new RoleCheckMiddleware($factory, [Role::PILOTE, Role::ADMIN]));
+
+    // ── ETUDIANTS ──
     $app->group('/etudiant', function (RouteCollectorProxy $group) {
         $group->get('/liste', [EtudiantController::class, 'index'])->setName('liste_etudiants');
         $group->get('/voir/{id:\d+}', [EtudiantController::class, 'voir'])->setName('etudiant.voir');
@@ -79,6 +95,7 @@ return function (App $app) {
         $group->post('/supprimer/{id:\d+}', [EtudiantController::class, 'supprimer'])->setName('etudiants.supprimer');
     })->add(new RoleCheckMiddleware($factory, [Role::PILOTE, Role::ADMIN]));
 
+    // ── PILOTES ──
     $app->group('/pilote', function (RouteCollectorProxy $group) {
         $group->get('/liste', [PiloteController::class, 'index'])->setName('liste_pilotes');
         $group->get('/voir/{id:\d+}', [PiloteController::class, 'voir'])->setName('pilote.voir');

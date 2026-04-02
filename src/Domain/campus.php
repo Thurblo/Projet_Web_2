@@ -2,16 +2,17 @@
 
 namespace App\Domain;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\JoinColumn;
 
 #[Entity, Table(name: 'campus')]
-class Campus 
+class Campus
 {
     #[Id, Column(type: 'integer'), GeneratedValue(strategy: 'AUTO')]
     private int $id;
@@ -19,29 +20,26 @@ class Campus
     #[Column(type: 'string', nullable: false)]
     private string $ville;
 
-    #[ManyToOne(targetEntity: Offre::class)]
-    #[JoinColumn(name: 'offre_id', referencedColumnName: 'id', nullable: true)]
-    private ?Offre $offre = null;
+    #[Column(type: 'string', nullable: true)]
+    private ?string $nom = null;
 
-    #[ManyToOne(targetEntity: User::class)]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: true)]
-    private ?User $user = null;
+    #[OneToMany(mappedBy: 'campus', targetEntity: User::class)]
+    private Collection $etudiants;
 
-    public function __construct(string $ville, ?User $user = null, ?Offre $offre = null) 
+    public function __construct(string $ville, ?string $nom = null)
     {
         $this->ville = $ville;
-        $this->user = $user;
-        $this->offre = $offre;
+        $this->nom = $nom;
+        $this->etudiants = new ArrayCollection();
     }
 
     public function getId(): int { return $this->id; }
 
     public function getVille(): string { return $this->ville; }
-    public function setVille(string $ville): self { $this->ville = $ville; return $this; }
+    public function setVille(string $ville): void { $this->ville = $ville; }
 
-    public function getOffre(): ?Offre { return $this->offre; }
-    public function setOffre(?Offre $offre): self { $this->offre = $offre; return $this; }
+    public function getNom(): ?string { return $this->nom; }
+    public function setNom(?string $nom): void { $this->nom = $nom; }
 
-    public function getUser(): ?User { return $this->user; }
-    public function setUser(?User $user): self { $this->user = $user; return $this; }
+    public function getEtudiants(): Collection { return $this->etudiants; }
 }

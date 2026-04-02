@@ -1,0 +1,29 @@
+{% extends "base.html.twig" %}
+{% block title %}Modifier un campus{% endblock %}
+{% block content %}
+<div class="container d-flex align-items-center py-5" style="max-width: 750px; min-height: 80vh;">
+    <div class="card border-0 shadow-sm rounded-4 p-4 w-100">
+        <h5 class="fw-bold mb-4 pb-3 border-bottom">Modifier le campus</h5>
+        <form method="POST" action="/campus/modifier/{{ campus.id }}">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Nom du campus</label>
+                    <input type="text" name="nom" class="form-control rounded-3" value="{{ campus.nom }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold small">Ville</label>
+                    <input type="text" name="ville" class="form-control rounded-3" value="{{ campus.ville }}" required>
+                </div>
+            </div>
+            <div class="d-flex gap-3 mt-4">
+                <button type="submit" class="btn btn-primary rounded-3 fw-semibold flex-fill">
+                    <i class="bi bi-check-lg me-2"></i>Enregistrer
+                </button>
+                <a href="/campus/liste" class="btn btn-outline-secondary rounded-3 fw-semibold flex-fill">
+                    <i class="bi bi-arrow-left me-2"></i>Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

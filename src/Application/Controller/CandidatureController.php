@@ -19,7 +19,6 @@ class CandidatureController
         $this->em = $em;
     }
 
-    // Postuler à une offre
     public function postuler(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $user = $request->getAttribute('user');
@@ -35,22 +34,62 @@ class CandidatureController
             return $response->withHeader('Location', '/offres')->withStatus(302);
         }
 
-        // Vérifier si déjà postulé
+        $view = Twig::fromRequest($request);
+
         $existante = $this->em->getRepository(Candidature::class)->findOneBy([
             'etudiant' => $user,
             'offre'    => $offre,
         ]);
 
-        if (!$existante) {
-            $candidature = new Candidature($user, $offre);
-            $this->em->persist($candidature);
-            $this->em->flush();
+        if ($request->getMethod() === 'GET') {
+            return $view->render($response, 'Candidatures-postuler.html.twig', [
+                'offre'       => $offre,
+                'dejaPostule' => $existante !== null,
+            ]);
         }
+
+        // POST
+        if ($existante) {
+            return $view->render($response, 'Candidatures-postuler.html.twig', [
+                'offre'       => $offre,
+                'dejaPostule' => true,
+            ]);
+        }
+
+        $data    = $request->getParsedBody();
+        $files   = $request->getUploadedFiles();
+
+        $cvTexte  = $data['cv_texte'] ?? '';
+        $lmTexte  = $data['lm_texte'] ?? '';
+        $cvFichier = $files['cv'] ?? null;
+        $lmFichier = $files['lettre_motivation'] ?? null;
+
+        $cvRempli = ($cvFichier && $cvFichier->getSize() > 0) || trim($cvTexte) !== '';
+        $lmRempli = ($lmFichier && $lmFichier->getSize() > 0) || trim($lmTexte) !== '';
+
+        if (!$cvRempli || !$lmRempli) {
+            $erreurs = [];
+            if (!$cvRempli) $erreurs[] = 'Veuillez fournir votre CV (fichier ou texte).';
+            if (!$lmRempli) $erreurs[] = 'Veuillez fournir votre lettre de motivation (fichier ou texte).';
+
+            return $view->render($response, 'Candidatures-postuler.html.twig', [
+                'offre'       => $offre,
+                'erreurs'     => $erreurs,
+                'dejaPostule' => false,
+            ]);
+        }
+
+        $candidature = new Candidature($user, $offre);
+        $candidature->setCommentaire($data['commentaire'] ?? '');
+        $candidature->setCvTexte($cvTexte);
+        $candidature->setLmTexte($lmTexte);
+
+        $this->em->persist($candidature);
+        $this->em->flush();
 
         return $response->withHeader('Location', '/candidatures')->withStatus(302);
     }
 
-    // Liste des candidatures de l'étudiant
     public function mesCandidatures(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $user = $request->getAttribute('user');
@@ -70,7 +109,6 @@ class CandidatureController
         ]);
     }
 
-    // Annuler une candidature
     public function annuler(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $user = $request->getAttribute('user');
@@ -86,7 +124,6 @@ class CandidatureController
         return $response->withHeader('Location', '/candidatures')->withStatus(302);
     }
 
-    // Liste toutes les candidatures (pilote/admin)
     public function gestion(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $user = $request->getAttribute('user');
@@ -106,7 +143,6 @@ class CandidatureController
         ]);
     }
 
-    // Changer le statut d'une candidature
     public function changerStatut(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $user = $request->getAttribute('user');
@@ -119,7 +155,7 @@ class CandidatureController
         $candidature = $this->em->getRepository(Candidature::class)->find($id);
 
         if ($candidature) {
-            $data = $request->getParsedBody();
+            $data   = $request->getParsedBody();
             $statut = $data['statut'] ?? 'en_attente';
 
             if (in_array($statut, ['en_attente', 'acceptee', 'refusee'])) {

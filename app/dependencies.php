@@ -95,5 +95,9 @@ return function (ContainerBuilder $containerBuilder) {
             return new CandidatureController($c->get(EntityManager::class));
         },
 
+        CampusController::class => function (ContainerInterface $c) {
+            return new CampusController($c->get(EntityManager::class));
+        },
+
     ]);
 };

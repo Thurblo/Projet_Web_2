@@ -1,0 +1,141 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Postuler - {{ offre.titre }}{% endblock %}
+
+{% block content %}
+<div class="container py-5" style="max-width: 800px;">
+
+    {# ── EN-TÊTE ── #}
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <div class="d-flex align-items-start gap-4">
+            <div class="bg-primary bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center text-primary fw-bold"
+                 style="width:60px;height:60px;flex-shrink:0;font-size:1.5rem;">
+                <i class="bi bi-building"></i>
+            </div>
+            <div class="flex-grow-1">
+                <h4 class="fw-bold mb-1">{{ offre.titre }}</h4>
+                <p class="text-muted mb-2">{{ offre.entreprise.nom }} — {{ offre.ville }}</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-light text-dark border rounded-pill">
+                        <i class="bi bi-clock me-1"></i>{{ offre.duree }} mois
+                    </span>
+                    <span class="badge bg-light text-dark border rounded-pill">
+                        <i class="bi bi-cash me-1"></i>{{ offre.remuneration }} €/mois
+                    </span>
+                    <span class="badge bg-light text-dark border rounded-pill">
+                        <i class="bi bi-tag me-1"></i>{{ offre.niveau }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ── ERREURS ── #}
+    {% if erreurs is defined and erreurs|length > 0 %}
+    <div class="alert alert-danger rounded-3 mb-4">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        <ul class="mb-0 mt-1">
+            {% for erreur in erreurs %}
+                <li>{{ erreur }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if dejaPostule is defined and dejaPostule %}
+    <div class="alert alert-warning rounded-3 mb-4">
+        <i class="bi bi-info-circle me-2"></i>Vous avez déjà postulé à cette offre.
+        <a href="/candidatures" class="alert-link ms-2">Voir mes candidatures</a>
+    </div>
+    {% else %}
+
+    {# ── FORMULAIRE ── #}
+    <form method="POST" action="/candidatures/postuler/{{ offre.id }}" enctype="multipart/form-data">
+
+        {# CV #}
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <p class="text-uppercase text-secondary fw-semibold small mb-3" style="letter-spacing:.1em;">
+                <i class="bi bi-file-earmark-person me-2"></i>Votre CV
+            </p>
+            <div class="border border-2 rounded-3 p-4 text-center bg-light mb-3"
+                 onclick="document.getElementById('cv').click()" style="cursor:pointer; border-style: dashed !important;">
+                <i class="bi bi-cloud-upload text-primary" style="font-size:2rem;"></i>
+                <p class="fw-semibold mt-2 mb-1">Glissez ou cliquez pour importer votre CV</p>
+                <p class="text-muted small mb-0">PDF, DOCX — max 5 Mo</p>
+            </div>
+            <input type="file" id="cv" name="cv" class="d-none" accept=".pdf,.doc,.docx"
+                   onchange="showFileName(this, 'cv-name')">
+            <div id="cv-name" class="text-success small mt-1 d-none">
+                <i class="bi bi-check-circle-fill me-1"></i><span></span>
+            </div>
+            <div class="d-flex align-items-center gap-2 my-3">
+                <hr class="flex-grow-1 my-0"/>
+                <span class="text-muted small fw-semibold">OU</span>
+                <hr class="flex-grow-1 my-0"/>
+            </div>
+            <textarea class="form-control rounded-3 bg-light" name="cv_texte" rows="4"
+                      placeholder="Collez le contenu de votre CV ici..."></textarea>
+        </div>
+
+        {# LETTRE DE MOTIVATION #}
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <p class="text-uppercase text-secondary fw-semibold small mb-3" style="letter-spacing:.1em;">
+                <i class="bi bi-file-earmark-text me-2"></i>Lettre de motivation
+            </p>
+            <div class="border border-2 rounded-3 p-4 text-center bg-light mb-3"
+                 onclick="document.getElementById('lm').click()" style="cursor:pointer; border-style: dashed !important;">
+                <i class="bi bi-cloud-upload text-primary" style="font-size:2rem;"></i>
+                <p class="fw-semibold mt-2 mb-1">Glissez ou cliquez pour importer votre lettre</p>
+                <p class="text-muted small mb-0">PDF, DOCX — max 5 Mo</p>
+            </div>
+            <input type="file" id="lm" name="lettre_motivation" class="d-none" accept=".pdf,.doc,.docx"
+                   onchange="showFileName(this, 'lm-name')">
+            <div id="lm-name" class="text-success small mt-1 d-none">
+                <i class="bi bi-check-circle-fill me-1"></i><span></span>
+            </div>
+            <div class="d-flex align-items-center gap-2 my-3">
+                <hr class="flex-grow-1 my-0"/>
+                <span class="text-muted small fw-semibold">OU</span>
+                <hr class="flex-grow-1 my-0"/>
+            </div>
+            <textarea class="form-control rounded-3 bg-light" name="lm_texte" rows="6"
+                      placeholder="Rédigez votre lettre de motivation ici..."></textarea>
+        </div>
+
+        {# COMMENTAIRE #}
+        <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+            <p class="text-uppercase text-secondary fw-semibold small mb-3" style="letter-spacing:.1em;">
+                <i class="bi bi-chat-text me-2"></i>Message additionnel
+                <span class="text-muted fw-normal">(optionnel)</span>
+            </p>
+            <textarea class="form-control rounded-3 bg-light" name="commentaire" rows="4"
+                      placeholder="Ajoutez un message personnalisé à votre candidature..."></textarea>
+        </div>
+
+        {# BOUTONS #}
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-primary rounded-3 fw-semibold flex-fill py-3">
+                <i class="bi bi-send-fill me-2"></i>Envoyer ma candidature
+            </button>
+            <a href="{{ url_for('offres.description', {'id': offre.id}) }}"
+               class="btn btn-outline-secondary rounded-3 fw-semibold flex-fill py-3">
+                <i class="bi bi-arrow-left me-2"></i>Annuler
+            </a>
+        </div>
+
+    </form>
+    {% endif %}
+
+</div>
+
+<script>
+function showFileName(input, targetId) {
+    const target = document.getElementById(targetId);
+    if (input.files && input.files[0]) {
+        target.classList.remove('d-none');
+        target.querySelector('span').textContent = input.files[0].name;
+    }
+}
+</script>
+
+{% endblock %}

@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\JoinColumn;
 
 #[Entity]
 #[Table(name: 'users')]
@@ -35,6 +37,10 @@ class User
     #[Column(type: Types::STRING, enumType: Role::class)]
     private Role $role = Role::ETUDIANT;
 
+    #[ManyToOne(targetEntity: Campus::class, inversedBy: 'etudiants')]
+    #[JoinColumn(name: 'campus_id', referencedColumnName: 'id', nullable: true)]
+    private ?Campus $campus = null;
+
     // Getters
     public function getId(): int { return $this->id; }
     public function getEmail(): string { return $this->email; }
@@ -42,6 +48,7 @@ class User
     public function getNom(): string { return $this->nom; }
     public function getPrenom(): string { return $this->prenom; }
     public function getRole(): Role { return $this->role; }
+    public function getCampus(): ?Campus { return $this->campus; }
 
     // Setters
     public function setEmail(string $email): void { $this->email = $email; }
@@ -49,6 +56,7 @@ class User
     public function setNom(string $nom): void { $this->nom = $nom; }
     public function setPrenom(string $prenom): void { $this->prenom = $prenom; }
     public function setRole(Role $role): void { $this->role = $role; }
+    public function setCampus(?Campus $campus): void { $this->campus = $campus; }
 
     // Helpers pour Twig
     public function isAdmin(): bool { return $this->role === Role::ADMIN; }
@@ -56,41 +64,30 @@ class User
     public function isEtudiant(): bool { return $this->role === Role::ETUDIANT; }
     public function isAtLeastPilote(): bool { return $this->role === Role::PILOTE || $this->role === Role::ADMIN; }
 
-
     // Vérifie si l'utilisateur peut créer des comptes d'un certain rôle
     public function canCreate(Role $targetRole): bool
     {
         return match($targetRole) {
-            Role::ETUDIANT => $this->isAtLeastPilote(), // Admin et Pilote peuvent créer des étudiants
-            Role::PILOTE   => $this->isAdmin(),         // Seul l'Admin peut créer des pilotes
-            Role::ADMIN    => false,                    // Personne ne peut créer un admin
+            Role::ETUDIANT => $this->isAtLeastPilote(),
+            Role::PILOTE   => $this->isAdmin(),
+            Role::ADMIN    => false,
         };
     }
 
     // Vérifie si l'utilisateur peut modifier un autre utilisateur
     public function canEdit(User $target): bool
     {
-        // Admin peut tout modifier
         if ($this->isAdmin()) return true;
-
-        // Pilote peut modifier uniquement les étudiants
         if ($this->isPilote() && $target->isEtudiant()) return true;
-
-        // Un utilisateur peut modifier son propre profil
         if ($this->getId() === $target->getId()) return true;
-
         return false;
     }
 
     // Vérifie si l'utilisateur peut supprimer un autre utilisateur
     public function canDelete(User $target): bool
     {
-        // Admin peut tout supprimer sauf lui-même
         if ($this->isAdmin() && $this->getId() !== $target->getId()) return true;
-
-        // Pilote peut supprimer uniquement les étudiants
         if ($this->isPilote() && $target->isEtudiant()) return true;
-
         return false;
     }
 }
