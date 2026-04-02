@@ -10,45 +10,45 @@
                 <div class="row mx-4 my-5">
                     <div class="col-md-6 ">
                         <label class="form-label" for="nom">Nom de l'entreprise</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="nom" name="nom" placeholder="Entrez le nom de l'entreprise">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="nom" name="nom" value="{{ entreprise.nom }}">
                     </div>
                     <div class="col-md-6 ">
                         <label class="form-label" for="phone">Numéro de téléphone</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="phone" name="phone" placeholder="Entrez le numéro de téléphone">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="phone" name="phone" value="{{ entreprise.telephone }}">
                     </div>
                     <div class="col-md-6 mt-4 ">
                         <label class="form-label" for="date">Date de Création</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="date" id="date" name="date" placeholder="Entrez la date de création">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="date" id="date" name="date" value="{{ entreprise.dateCreation }}">
                     </div>
                     <div class="col-md-6 mt-4 ">
                         <label class="form-label" for="type">Type d'entreprise</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="type" name="type" placeholder="Entrez le type d'entreprise">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="type" name="type" value="{{ entreprise.type }}">
                     </div>
 
                     <div class="col-md-6 mt-4 ">
                         <label class="form-label" for="ville">Ville</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="ville" name="ville" placeholder="Entrez la ville">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="ville" name="ville" value="{{ entreprise.ville }}">
                     </div>
                     <div class="col-md-6 mt-4 ">
                         <label class="form-label" for="salaries">Salariés</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="salaries" name="salaries" placeholder="Entrez le nombre de salariés">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="salaries" name="salaries" value="{{ entreprise.salaries }}">
                     </div>
                     
                     <div class="col-md-12 mt-4 ">
                         <label class="form-label" for="description">Description de l'entreprise</label>
-                        <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description" placeholder="Entrez la description de l'entreprise" cols="30" rows="5"></textarea>
+                        <textarea class="form-control border border-secondary border-3 rounded-3" id="description" name="description"  cols="30" rows="5">{{ entreprise.description }}</textarea>
                     </div>
                     <div class="col-md-12 mt-4 ">
                         <label class="form-label" for="missions">Missions</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="missions" name="missions" placeholder="Entrez les missions">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="missions" name="missions" value="{{ entreprise.missions }}">
                     </div>
                     <div class="col-md-12 mt-4 ">
                         <label class="form-label" for="domaines">Domaines d'expertise</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="domaines" name="domaines" placeholder="Entrez les domaines d'expertise">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="domaines" name="domaines" value="{{ entreprise.domainesExpertise }}">
                     </div>
                     <div class="col-md-12 mt-4 ">
                         <label class="form-label" for="evaluation">Evaluation de l'entreprise</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="evaluation" name="evaluation" placeholder="Entrez l'évaluation de l'entreprise">
+                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="evaluation" name="evaluation" value="{{ entreprise.evaluation }}">
                     </div>
                     <div class="col-md-6 mt-4">
                         <label class="form-label" for="statut">Statut de l'entreprise</label>
