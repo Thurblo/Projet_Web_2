@@ -21,6 +21,7 @@ use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Routing\RouteCollectorProxy;
 use App\Application\Controller\LoginController;
 use App\Application\Controller\CandidatureController;
+use App\Application\Controller\SearchController;
 
 return function (App $app) {
     $app->options('/{routes:.*}', function (Request $request, Response $response) {
@@ -103,5 +104,7 @@ return function (App $app) {
         $group->post('/modifier/{id:\d+}', [PiloteController::class, 'modify']);
         $group->post('/supprimer/{id:\d+}', [PiloteController::class, 'supprimer'])->setName('pilotes.supprimer');
     })->add(new RoleCheckMiddleware($factory, [Role::ADMIN]));
+
+    $app->get('/search', [SearchController::class, 'search'])->setName('search');
 
 };

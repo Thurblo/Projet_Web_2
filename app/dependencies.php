@@ -3,6 +3,14 @@
 declare(strict_types=1);
 
 use App\Application\Controller\LoginController;
+use App\Application\Controller\WishlistController;
+use App\Application\Controller\CompteController;
+use App\Application\Controller\ProfileController;
+use App\Application\Controller\EtudiantController;
+use App\Application\Controller\PiloteController;
+use App\Application\Controller\CandidatureController;
+use App\Application\Controller\CampusController;
+use App\Application\Controller\SearchController;
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\DriverManager;
@@ -17,48 +25,33 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Slim\Psr7\Factory\ResponseFactory;
-use App\Application\Controller\WishlistController;
-use App\Application\Controller\CompteController;
-use App\Application\Controller\ProfileController;
-use App\Application\Controller\EtudiantController;
-use App\Application\Controller\PiloteController;
-
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
         LoggerInterface::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
-
             $loggerSettings = $settings->get('logger');
             $logger = new Logger($loggerSettings['name']);
-
             $processor = new UidProcessor();
             $logger->pushProcessor($processor);
-
             $handler = new StreamHandler($loggerSettings['path'], $loggerSettings['level']);
             $logger->pushHandler($handler);
-
             return $logger;
         },
 
         EntityManager::class => function (ContainerInterface $c) {
             $settings = $c->get(SettingsInterface::class);
             $doctrine = $settings->get('doctrine');
-
-
             $cache = $doctrine['dev_mode'] ?
                 new ArrayAdapter() :
                 new FilesystemAdapter(directory: $doctrine['cache_dir']);
-
             $config = ORMSetup::createAttributeMetadataConfiguration(
                 $doctrine['metadata_dirs'],
                 $doctrine['dev_mode'],
                 null,
                 $cache
             );
-
-            $connection = DriverManager::getConnection($doctrine['connection'])
-            ;
+            $connection = DriverManager::getConnection($doctrine['connection']);
             return new EntityManager($connection, $config);
         },
 
@@ -66,7 +59,6 @@ return function (ContainerBuilder $containerBuilder) {
             return $container->get(ResponseFactory::class);
         },
 
-        // ↓ Ajout du LoginController
         LoginController::class => function (ContainerInterface $c) {
             return new LoginController($c->get(EntityManager::class));
         },
@@ -99,5 +91,8 @@ return function (ContainerBuilder $containerBuilder) {
             return new CampusController($c->get(EntityManager::class));
         },
 
+        SearchController::class => function (ContainerInterface $c) {
+            return new SearchController($c->get(EntityManager::class));
+        },
     ]);
 };

@@ -33,8 +33,10 @@
                                 {{ offre.description|slice(0, 100) }}{% if offre.description|length > 100 %}...{% endif %}
                             </p>
                             <div class="d-flex gap-2 mt-3">
-                                <a href="{{ url_for('offres.description', { 'id': offre.id }) }}" class="btn btn-outline-primary flex-fill rounded-4 py-2 text-decoration-none">Voir</a>
-                                <a href="#" class="btn btn-primary flex-fill rounded-4 py-2 text-decoration-none">Postuler</a>
+                                <a href="{{ url_for('offres.description', { 'id': offre.id }) }}"
+                                   class="btn btn-outline-primary flex-fill rounded-4 py-2 text-decoration-none">Voir</a>
+                                <a href="/candidatures/postuler/{{ offre.id }}"
+                                   class="btn btn-primary flex-fill rounded-4 py-2 text-decoration-none">Postuler</a>
                             </div>
                         </div>
                     </div>

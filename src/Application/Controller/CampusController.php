@@ -95,8 +95,15 @@ class CampusController
             return $response->withHeader('Location', '/campus/liste')->withStatus(302);
         }
 
-        return $view->render($response, 'Campus-voir.html.twig', [
+        // Récupérer les pilotes rattachés à ce campus
+        $pilotes = $this->em->getRepository(User::class)->findBy([
             'campus' => $campus,
+            'role'   => Role::PILOTE,
+        ]);
+
+        return $view->render($response, 'Campus-voir.html.twig', [
+            'campus'  => $campus,
+            'pilotes' => $pilotes,
         ]);
     }
 
@@ -110,23 +117,32 @@ class CampusController
             return $response->withHeader('Location', '/campus/liste')->withStatus(302);
         }
 
-        $etudiants = $this->em->getRepository(User::class)->findBy(['role' => Role::ETUDIANT]);
+        // Déterminer le type depuis l'URL ou le POST
+        $type = $request->getQueryParams()['type'] ?? 'etudiant';
 
         if ($request->getMethod() === 'POST') {
             $data = $request->getParsedBody();
-            $etudiantId = (int)($data['etudiant_id'] ?? 0);
-            $etudiant = $this->em->getRepository(User::class)->find($etudiantId);
+            $type = $data['type'] ?? 'etudiant';
+            $userId = (int)($data['user_id'] ?? 0);
+            $user = $this->em->getRepository(User::class)->find($userId);
 
-            if ($etudiant && $etudiant->getRole() === Role::ETUDIANT) {
-                $etudiant->setCampus($campus);
+            $expectedRole = $type === 'pilote' ? Role::PILOTE : Role::ETUDIANT;
+
+            if ($user && $user->getRole() === $expectedRole) {
+                $user->setCampus($campus);
                 $this->em->flush();
                 return $response->withHeader('Location', '/campus/voir/' . $campus->getId())->withStatus(302);
             }
         }
 
+        // Récupérer la liste selon le type
+        $role = $type === 'pilote' ? Role::PILOTE : Role::ETUDIANT;
+        $users = $this->em->getRepository(User::class)->findBy(['role' => $role]);
+
         return $view->render($response, 'Campus-rattacher.html.twig', [
-            'campus'    => $campus,
-            'etudiants' => $etudiants,
+            'campus' => $campus,
+            'users'  => $users,
+            'type'   => $type,
         ]);
     }
 }

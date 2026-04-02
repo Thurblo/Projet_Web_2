@@ -26,149 +26,140 @@
 
 <div class="container-xl py-4">
 
-    <h5 class="fw-bold mb-0">Dernières offres ajoutées</h5>
-    <p class="text-muted small mb-3">Consultez les offres les plus récentes</p>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h5 class="fw-bold mb-0">Dernières offres ajoutées</h5>
+            <p class="text-muted small mb-0">Consultez les offres les plus récentes</p>
+        </div>
+        <a href="{{ url_for('offres') }}" class="btn btn-outline-primary rounded-3 fw-semibold btn-sm">
+            Voir toutes <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+    </div>
 
-    <div class="row g-3 align-items-start">
+    {# ── CAROUSEL ── #}
+    {% if offres|length > 0 %}
+    <div id="offresCarousel" class="carousel slide mb-5" data-bs-ride="carousel" data-bs-interval="4000">
 
-        <div class="col-12 col-md-5 col-lg-4">
-            <div class="bg-white border rounded-3 overflow-hidden">
-
-                {% for offre in offres %}
-                    <div class="job-card {% if offreSelectionnee and offre.id == offreSelectionnee.id %}active{% endif %} p-3 {% if not loop.last %}border-bottom{% endif %}">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <a href="{{ url_for('offres.description', { 'id': offre.id }) }}" class="fw-bold mb-1 text-dark text-decoration-none" style="font-size:.95rem">{{ offre.titre }}</a>
-                            <a href="{{ url_for('wishlist.toggle', { 'id': offre.id }) }}" class="text-decoration-none flex-shrink-0 ms-2">
-                                <i class="bi bi-bookmark{% if offre.id in wishlistIds %}-fill text-primary{% else %} text-secondary{% endif %} fs-4"></i>
-                            </a>
-                        </div>
-                        <p class="text-muted small mb-1">{{ offre.entreprise }}</p>
-                        <p class="text-muted small mb-1">{{ offre.ville }}</p>
-
-                        <div class="d-flex flex-wrap gap-1 mb-2">
-                            <span class="badge bg-light text-dark border rounded-pill">
-                                {{ offre.duree }} mois
-                            </span>
-                            <span class="badge bg-light text-dark border rounded-pill">
-                                {{ offre.niveau }}
-                            </span>
-                        </div>
-
-                        <p class="text-primary fw-semibold mb-0" style="font-size:.85rem">
-                            {{ offre.remuneration }}
-                        </p>
-                    </div>
-                {% else %}
-                    <div class="p-3 text-center text-muted">
-                        Aucune offre disponible.
-                    </div>
-                {% endfor %}
-
-            </div>
+        {# Indicateurs #}
+        <div class="carousel-indicators">
+            {% for offre in offres %}
+                <button type="button" data-bs-target="#offresCarousel" data-bs-slide-to="{{ loop.index0 }}"
+                        class="{% if loop.first %}active{% endif %} bg-primary"
+                        style="width:8px;height:8px;border-radius:50%;border:none;opacity:.4;">
+                </button>
+            {% endfor %}
         </div>
 
-        <div class="col-12 col-md-7 col-lg-8">
-            <div class="detail-panel bg-white border rounded-3 overflow-hidden">
+        <div class="carousel-inner">
+            {% for offre in offres %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <div class="card border-0 shadow-sm rounded-4 p-0 overflow-hidden mx-auto" style="max-width:700px;">
 
-                {% if offreSelectionnee %}
-                    <div class="p-4 border-bottom">
-                        <h4 class="fw-bold mb-1">{{ offreSelectionnee.titre }}</h4>
-                        <p class="mb-1 text-primary" style="font-size:.9rem">{{ offreSelectionnee.entreprise }}</p>
-                        <p class="text-muted mb-1" style="font-size:.85rem">{{ offreSelectionnee.ville }}</p>
-                        <p class="fw-semibold text-success mb-0" style="font-size:.85rem">{{ offreSelectionnee.remuneration }}</p>
-                    </div>
-
-                    <div class="p-4 border-bottom">
-                        <p class="fw-bold mb-3">Détails de l'offre</p>
-
-                        <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Date de début</p>
-                        <div class="mb-3">
-                            <span class="badge bg-light text-dark border">{{ offreSelectionnee.dateDebut }}</span>
-                        </div>
-
-                        <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Durée</p>
-                        <div class="mb-3">
-                            <span class="badge bg-light text-dark border">{{ offreSelectionnee.duree }} mois</span>
-                        </div>
-
-                        <p class="text-muted fw-semibold mb-1" style="font-size:.75rem">Niveau</p>
-                        <div>
-                            <span class="badge bg-light text-dark border">{{ offreSelectionnee.niveau }}</span>
+                    {# Header coloré #}
+                    <div class="bg-primary bg-opacity-10 px-4 pt-4 pb-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="fw-bold mb-1 text-dark">{{ offre.titre }}</h5>
+                                <p class="text-primary fw-semibold small mb-0">{{ offre.entreprise }}</p>
+                            </div>
+                            <span class="badge text-bg-primary rounded-pill px-3 py-2 fw-semibold">
+                                {{ offre.remuneration }} €/mois
+                            </span>
                         </div>
                     </div>
 
-                    <div class="p-4 border-bottom">
-                        <p class="fw-bold mb-2">Missions</p>
-                        {% if offreSelectionnee.missionsListe is not empty %}
-                            <ul class="mb-0 ps-3" style="font-size:.85rem; line-height:1.8">
-                                {% for mission in offreSelectionnee.missionsListe %}
-                                    <li>{{ mission }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <p class="text-muted mb-0">Aucune mission renseignée.</p>
-                        {% endif %}
-                    </div>
+                    {# Body #}
+                    <div class="px-4 py-3">
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge bg-light text-dark border rounded-pill px-3">
+                                <i class="bi bi-geo-alt me-1"></i>{{ offre.ville }}
+                            </span>
+                            <span class="badge bg-light text-dark border rounded-pill px-3">
+                                <i class="bi bi-clock me-1"></i>{{ offre.duree }} mois
+                            </span>
+                            <span class="badge bg-light text-dark border rounded-pill px-3">
+                                <i class="bi bi-mortarboard me-1"></i>{{ offre.niveau }}
+                            </span>
+                        </div>
 
-                    <div class="p-4 border-bottom">
-                        <p class="fw-bold mb-2">Description</p>
-                        <p style="font-size:.85rem; line-height:1.7">{{ offreSelectionnee.description }}</p>
-                    </div>
+                        <p class="text-muted small mb-3" style="line-height:1.6;">
+                            {{ offre.description|slice(0, 150) }}{% if offre.description|length > 150 %}...{% endif %}
+                        </p>
 
-                    <div class="p-4 border-bottom">
-                        <p class="fw-bold mb-2">Compétences</p>
-                        <div class="d-flex flex-wrap gap-2">
-                            {% if offreSelectionnee.competencesListe is not empty %}
-                                {% for competence in offreSelectionnee.competencesListe %}
-                                    <span class="badge bg-light text-dark border rounded-pill">{{ competence }}</span>
-                                {% endfor %}
+                        <div class="d-flex gap-2">
+                            {% if user and user.isEtudiant() %}
+                                {# Étudiant : Postuler + Wishlist #}
+                                <a href="{{ url_for('offres.description', { 'id': offre.id }) }}"
+                                   class="btn btn-primary rounded-3 fw-semibold flex-fill">
+                                    <i class="bi bi-send-fill me-2"></i>Postuler
+                                </a>
+                                <a href="{{ url_for('wishlist.toggle', { 'id': offre.id }) }}"
+                                   class="btn btn-outline-secondary rounded-3 px-3">
+                                    <i class="bi bi-bookmark{% if offre.id in wishlistIds %}-fill text-primary{% endif %}"></i>
+                                </a>
+                            {% elseif user and user.isAtLeastPilote() %}
+                                {# Pilote/Admin : Voir + Gérer #}
+                                <a href="{{ url_for('offres.description', { 'id': offre.id }) }}"
+                                   class="btn btn-outline-primary rounded-3 fw-semibold flex-fill">
+                                    <i class="bi bi-eye-fill me-2"></i>Voir
+                                </a>
+                                <a href="{{ url_for('offres.modifier', { 'id': offre.id }) }}"
+                                   class="btn btn-primary rounded-3 fw-semibold flex-fill">
+                                    <i class="bi bi-pencil-fill me-2"></i>Gérer
+                                </a>
                             {% else %}
-                                <p class="text-muted mb-0">Aucune compétence renseignée.</p>
+                                {# Non connecté : Voir l'offre #}
+                                <a href="{{ url_for('offres.description', { 'id': offre.id }) }}"
+                                   class="btn btn-primary rounded-3 fw-semibold flex-fill">
+                                    <i class="bi bi-eye-fill me-2"></i>Voir l'offre
+                                </a>
                             {% endif %}
                         </div>
                     </div>
 
-                    <div class="p-4 border-bottom">
-                        <p class="fw-bold mb-2">Contact</p>
-                        <p class="mb-1"><strong>Email :</strong> {{ offreSelectionnee.email }}</p>
-                        <p class="mb-0"><strong>Téléphone :</strong> {{ offreSelectionnee.telephone }}</p>
-                    </div>
-
-                    <div class="p-4 d-flex gap-3">
-                        <a href="{{ url_for('offres.description', { 'id': offreSelectionnee.id }) }}"
-                           class="btn btn-primary rounded-3 fw-semibold flex-fill">
-                            <i class="bi bi-send-fill me-2"></i>Postuler
-                        </a>
-                        <a href="{{ url_for('entreprises.description', { 'id': offreSelectionnee.entreprise.id }) }}"
-                           class="btn btn-outline-primary rounded-3 fw-semibold flex-fill">
-                            <i class="bi bi-building me-2"></i>Voir l'entreprise
-                        </a>
-                    </div>
-
-                {% else %}
-                    <div class="p-4 text-center text-muted">
-                        Aucune offre disponible.
-                    </div>
-                {% endif %}
-
+                </div>
             </div>
+            {% endfor %}
         </div>
 
+        {# Contrôles #}
+        <button class="carousel-control-prev" type="button" data-bs-target="#offresCarousel" data-bs-slide="prev"
+                style="width:40px;left:-50px;">
+            <span class="bg-white border shadow-sm rounded-circle d-flex align-items-center justify-content-center"
+                  style="width:36px;height:36px;">
+                <i class="bi bi-chevron-left text-dark"></i>
+            </span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#offresCarousel" data-bs-slide="next"
+                style="width:40px;right:-50px;">
+            <span class="bg-white border shadow-sm rounded-circle d-flex align-items-center justify-content-center"
+                  style="width:36px;height:36px;">
+                <i class="bi bi-chevron-right text-dark"></i>
+            </span>
+        </button>
+
     </div>
+    {% else %}
+    <div class="card border-0 shadow-sm rounded-4 p-5 text-center mb-5">
+        <i class="bi bi-briefcase text-muted" style="font-size:3rem;"></i>
+        <h5 class="fw-bold mt-3 mb-1">Aucune offre disponible</h5>
+        <p class="text-muted small mb-0">Revenez plus tard.</p>
+    </div>
+    {% endif %}
 
     {# ── STATISTIQUES ── #}
     {% if stats is defined %}
-    <div class="row g-3 mt-5">
+    <div class="row g-3 mt-2">
         <div class="col-12">
             <h5 class="fw-bold mb-3">StageFinder en chiffres</h5>
         </div>
-        <div class="col-6 col-md-6">
+        <div class="col-6">
             <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
                 <div class="fw-bold fs-2 text-primary">{{ stats.nb_offres }}</div>
                 <div class="text-muted small mt-1"><i class="bi bi-briefcase-fill me-1"></i>Offres disponibles</div>
             </div>
         </div>
-        <div class="col-6 col-md-6">
+        <div class="col-6">
             <div class="card border-0 shadow-sm rounded-4 p-4 text-center">
                 <div class="fw-bold fs-2 text-success">{{ stats.nb_entreprises }}</div>
                 <div class="text-muted small mt-1"><i class="bi bi-building-fill me-1"></i>Entreprises partenaires</div>

@@ -4,6 +4,7 @@ namespace App\Application\Controller;
 
 use App\Domain\Role;
 use App\Domain\User;
+use App\Domain\Campus;
 use Doctrine\ORM\EntityManager;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -29,10 +30,12 @@ class CompteController
         $view = Twig::fromRequest($request);
         $queryParams = $request->getQueryParams();
         $type = $queryParams['type'] ?? null;
+        $campusList = $this->em->getRepository(Campus::class)->findAll();
 
         return $view->render($response, 'Compte.html.twig', [
-            'typeCompte' => $type,
-            'isAdmin'    => $currentUser->isAdmin(),
+            'typeCompte'  => $type,
+            'isAdmin'     => $currentUser->isAdmin(),
+            'campus_list' => $campusList,
         ]);
     }
 
@@ -45,6 +48,7 @@ class CompteController
         }
 
         $view = Twig::fromRequest($request);
+        $campusList = $this->em->getRepository(Campus::class)->findAll();
 
         $donnees = $request->getParsedBody();
         $type    = $donnees['type'] ?? null;
@@ -52,8 +56,9 @@ class CompteController
 
         if ($action === 'select_type') {
             return $view->render($response, 'Compte.html.twig', [
-                'typeCompte' => $type,
-                'isAdmin'    => $currentUser->isAdmin(),
+                'typeCompte'  => $type,
+                'isAdmin'     => $currentUser->isAdmin(),
+                'campus_list' => $campusList,
             ]);
         }
 
@@ -67,9 +72,10 @@ class CompteController
             $existingUser = $this->em->getRepository(User::class)->findOneBy(['email' => $donnees['email'] ?? '']);
             if ($existingUser) {
                 return $view->render($response, 'Compte.html.twig', [
-                    'typeCompte' => $type,
-                    'isAdmin'    => $currentUser->isAdmin(),
-                    'error'      => 'Cet email est déjà utilisé.',
+                    'typeCompte'  => $type,
+                    'isAdmin'     => $currentUser->isAdmin(),
+                    'campus_list' => $campusList,
+                    'error'       => 'Cet email est déjà utilisé.',
                 ]);
             }
 
@@ -80,10 +86,18 @@ class CompteController
             $user->setMotDePasse(password_hash($donnees['password'] ?? '', PASSWORD_DEFAULT));
             $user->setRole($targetRole);
 
+            // Rattacher au campus si sélectionné
+            $campusId = (int)($donnees['campus_id'] ?? 0);
+            if ($campusId > 0) {
+                $campus = $this->em->getRepository(Campus::class)->find($campusId);
+                if ($campus) {
+                    $user->setCampus($campus);
+                }
+            }
+
             $this->em->persist($user);
             $this->em->flush();
 
-            // Redirection selon le rôle créé
             if ($targetRole === Role::ETUDIANT) {
                 return $response->withHeader('Location', '/etudiant/liste')->withStatus(302);
             }
@@ -92,8 +106,9 @@ class CompteController
         }
 
         return $view->render($response, 'Compte.html.twig', [
-            'typeCompte' => $type,
-            'isAdmin'    => $currentUser->isAdmin(),
+            'typeCompte'  => $type,
+            'isAdmin'     => $currentUser->isAdmin(),
+            'campus_list' => $campusList,
         ]);
     }
 }

@@ -1,26 +1,38 @@
 {% extends "base.html.twig" %}
-{% block title %}Rattacher un étudiant{% endblock %}
+{% block title %}Rattacher un {{ type == 'pilote' ? 'pilote' : 'étudiant' }}{% endblock %}
 {% block content %}
 <div class="container d-flex align-items-center py-5" style="max-width: 750px; min-height: 80vh;">
     <div class="card border-0 shadow-sm rounded-4 p-4 w-100">
-        <h5 class="fw-bold mb-1">Rattacher un étudiant</h5>
-        <p class="text-muted small mb-4 pb-3 border-bottom">Campus : <strong>{{ campus.nom ?? campus.ville }}</strong></p>
+
+        <h5 class="fw-bold mb-1">
+            Rattacher un {{ type == 'pilote' ? 'pilote' : 'étudiant' }}
+        </h5>
+        <p class="text-muted small mb-4 pb-3 border-bottom">
+            Campus : <strong>{{ campus.nom ?? campus.ville }}</strong>
+        </p>
 
         <form method="POST" action="/campus/rattacher/{{ campus.id }}">
+            <input type="hidden" name="type" value="{{ type }}">
+
             <div class="mb-4">
-                <label class="form-label fw-semibold small">Sélectionner un étudiant</label>
-                <select name="etudiant_id" class="form-select rounded-3" required>
-                    <option value="">Choisir un étudiant</option>
-                    {% for etudiant in etudiants %}
-                        <option value="{{ etudiant.id }}">
-                            {{ etudiant.prenom }} {{ etudiant.nom }} — {{ etudiant.email }}
-                            {% if etudiant.campus %}(déjà rattaché à {{ etudiant.campus.nom ?? etudiant.campus.ville }}){% endif %}
+                <label class="form-label fw-semibold small">
+                    Sélectionner un {{ type == 'pilote' ? 'pilote' : 'étudiant' }}
+                </label>
+                <select name="user_id" class="form-select rounded-3" required>
+                    <option value="">Choisir...</option>
+                    {% for user in users %}
+                        <option value="{{ user.id }}">
+                            {{ user.prenom }} {{ user.nom }} — {{ user.email }}
+                            {% if user.campus %}
+                                (déjà rattaché à {{ user.campus.nom ?? user.campus.ville }})
+                            {% endif %}
                         </option>
                     {% endfor %}
                 </select>
             </div>
+
             <div class="d-flex gap-3">
-                <button type="submit" class="btn btn-primary rounded-3 fw-semibold flex-fill">
+                <button type="submit" class="btn btn-{% if type == 'pilote' %}warning{% else %}primary{% endif %} rounded-3 fw-semibold flex-fill">
                     <i class="bi bi-check-lg me-2"></i>Rattacher
                 </button>
                 <a href="/campus/voir/{{ campus.id }}" class="btn btn-outline-secondary rounded-3 fw-semibold flex-fill">

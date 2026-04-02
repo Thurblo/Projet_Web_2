@@ -4,134 +4,114 @@
     {% block head %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Offres recommandées</title>
+    <title>StageFinder</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>.card-hover:hover{transform:translateY(-5px);box-shadow:0 10px 20px;transition:.3s}</style>
     {% endblock %}
-
-    <style>
-        body { font-family: 'Noto Sans', sans-serif; background: #F8F9FA; }
-
-        .job-card {
-            cursor: pointer;
-            border-left: 3px solid transparent !important;
-            transition: background 0.15s, border-color 0.15s;
-        }
-        .job-card:hover { background: #f9f8f7; }
-        .job-card.active { background: #eef3fc !important; border-left-color: #2d6ef5 !important; }
-
-        .badge-urgent { background: #fff3cd; color: #7a4a00; border: 1px solid #f5c518; }
-        .badge-delay  { background: #e8f4ea; color: #1a6630; border: 1px solid #a3d9a5; }
-        .badge-salary { background: #e6f7ed; color: #1a6630; border: 1px solid #7ecb97; }
-
-        .tag-pill { font-size: .72rem; padding: 2px 10px; border-radius: 20px; border: 1px solid #d4d2d0; background: #fff; color: #1a1a1a; }
-
-        .detail-panel { position: sticky; top: 16px; max-height: 90vh; overflow-y: auto; }
-
-        .btn-postuler { background: #2d6ef5; font-weight: 700; font-size: .88rem; }
-        .btn-postuler:hover { background: #1a5ae0; }
-
-        .skill-chip { font-size: .75rem; padding: 4px 12px; border-radius: 20px; border: 1px solid #2d6ef5; color: #2d6ef5; background: #eef3fc; }
-        .meta-chip  { font-size: .78rem; padding: 4px 14px; border-radius: 20px; border: 1px solid #d4d2d0; background: #f3f2f1; }
-
-        .icon-btn { background: none; border: 1px solid #d4d2d0; border-radius: 4px; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: .95rem; color: #595959; transition: background .1s; }
-        .icon-btn:hover { background: #e4e2e0; }
-
-        .apply-link { color: #2d6ef5; font-size: .75rem; font-weight: 600; text-decoration: none; }
-
-        html, body { height: 100%; }
-        body { display: flex; flex-direction: column; min-height: 100vh; }
-        main#content { flex: 1; }
-    </style>
 </head>
 
-<body>
+<body class="bg-light d-flex flex-column min-vh-100">
 
     {# ── NAVBAR ── #}
-    <header>
-        <nav class="navbar navbar-expand-lg bg-white border-bottom px-4">
+    <header class="sticky-top">
+        <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm px-4">
+
             <a class="navbar-brand fw-bold" href="/home">
                 <img src="/images/Logo_v2.png" alt="Logo" width="100" height="40" class="d-inline-block align-text-top">
             </a>
-            <button class="navbar-toggler" type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarMain"
-                    aria-controls="navbarMain"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation">
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarMain">
                 <ul class="navbar-nav me-auto"></ul>
-
-                <ul class="navbar-nav align-items-center">
+                <ul class="navbar-nav align-items-center gap-1">
 
                     {% if user %}
 
                         {# ── ETUDIANT ── #}
                         {% if user.isEtudiant() %}
-                            <li class="nav-item"><a class="nav-link text-dark" href="/wishlist">Wishlist</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/candidatures">
-                                    <i class="bi bi-file-earmark-text me-1"></i>Mes candidatures
-                                </a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/wishlist"><i class="bi bi-bookmark me-1"></i>Wishlist</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/offres"><i class="bi bi-briefcase me-1"></i>Offres</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/entreprises"><i class="bi bi-building me-1"></i>Entreprises</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/candidatures"><i class="bi bi-file-earmark-text me-1"></i>Candidatures</a></li>
                         {% endif %}
 
                         {# ── PILOTE ── #}
                         {% if user.isPilote() %}
-                            <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/candidatures/gestion">
-                                    <i class="bi bi-clipboard-check me-1"></i>Candidatures
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/campus/liste">
-                                    <i class="bi bi-building-fill me-1"></i>Campus
-                                </a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/offres"><i class="bi bi-briefcase me-1"></i>Offres</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/entreprises"><i class="bi bi-building me-1"></i>Entreprises</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/candidatures/gestion"><i class="bi bi-clipboard-check me-1"></i>Candidatures</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/campus/liste"><i class="bi bi-geo-alt me-1"></i>Campus</a></li>
                         {% endif %}
 
                         {# ── ADMIN ── #}
                         {% if user.isAdmin() %}
-                            <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
-                            <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/candidatures/gestion">
-                                    <i class="bi bi-clipboard-check me-1"></i>Candidatures
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/campus/liste">
-                                    <i class="bi bi-building-fill me-1"></i>Campus
-                                </a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/offres"><i class="bi bi-briefcase me-1"></i>Offres</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/entreprises"><i class="bi bi-building me-1"></i>Entreprises</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/candidatures/gestion"><i class="bi bi-clipboard-check me-1"></i>Candidatures</a></li>
+                            <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/campus/liste"><i class="bi bi-geo-alt me-1"></i>Campus</a></li>
                         {% endif %}
 
-                        {# ── PROFIL + DÉCONNEXION (tous les connectés) ── #}
-                        <li class="nav-item"><a class="nav-link text-dark" href="/profile">
-                            <i class="bi bi-person-circle me-1"></i>Profil
-                        </a></li>
+                        <li class="nav-item d-none d-lg-block">
+                            <div class="vr mx-2 opacity-25" style="height:24px;"></div>
+                        </li>
+
+                        {# ── LOUPE ── #}
                         <li class="nav-item">
-                            <a class="nav-link text-danger d-flex align-items-center gap-1" href="/logout">
-                                <i class="bi bi-box-arrow-right"></i> Déconnexion
-                            </a>
+                            <button class="btn btn-light border rounded-3 px-2 py-1 d-flex align-items-center gap-2"
+                                    data-bs-toggle="modal" data-bs-target="#searchModal">
+                                <i class="bi bi-search text-muted"></i>
+                                <span class="text-muted small d-none d-lg-inline">Ctrl K</span>
+                            </button>
+                        </li>
+
+                        {# ── PROFIL DROPDOWN ── #}
+                        <li class="nav-item dropdown">
+                            <button class="btn btn-light border rounded-3 px-3 py-1 d-flex align-items-center gap-2 dropdown-toggle"
+                                    data-bs-toggle="dropdown">
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white fw-bold"
+                                     style="width:28px;height:28px;font-size:.8rem;flex-shrink:0;">
+                                    {{ user.prenom|first|upper }}
+                                </div>
+                                <span class="small fw-semibold d-none d-lg-inline">{{ user.prenom }}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow rounded-3 mt-1" style="min-width:200px;">
+                                <li>
+                                    <div class="px-3 py-2 border-bottom">
+                                        <div class="fw-semibold small">{{ user.prenom }} {{ user.nom }}</div>
+                                        <div class="text-muted" style="font-size:.75rem;">{{ user.email }}</div>
+                                    </div>
+                                </li>
+                                <li><a class="dropdown-item rounded-2 py-2" href="/profile"><i class="bi bi-person-circle me-2 text-primary"></i>Mon profil</a></li>
+                                {% if user.isAdmin() or user.isPilote() %}
+                                <li><a class="dropdown-item rounded-2 py-2" href="/compte"><i class="bi bi-person-plus me-2 text-success"></i>Créer un compte</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2" href="{{ url_for('liste_etudiants') }}"><i class="bi bi-mortarboard me-2 text-primary"></i>Étudiants</a></li>
+                                {% endif %}
+                                {% if user.isAdmin() %}
+                                <li><a class="dropdown-item rounded-2 py-2" href="{{ url_for('liste_pilotes') }}"><i class="bi bi-person-badge me-2 text-warning"></i>Pilotes</a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item rounded-2 py-2 text-danger" href="/logout"><i class="bi bi-box-arrow-right me-2"></i>Déconnexion</a></li>
+                            </ul>
                         </li>
 
                     {% else %}
-                        {# ── NON CONNECTÉ ── #}
-                        <li class="nav-item"><a class="nav-link text-dark" href="/offres">Offres</a></li>
-                        <li class="nav-item"><a class="nav-link text-dark" href="/entreprises">Entreprises</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/offres"><i class="bi bi-briefcase me-1"></i>Offres</a></li>
+                        <li class="nav-item"><a class="nav-link text-dark rounded-3 px-3" href="/entreprises"><i class="bi bi-building me-1"></i>Entreprises</a></li>
+                        <li class="nav-item d-none d-lg-block"><div class="vr mx-2 opacity-25" style="height:24px;"></div></li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark d-flex align-items-center gap-1" href="/Login">
-                                <i class="bi bi-person-circle"></i> Connexion
+                            <button class="btn btn-light border rounded-3 px-2 py-1 d-flex align-items-center gap-2"
+                                    data-bs-toggle="modal" data-bs-target="#searchModal">
+                                <i class="bi bi-search text-muted"></i>
+                                <span class="text-muted small d-none d-lg-inline">Ctrl K</span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Login" class="btn btn-primary rounded-3 px-3 fw-semibold">
+                                <i class="bi bi-person-circle me-1"></i>Connexion
                             </a>
                         </li>
                     {% endif %}
@@ -141,54 +121,139 @@
         </nav>
     </header>
 
-    {# ── BARRE DE RECHERCHE ── #}
-    <div class="d-flex align-items-center border border-2 border-primary rounded-pill px-2 py-1 mx-auto my-2 w-50">
-        <div class="dropdown me-1">
-            <button class="btn btn-primary btn-sm rounded-pill dropdown-toggle fw-semibold px-3"
-                    type="button" data-bs-toggle="dropdown">
-                Offre
-            </button>
-            <ul class="dropdown-menu shadow-sm border-0 mt-1">
-                <li><a class="dropdown-item" href="/offres">Offre</a></li>
-                <li><a class="dropdown-item" href="/entreprises">Entreprise</a></li>
-                {% if user and user.isEtudiant() %}
-                    <li><a class="dropdown-item" href="/candidatures">Mes candidatures</a></li>
-                {% endif %}
-                {% if user and user.isAtLeastPilote() %}
-                    <li><a class="dropdown-item" href="{{ url_for('liste_etudiants') }}">Les Étudiants</a></li>
-                    <li><a class="dropdown-item" href="/candidatures/gestion">Candidatures</a></li>
-                    <li><a class="dropdown-item" href="/campus/liste">Campus</a></li>
-                {% endif %}
-                {% if user and user.isAdmin() %}
-                    <li><a class="dropdown-item" href="{{ url_for('liste_pilotes') }}">Les Pilotes</a></li>
-                    <li><a class="dropdown-item" href="/compte">Créer un compte</a></li>
-                {% endif %}
-            </ul>
+    {# ── SEARCH MODAL ── #}
+    <div class="modal fade" id="searchModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:600px;">
+            <div class="modal-content border-0 shadow rounded-4 overflow-hidden">
+
+                <div class="d-flex align-items-center gap-3 px-3 py-3 border-bottom">
+                    <i class="bi bi-search text-muted fs-5"></i>
+                    <input type="text" id="searchInput" class="form-control border-0 shadow-none p-0 fs-6"
+                           placeholder="Rechercher une offre, entreprise..." autocomplete="off">
+                    <kbd class="bg-light border rounded px-2 py-1 small text-muted">Esc</kbd>
+                </div>
+
+                <div id="searchResults" class="p-3" style="max-height:400px;overflow-y:auto;">
+                    <p class="text-uppercase text-muted fw-semibold mb-2 px-1" style="font-size:.65rem;letter-spacing:.1em;">Accès rapide</p>
+
+                    <a href="/offres" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                        <span class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-briefcase-fill"></i></span>
+                        <div><div class="fw-semibold small">Offres de stage</div><div class="text-muted" style="font-size:.75rem;">Parcourir toutes les offres</div></div>
+                        <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                    </a>
+                    <a href="/entreprises" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                        <span class="bg-success bg-opacity-10 text-success rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-building-fill"></i></span>
+                        <div><div class="fw-semibold small">Entreprises</div><div class="text-muted" style="font-size:.75rem;">Voir toutes les entreprises</div></div>
+                        <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                    </a>
+
+                    {% if user and user.isEtudiant() %}
+                    <a href="/candidatures" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                        <span class="bg-warning bg-opacity-10 text-warning rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-file-earmark-text-fill"></i></span>
+                        <div><div class="fw-semibold small">Mes candidatures</div><div class="text-muted" style="font-size:.75rem;">Suivre mes candidatures</div></div>
+                        <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                    </a>
+                    <a href="/wishlist" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                        <span class="bg-danger bg-opacity-10 text-danger rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-bookmark-fill"></i></span>
+                        <div><div class="fw-semibold small">Ma Wishlist</div><div class="text-muted" style="font-size:.75rem;">Offres sauvegardées</div></div>
+                        <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                    </a>
+                    {% endif %}
+
+                    {% if user and user.isAtLeastPilote() %}
+                    <a href="{{ url_for('liste_etudiants') }}" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                        <span class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-mortarboard-fill"></i></span>
+                        <div><div class="fw-semibold small">Étudiants</div><div class="text-muted" style="font-size:.75rem;">Liste des étudiants</div></div>
+                        <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                    </a>
+                    <a href="/candidatures/gestion" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                        <span class="bg-info bg-opacity-10 text-info rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-clipboard-check-fill"></i></span>
+                        <div><div class="fw-semibold small">Candidatures</div><div class="text-muted" style="font-size:.75rem;">Gérer les candidatures</div></div>
+                        <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                    </a>
+                    <a href="/campus/liste" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                        <span class="bg-secondary bg-opacity-10 text-secondary rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-geo-alt-fill"></i></span>
+                        <div><div class="fw-semibold small">Campus</div><div class="text-muted" style="font-size:.75rem;">Gérer les campus</div></div>
+                        <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                    </a>
+                    {% endif %}
+
+                    {% if user and user.isAdmin() %}
+                    <a href="{{ url_for('liste_pilotes') }}" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                        <span class="bg-warning bg-opacity-10 text-warning rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-person-badge-fill"></i></span>
+                        <div><div class="fw-semibold small">Pilotes</div><div class="text-muted" style="font-size:.75rem;">Liste des pilotes</div></div>
+                        <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                    </a>
+                    <a href="/compte" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                        <span class="bg-success bg-opacity-10 text-success rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-person-plus-fill"></i></span>
+                        <div><div class="fw-semibold small">Créer un compte</div><div class="text-muted" style="font-size:.75rem;">Ajouter un pilote ou étudiant</div></div>
+                        <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                    </a>
+                    {% endif %}
+
+                </div>
+            </div>
         </div>
-
-        <input type="text"
-               class="form-control border-0 shadow-none bg-transparent"
-               placeholder="Rechercher...">
-
-        <button class="btn btn-primary btn-sm rounded-pill px-3" type="submit">
-            <i class="bi bi-search"></i>
-        </button>
     </div>
 
-    <title>{% block title %}{% endblock %} - My Webpage</title>
-
-    <main id="content">{% block content %}{% endblock %}</main>
+    <title>{% block title %}{% endblock %} - StageFinder</title>
+    <main id="content" class="flex-grow-1">{% block content %}{% endblock %}</main>
 
     <footer id="footer">
         {% block footer %}
-        <div class="container-fluid bg-white py-3 border-top border-1 d-flex justify-content-center shadow">
-            <a href="/mentions" class="text-black text-decoration-none small">
-                <i class="bi bi-file-text text-black me-1"></i>Mentions légales
+        <div class="container-fluid bg-white py-3 border-top d-flex justify-content-center shadow-sm">
+            <a href="/mentions" class="text-dark text-decoration-none small">
+                <i class="bi bi-file-text me-1"></i>Mentions légales
             </a>
         </div>
         {% endblock %}
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const input   = document.getElementById('searchInput');
+        const results = document.getElementById('searchResults');
+        const defHtml = results.innerHTML;
+        let timer;
+
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('searchModal')).show();
+                setTimeout(() => input.focus(), 300);
+            }
+        });
+
+        input.addEventListener('input', function() {
+            clearTimeout(timer);
+            const q = this.value.trim();
+            if (q.length < 2) { results.innerHTML = defHtml; return; }
+            timer = setTimeout(async () => {
+                const data = await fetch(`/search?q=${encodeURIComponent(q)}`).then(r => r.json());
+                if (!data.offres.length && !data.entreprises.length) {
+                    results.innerHTML = `<div class="text-center py-4 text-muted"><i class="bi bi-search fs-3"></i><p class="small mt-2">Aucun résultat pour "<strong>${q}</strong>"</p></div>`;
+                    return;
+                }
+                results.innerHTML =
+                    (data.offres.length ? `<p class="text-uppercase text-muted fw-semibold mb-2 px-1" style="font-size:.65rem;letter-spacing:.1em;">Offres</p>` + data.offres.map(o => `
+                        <a href="/offres/description/${o.id}" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                            <span class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-briefcase-fill"></i></span>
+                            <div><div class="fw-semibold small">${o.titre}</div><div class="text-muted" style="font-size:.75rem;">${o.entreprise} — ${o.ville}</div></div>
+                            <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                        </a>`).join('') : '') +
+                    (data.entreprises.length ? `<p class="text-uppercase text-muted fw-semibold mb-2 mt-2 px-1" style="font-size:.65rem;letter-spacing:.1em;">Entreprises</p>` + data.entreprises.map(e => `
+                        <a href="/entreprises/description/${e.id}" class="d-flex align-items-center gap-3 p-2 rounded-3 text-decoration-none text-dark mb-1">
+                            <span class="bg-success bg-opacity-10 text-success rounded-3 d-flex align-items-center justify-content-center" style="width:36px;height:36px;flex-shrink:0;"><i class="bi bi-building-fill"></i></span>
+                            <div><div class="fw-semibold small">${e.nom}</div><div class="text-muted" style="font-size:.75rem;">${e.ville}</div></div>
+                            <i class="bi bi-arrow-right ms-auto text-muted small"></i>
+                        </a>`).join('') : '');
+            }, 300);
+        });
+
+        document.getElementById('searchModal').addEventListener('hidden.bs.modal', () => {
+            input.value = '';
+            results.innerHTML = defHtml;
+        });
+    </script>
 </body>
 </html>

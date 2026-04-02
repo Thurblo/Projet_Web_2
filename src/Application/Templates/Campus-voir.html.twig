@@ -14,8 +14,11 @@
                 <p class="text-muted mb-0"><i class="bi bi-geo-alt me-1"></i>{{ campus.ville }}</p>
             </div>
             <div class="d-flex gap-2">
-                <a href="/campus/rattacher/{{ campus.id }}" class="btn btn-outline-primary rounded-3 fw-semibold">
+                <a href="/campus/rattacher/{{ campus.id }}?type=etudiant" class="btn btn-outline-primary rounded-3 fw-semibold">
                     <i class="bi bi-person-plus-fill me-2"></i>Rattacher un étudiant
+                </a>
+                <a href="/campus/rattacher/{{ campus.id }}?type=pilote" class="btn btn-outline-warning rounded-3 fw-semibold">
+                    <i class="bi bi-person-badge-fill me-2"></i>Rattacher un pilote
                 </a>
                 <a href="/campus/modifier/{{ campus.id }}" class="btn btn-primary rounded-3 fw-semibold">
                     <i class="bi bi-pencil-fill me-2"></i>Modifier
@@ -24,7 +27,8 @@
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm rounded-4 p-4">
+    {# ── ÉTUDIANTS ── #}
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <p class="text-uppercase text-secondary fw-semibold small mb-0" style="letter-spacing:.1em;">
                 Étudiants rattachés
@@ -43,6 +47,7 @@
             </thead>
             <tbody>
                 {% for etudiant in campus.etudiants %}
+                {% if etudiant.isEtudiant() %}
                 <tr>
                     <td class="ps-3 py-3">
                         <div class="d-flex align-items-center gap-3">
@@ -61,6 +66,7 @@
                         </a>
                     </td>
                 </tr>
+                {% endif %}
                 {% endfor %}
             </tbody>
         </table>
@@ -68,6 +74,55 @@
         <div class="text-center py-4">
             <i class="bi bi-people text-muted" style="font-size:2rem;"></i>
             <p class="text-muted small mt-2 mb-0">Aucun étudiant rattaché à ce campus.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    {# ── PILOTES ── #}
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <p class="text-uppercase text-secondary fw-semibold small mb-0" style="letter-spacing:.1em;">
+                Pilotes rattachés
+            </p>
+            <span class="badge text-bg-warning rounded-pill px-3">{{ pilotes|length }}</span>
+        </div>
+
+        {% if pilotes|length > 0 %}
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-3 py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Pilote</th>
+                    <th class="py-3 text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Email</th>
+                    <th class="pe-3 py-3 text-end text-uppercase text-muted fw-semibold" style="font-size:.72rem;letter-spacing:.08em;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pilote in pilotes %}
+                <tr>
+                    <td class="ps-3 py-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-warning bg-opacity-10 rounded-3 d-flex align-items-center justify-content-center text-warning fw-bold"
+                                 style="width:36px;height:36px;flex-shrink:0;">
+                                {{ pilote.prenom|first|upper }}
+                            </div>
+                            <div class="fw-semibold">{{ pilote.prenom }} {{ pilote.nom }}</div>
+                        </div>
+                    </td>
+                    <td class="py-3 text-muted small">{{ pilote.email }}</td>
+                    <td class="pe-3 py-3 text-end">
+                        <a href="{{ url_for('pilote.voir', {'id': pilote.id}) }}"
+                           class="btn btn-outline-warning btn-sm rounded-3 fw-semibold">
+                            <i class="bi bi-eye-fill me-1"></i>Voir
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="bi bi-person-badge text-muted" style="font-size:2rem;"></i>
+            <p class="text-muted small mt-2 mb-0">Aucun pilote rattaché à ce campus.</p>
         </div>
         {% endif %}
     </div>

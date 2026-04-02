@@ -61,8 +61,13 @@
                     </div>
 
                     <div class="col-md-12 mt-4">
-                        <label class="form-label" for="campus">Campus</label>
-                        <input class="form-control border border-secondary border-3 rounded-3" type="text" id="campus" name="campus" placeholder="Ex : CESI Reims">
+                        <label class="form-label" for="campus_id">Campus</label>
+                        <select class="form-select border border-secondary border-3 rounded-3" id="campus_id" name="campus_id">
+                            <option value="">Choisir un campus</option>
+                            {% for campus in campus_list %}
+                                <option value="{{ campus.id }}">{{ campus.nom ?? campus.ville }} — {{ campus.ville }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
 
                 {% elseif typeCompte is defined and typeCompte == 'pilote' %}
@@ -74,6 +79,16 @@
                     <div class="col-md-12 mt-4">
                         <label class="form-label" for="poste">Poste</label>
                         <input class="form-control border border-secondary border-3 rounded-3" type="text" id="poste" name="poste" placeholder="Ex : Responsable RH">
+                    </div>
+
+                    <div class="col-md-12 mt-4">
+                        <label class="form-label" for="campus_id">Campus rattaché</label>
+                        <select class="form-select border border-secondary border-3 rounded-3" id="campus_id" name="campus_id">
+                            <option value="">Choisir un campus</option>
+                            {% for campus in campus_list %}
+                                <option value="{{ campus.id }}">{{ campus.nom ?? campus.ville }} — {{ campus.ville }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 {% endif %}
 
